@@ -970,5 +970,355 @@
     <script src="../assets/js/calendarview.js"></script>
     <script src="../assets/js/location.js"></script>
     <script src="../assets/js/errorNavigation.js"></script>
+    <script src="../assets/js/form-tabs.js"></script>
+
+    <!-- Script personalizado para validação de campos -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos
+            const formTabs = document.querySelectorAll('.form-tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const nextButtons = document.querySelectorAll('.next-tab');
+            const prevButtons = document.querySelectorAll('.prev-tab');
+            const form = document.getElementById('cadastro-form');
+            
+            // Formatação para campos específicos
+            // CPF
+            const cpfInput = document.getElementById('input_95');
+            if (cpfInput) {
+                jQuery(cpfInput).mask('999.999.999-99');
+                cpfInput.addEventListener('blur', function() {
+                    validateCPF(this);
+                });
+            }
+            
+            // Data de Nascimento e Expedição
+            const dateFields = [
+                document.getElementById('input_104'),
+                document.getElementById('input_106')
+            ];
+            
+            dateFields.forEach(function(field) {
+                if (field) {
+                    jQuery(field).mask('99/99/9999');
+                    field.addEventListener('blur', function() {
+                        validateDate(this);
+                    });
+                    field.addEventListener('input', function(e) {
+                        // Preencher os campos ocultos para o JotForm
+                        const fieldId = e.target.id;
+                        const parts = e.target.value.split('/');
+                        if (parts.length === 3 && parts[2].length === 4) {
+                            document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
+                            document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
+                            document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
+                        }
+                    });
+                }
+            });
+            
+            // CEP
+            const cepField = document.getElementById('input_108');
+            if (cepField) {
+                jQuery(cepField).mask('99999-999');
+                cepField.addEventListener('blur', function() {
+                    if (this.value.replace(/\D/g, '').length === 8) {
+                        searchCEP(this.value);
+                    }
+                });
+            }
+            
+            // Telefone
+            const phoneField = document.getElementById('input_118');
+            if (phoneField) {
+                jQuery(phoneField).mask('(99) 99999-9999');
+            }
+            
+            // Email
+            const emailField = document.getElementById('input_117');
+            if (emailField) {
+                emailField.addEventListener('blur', function() {
+                    validateEmail(this);
+                });
+            }
+            
+            // Validação de CPF
+            function validateCPF(input) {
+                const cpf = input.value.replace(/\D/g, '');
+                if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+                    showError(input, 'CPF inválido');
+                    return false;
+                }
+                
+                let sum = 0;
+                let remainder;
+                
+                for (let i = 1; i <= 9; i++) {
+                    sum = sum + parseInt(cpf.substring(i-1, i)) * (11 - i);
+                }
+                
+                remainder = (sum * 10) % 11;
+                
+                if ((remainder === 10) || (remainder === 11)) {
+                    remainder = 0;
+                }
+                
+                if (remainder !== parseInt(cpf.substring(9, 10))) {
+                    showError(input, 'CPF inválido');
+                    return false;
+                }
+                
+                sum = 0;
+                for (let i = 1; i <= 10; i++) {
+                    sum = sum + parseInt(cpf.substring(i-1, i)) * (12 - i);
+                }
+                
+                remainder = (sum * 10) % 11;
+                
+                if ((remainder === 10) || (remainder === 11)) {
+                    remainder = 0;
+                }
+                
+                if (remainder !== parseInt(cpf.substring(10, 11))) {
+                    showError(input, 'CPF inválido');
+                    return false;
+                }
+                
+                removeError(input);
+                return true;
+            }
+            
+            // Validação de Data
+            function validateDate(input) {
+                const dateValue = input.value;
+                if (!dateValue) return;
+                
+                const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                const matches = dateValue.match(regex);
+                
+                if (!matches) {
+                    showError(input, 'Formato de data inválido');
+                    return false;
+                }
+                
+                const day = parseInt(matches[1]);
+                const month = parseInt(matches[2]);
+                const year = parseInt(matches[3]);
+                
+                // Verificar se a data é válida
+                if (month < 1 || month > 12) {
+                    showError(input, 'Mês inválido');
+                    return false;
+                }
+                
+                // Verificar os dias conforme o mês
+                const daysInMonth = new Date(year, month, 0).getDate();
+                if (day < 1 || day > daysInMonth) {
+                    showError(input, 'Dia inválido para o mês informado');
+                    return false;
+                }
+                
+                // Verificar idade mínima (18 anos) para data de nascimento
+                if (input.id === 'input_104') {
+                    const birthDate = new Date(year, month - 1, day);
+                    const today = new Date();
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    
+                    // Ajustar idade se ainda não completou aniversário no ano corrente
+                    const m = today.getMonth() - birthDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        if (age - 1 < 18) {
+                            showError(input, 'É necessário ter pelo menos 18 anos');
+                            return false;
+                        }
+                    } else if (age < 18) {
+                        showError(input, 'É necessário ter pelo menos 18 anos');
+                        return false;
+                    }
+                }
+                
+                removeError(input);
+                return true;
+            }
+            
+            // Validação de Email
+            function validateEmail(input) {
+                if (!input.value) return;
+                
+                if (!EmailValidator.validate(input.value)) {
+                    showError(input, 'Email inválido');
+                    return false;
+                }
+                
+                removeError(input);
+                return true;
+            }
+            
+            // Busca CEP e preenche campos de endereço
+            function searchCEP(cep) {
+                cep = cep.replace(/\D/g, '');
+                if (cep.length !== 8) return;
+                
+                const cepField = document.getElementById('input_108');
+                cepField.classList.add('loading');
+                
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        cepField.classList.remove('loading');
+                        
+                        if (data.erro) {
+                            showError(cepField, 'CEP não encontrado');
+                            return;
+                        }
+                        
+                        removeError(cepField);
+                        cepField.classList.add('cep-valido');
+                        
+                        // Preencher campos de endereço
+                        if (document.getElementById('input_109')) document.getElementById('input_109').value = data.logradouro;
+                        if (document.getElementById('input_111')) document.getElementById('input_111').value = data.bairro;
+                        if (document.getElementById('input_110')) document.getElementById('input_110').value = data.localidade;
+                        
+                        // Selecionar estado
+                        const estadoSelect = document.getElementById('input_114');
+                        if (estadoSelect) {
+                            for (let i = 0; i < estadoSelect.options.length; i++) {
+                                if (estadoSelect.options[i].value === data.uf) {
+                                    estadoSelect.selectedIndex = i;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // Focar no campo número
+                        if (document.getElementById('input_112')) {
+                            document.getElementById('input_112').focus();
+                        }
+                    })
+                    .catch(error => {
+                        cepField.classList.remove('loading');
+                        showError(cepField, 'Erro ao buscar CEP');
+                        console.error(error);
+                    });
+            }
+            
+            // Mostrar mensagem de erro
+            function showError(input, message) {
+                // Remover erro existente
+                removeError(input);
+                
+                // Adicionar classe de erro
+                input.classList.add('error');
+                
+                // Criar elemento de mensagem de erro
+                const errorElement = document.createElement('div');
+                errorElement.className = 'error-message';
+                errorElement.textContent = message;
+                
+                // Inserir após o input
+                input.parentNode.insertBefore(errorElement, input.nextSibling);
+            }
+            
+            // Remover mensagem de erro
+            function removeError(input) {
+                input.classList.remove('error');
+                
+                // Remover mensagem de erro se existir
+                const nextSibling = input.nextElementSibling;
+                if (nextSibling && nextSibling.classList.contains('error-message')) {
+                    nextSibling.remove();
+                }
+            }
+            
+            // Validar todos os campos obrigatórios
+            function validateRequiredFields(container) {
+                const requiredFields = container.querySelectorAll('input[required], select[required], textarea[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    // Remover mensagem de erro existente
+                    removeError(field);
+                    
+                    // Verificar se está vazio
+                    if (!field.value.trim()) {
+                        showError(field, 'Este campo é obrigatório');
+                        isValid = false;
+                    } else {
+                        // Validações específicas para cada tipo de campo
+                        if (field.id === 'input_95') { // CPF
+                            if (!validateCPF(field)) isValid = false;
+                        } else if (field.id === 'input_104' || field.id === 'input_106') { // Datas
+                            if (!validateDate(field)) isValid = false;
+                        } else if (field.id === 'input_117') { // Email
+                            if (!validateEmail(field)) isValid = false;
+                        }
+                    }
+                });
+                
+                return isValid;
+            }
+            
+            // Botões de próximo - validar campos antes de continuar
+            nextButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-next');
+                    const currentTabId = document.querySelector('.tab-content.active').id;
+                    
+                    // Validar campos da aba atual
+                    if (validateRequiredFields(document.getElementById(currentTabId))) {
+                        // Navegação para a próxima aba
+                        formTabs.forEach(tab => tab.classList.remove('active'));
+                        tabContents.forEach(content => content.classList.remove('active'));
+                        
+                        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+                        document.getElementById(tabId).classList.add('active');
+                    }
+                });
+            });
+            
+            // Envio do formulário
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    let allValid = true;
+                    tabContents.forEach(content => {
+                        if (!validateRequiredFields(content)) {
+                            allValid = false;
+                        }
+                    });
+                    
+                    if (allValid) {
+                        // Enviar formulário
+                        this.submit();
+                    } else {
+                        // Encontrar a primeira aba com erros e mostrar
+                        let foundTab = false;
+                        tabContents.forEach((content, index) => {
+                            if (!foundTab && content.querySelector('.error-message')) {
+                                foundTab = true;
+                                
+                                // Ativar a aba com erro
+                                formTabs.forEach(tab => tab.classList.remove('active'));
+                                tabContents.forEach(c => c.classList.remove('active'));
+                                
+                                formTabs[index].classList.add('active');
+                                content.classList.add('active');
+                                
+                                // Focar no primeiro campo com erro
+                                const firstError = content.querySelector('.error');
+                                if (firstError) {
+                                    firstError.focus();
+                                }
+                            }
+                        });
+                        
+                        alert('Por favor, corrija os erros antes de enviar o formulário.');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
