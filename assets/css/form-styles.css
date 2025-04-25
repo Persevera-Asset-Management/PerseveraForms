@@ -147,24 +147,66 @@ select.form-control {
     background-position: right 10px center;
     background-size: 16px;
     padding-right: 30px;
+    font-size: 14px; /* Garantir que o tamanho da fonte seja o mesmo dos labels */
+    font-family: var(--font-light);
+}
+
+/* Estilo para option dentro de select */
+option {
+    font-size: 14px;
+    font-family: var(--font-light);
 }
 
 /* Estilo para checkbox */
 .checkbox-group {
     display: flex;
-    align-items: center;
+    align-items: left;
     margin-bottom: 20px;
+    margin-top: 5px;
 }
 
 .checkbox-group input[type="checkbox"] {
     width: 18px;
     height: 18px;
     margin-right: 10px;
+    margin-top: 2px; /* Alinha melhor com o texto */
 }
 
-.checkbox-group label {
-    margin-bottom: 0;
-    cursor: pointer;
+.checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.checkbox-label {
+    font-size: 14px; /* Mesmo tamanho dos labels */
+    font-family: var(--font-primary);
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+/* Estilo para radio buttons */
+.radio-group {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+
+.radio-input {
+    margin-top: 2px; /* Alinha melhor com o texto */
+    margin-right: 8px;
+}
+
+.radio-label {
+    font-size: 14px; /* Mesmo tamanho dos labels */
+    font-family: var(--font-primary);
+    font-weight: normal;
+    line-height: 1.4;
 }
 
 /* Botões de navegação */
