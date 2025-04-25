@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Obrigado - Persevera</title>
+    
+    <style>
+        @font-face {
+            font-family: 'Avenir';
+            src: url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff2') format('woff2'),
+                 url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff') format('woff');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Avenir Light';
+            src: url('https://assets.persevera.com.br/fonts/Avenir-Light.woff2') format('woff2'),
+                 url('https://assets.persevera.com.br/fonts/Avenir-Light.woff') format('woff');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        :root {
+            --primary-color: #124A81;
+            --secondary-color: #0F75BC;
+            --hover-color: #2554CC;
+            --submit-hover: #16AA52;
+            --background-color: #F3F3FE;
+            --form-bg: #FFFFFF;
+            --divider-color: #F3F3FE;
+            --text-color: #000000;
+            --sub-text-color: #57647e;
+            --font-primary: 'Avenir', 'avenir', 'Nunito', Helvetica, Arial, sans-serif;
+            --font-light: 'Avenir Light', 'avenir', 'Nunito Light', 'Nunito', Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            padding: 20px;
+            color: var(--text-color);
+            font-family: var(--font-primary);
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--form-bg);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        
+        .form-header {
+            padding: 40px 52px;
+            border-bottom: 1px solid var(--divider-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #FFFFFF;
+        }
+        
+        .header-logo {
+            max-width: 265px;
+            height: auto;
+            display: block;
+        }
+        
+        .thank-you-container {
+            max-width: 600px;
+        }
+        
+        .thank-you-content {
+            padding: 50px 40px;
+            text-align: center;
+        }
+        
+        .thank-you-title {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-family: var(--font-primary);
+        }
+        
+        .thank-you-message {
+            font-size: 18px;
+            color: var(--text-color);
+            margin-bottom: 40px;
+            font-family: var(--font-light);
+        }
+        
+        .thank-you-actions {
+            margin-top: 20px;
+        }
+        
+        .btn-voltar {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            font-family: var(--font-primary);
+            display: inline-block;
+        }
+        
+        .btn-voltar:hover {
+            background-color: var(--hover-color);
+            text-decoration: none;
+            color: white;
+        }
+        
+        /* Animação de check */
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .success-checkmark .check-icon {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            border-radius: 50%;
+            box-sizing: content-box;
+            border: none;
+            background: linear-gradient(145deg, #ffffff, #f5f9ff);
+            box-shadow: 0 6px 15px rgba(15, 117, 188, 0.15), 
+                        0 1px 2px rgba(0, 0, 0, 0.05),
+                        inset 0 -2px 0 rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(0);
+            transition: transform 0.2s ease;
+        }
+        
+        .success-checkmark .check-icon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 117, 188, 0.2), 
+                        0 1px 3px rgba(0, 0, 0, 0.08),
+                        inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+        }
+        
+        .success-checkmark .check-icon:after {
+            content: "";
+            display: block;
+            width: 35px;
+            height: 25px;
+            border: none;
+            border-bottom: 6px solid var(--secondary-color);
+            border-left: 6px solid var(--secondary-color);
+            transform: rotate(-45deg) translate(3px, -4px);
+            border-radius: 2px;
+            box-shadow: -2px 2px 0 rgba(0, 0, 0, 0.08);
+        }
+        
+        .success-checkmark .check-icon:before {
+            content: "";
+            position: absolute;
+            width: 92%;
+            height: 92%;
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), rgba(240, 249, 255, 0.5));
+            box-shadow: inset 0 0 25px rgba(15, 117, 188, 0.05);
+            z-index: 0;
+        }
+        
+        .success-checkmark:before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle, rgba(15, 117, 188, 0.08) 0%, rgba(15, 117, 188, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        .success-checkmark:after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 10px;
+            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: -1;
+        }
+        
+        /* Otimizações para orientação paisagem em dispositivos móveis */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .form-container {
+                max-width: 90%;
+                margin: 10px auto;
+            }
+            
+            .form-header {
+                padding: 15px;
+            }
+            
+            .thank-you-content {
+                padding: 30px 20px;
+            }
+        }
+        
+        /* Melhorias para acessibilidade de toque */
+        @media (hover: none) and (pointer: coarse) {
+            .btn-voltar {
+                cursor: pointer;
+                touch-action: manipulation;
+                min-height: 44px;
+                font-size: 16px;
+                padding: 14px 30px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            
+            .form-container {
+                border-radius: 10px;
+                overflow: hidden;
+                margin: 10px;
+                width: calc(100% - 20px);
+                max-width: 100%;
+            }
+            
+            .form-header {
+                padding: 20px;
+            }
+            
+            .header-logo {
+                max-width: 200px;
+            }
+            
+            .thank-you-content {
+                padding: 30px 20px;
+            }
+            
+            .thank-you-title {
+                font-size: 24px;
+            }
+            
+            .thank-you-message {
+                font-size: 16px;
+                margin-bottom: 30px;
+            }
+            
+            .btn-voltar {
+                width: 100%;
+                padding: 14px 20px;
+                font-size: 16px;
+                white-space: normal;
+                line-height: 1.5;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 50px;
+            }
+            
+            .success-checkmark {
+                width: 70px;
+                height: 70px;
+                margin-bottom: 25px;
+            }
+            
+            .success-checkmark .check-icon {
+                width: 70px;
+                height: 70px;
+                box-shadow: 0 4px 12px rgba(15, 117, 188, 0.15), 
+                            0 1px 2px rgba(0, 0, 0, 0.05),
+                            inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+            }
+            
+            .success-checkmark .check-icon:after {
+                width: 30px;
+                height: 21px;
+                border-width: 5px;
+                transform: rotate(-45deg) translate(2px, -3px);
+            }
+            
+            .success-checkmark:before {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .success-checkmark:after {
+                width: 60%;
+                height: 8px;
+            }
+        }
+        
+        /* Media query específica para dispositivos muito pequenos */
+        @media (max-width: 360px) {
+            .thank-you-content {
+                padding: 25px 15px;
+            }
+            
+            .thank-you-title {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            
+            .thank-you-message {
+                font-size: 15px;
+                margin-bottom: 25px;
+            }
+            
+            .success-checkmark {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 20px;
+            }
+            
+            .success-checkmark .check-icon {
+                width: 60px;
+                height: 60px;
+                box-shadow: 0 4px 10px rgba(15, 117, 188, 0.15);
+            }
+            
+            .success-checkmark .check-icon:after {
+                width: 26px;
+                height: 18px;
+                border-width: 4px;
+                transform: rotate(-45deg) translate(2px, -3px);
+            }
+            
+            .success-checkmark:before {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .success-checkmark:after {
+                width: 55%;
+                height: 6px;
+            }
+            
+            .btn-voltar {
+                min-height: 44px;
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container thank-you-container">
+        <div class="form-header">
+            <img src="https://static.wixstatic.com/media/056676_38b0c30273f94ab8b386921f459c7b91~mv2.png/v1/crop/x_0,y_9,w_2300,h_347/fill/w_265,h_40,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/_edited.png" alt="Persevera Logo" class="header-logo">
+        </div>
+        <div class="thank-you-content">
+            <div class="thank-you-icon">
+                <div class="success-checkmark">
+                    <div class="check-icon">
+                        <!-- Símbolo de check simplificado por CSS -->
+                    </div>
+                </div>
+            </div>
+            <h2 class="thank-you-title">Obrigado!</h2>
+            <p class="thank-you-message">Suas informações foram enviadas com sucesso.</p>
+            <div class="thank-you-actions">
+                <a href="https://www.persevera.com.br/" class="btn-voltar" target="_top" rel="noopener" onclick="window.top.location.href='https://www.persevera.com.br/'; return false;">Voltar para o site</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Script para garantir o redirecionamento
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnVoltar = document.querySelector('.btn-voltar');
+            
+            if (btnVoltar) {
+                btnVoltar.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Usar window.top para garantir que a navegação ocorra na janela principal, não no iframe
+                    window.top.location.href = 'https://www.persevera.com.br/';
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
