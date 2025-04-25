@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ficha Cadastral - Persevera</title>
+    
+    <!-- Adobe Fonts (Typekit) para Avenir - Apenas como exemplo, precisa ser substituído por um kit real -->
+    <link rel="stylesheet" href="https://use.typekit.net/abc1234.css">
+    
+    <!-- Google Fonts alternativa - Fontes similares à Avenir -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Principal -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    
+    <!-- Email Validator via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/index.min.js"></script>
+    
+    <!-- Verificação do carregamento do Email Validator -->
+    <script>
+        // Verificar se a biblioteca foi carregada corretamente e definir um fallback se necessário
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof EmailValidator === 'undefined' || typeof EmailValidator.validate !== 'function') {
+                console.warn('Email Validator não carregado corretamente. Usando implementação local.');
+                window.EmailValidator = {
+                    validate: function(email) {
+                        // Implementação de fallback usando regex para validação de email
+                        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                        return emailRegex.test(email);
+                    }
+                };
+            } else {
+                console.log('Email Validator carregado com sucesso.');
+            }
+            
+            // Teste da biblioteca para confirmar funcionamento
+            console.log('TESTE VALIDADOR DE EMAIL:');
+            const testEmails = [
+                'usuario@exemplo.com',      // Válido
+                'usuario@exemplo.com.br',   // Válido
+                'usuario.nome@exemplo.co',  // Válido
+                'usuario',                  // Inválido
+                'usuario@',                 // Inválido
+                'usuario@exemplo',          // Inválido
+                '@exemplo.com',             // Inválido
+                'usuario@.com'              // Inválido
+            ];
+            
+            testEmails.forEach(email => {
+                console.log(`${email}: ${EmailValidator.validate(email) ? 'VÁLIDO' : 'INVÁLIDO'}`);
+            });
+        });
+    </script>
+    
+    <style>
+        /* Estilos específicos deste formulário */
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <img src="../assets/img/persevera-logo.png" alt="Persevera Logo" class="header-logo">
+        </div>
+        <form id="cadastro-form" class="jotform-form" method="post" action="https://submit.jotform.com/submit/250986205951665">
+            <input type="hidden" name="formID" value="250986205951665">
+            
+            <div class="form-content">
+                <!-- Navegação por abas -->
+                <div class="form-tabs">
+                    <div class="form-tab active" data-tab="tab-1">Dados Pessoais</div>
+                    <div class="form-tab" data-tab="tab-2">Contato</div>
+                    <div class="form-tab" data-tab="tab-3">Envio de Documentos</div>
+                    <div class="form-tab" data-tab="tab-4">Conformidade e Termos</div>
+                </div>
+                
+                <!-- Seção de Dados Pessoais -->
+                <div id="tab-1" class="tab-content active">
+                    <div class="form-section-header">
+                        <h2 class="form-section-title">Dados Pessoais</h2>
+                    </div>
+                    
+                    <div class="required-note">
+                        <span>*</span> Campos obrigatórios
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_94">Nome Completo</label>
+                            <input type="text" id="input_94" name="q94_nomeCompleto" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_102">Sexo</label>
+                            <select class="form-control" id="input_102" name="q102_sexo" required>
+                                <option value="">Selecione</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_103">Estado Civil</label>
+                            <select class="form-control" id="input_103" name="q103_estadoCivil" required>
+                                <option value="">Selecione</option>
+                                <option value="Solteiro(a)">Solteiro(a)</option>
+                                <option value="Casado(a)">Casado(a)</option>
+                                <option value="Divorciado(a)">Divorciado(a)</option>
+                                <option value="Viúvo(a)">Viúvo(a)</option>
+                                <option value="União Estável">União Estável</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_95">CPF</label>
+                            <input type="text" id="input_95" name="q95_cpf" class="form-control" placeholder="000.000.000-00" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_96">Nacionalidade</label>
+                            <input type="text" id="input_96" name="q96_nacionalidade" class="form-control" value="Brasileiro(a)" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_97">Naturalidade</label>
+                            <input type="text" id="input_97" name="q97_naturalidade" class="form-control" placeholder="Cidade e Estado de Nascimento" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_104">Data de Nascimento</label>
+                            <input type="text" id="input_104" name="q104_dataNascimento[full]" class="form-control" placeholder="DD/MM/AAAA" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_105">Tipo de Documento</label>
+                            <select class="form-control" id="input_105" name="q105_tipoDocumento" required>
+                                <option value="">Selecione</option>
+                                <option value="RG">RG</option>
+                                <option value="CNH">CNH</option>
+                                <option value="Passaporte">Passaporte</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_98">Nº do Documento</label>
+                            <input type="text" id="input_98" name="q98_numeroDocumento" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_106">Data de Expedição</label>
+                            <input type="text" id="input_106" name="q106_dataExpedicao[full]" class="form-control" placeholder="DD/MM/AAAA" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_99">Órgão Emissor</label>
+                            <input type="text" id="input_99" name="q99_orgaoEmissor" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_100">Nome da Mãe</label>
+                            <input type="text" id="input_100" name="q100_nomeMae" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_101">Nome do Pai</label>
+                            <input type="text" id="input_101" name="q101_nomePai" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <div></div> <!-- Espaço vazio para alinhamento -->
+                        <button type="button" class="nav-button next-tab" data-next="tab-2">Próximo</button>
+                    </div>
+                </div>
+                
+                <!-- Seção de Contato -->
+                <div id="tab-2" class="tab-content">
+                    <div class="form-section-header">
+                        <h2 class="form-section-title">Contato</h2>
+                    </div>
+                    
+                    <div class="required-note">
+                        <span>*</span> Campos obrigatórios
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_108">CEP</label>
+                            <input type="text" id="input_108" name="q108_cep" class="form-control" placeholder="00000-000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_109">Logradouro</label>
+                            <input type="text" id="input_109" name="q109_logradouro" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_112">Número</label>
+                            <input type="text" id="input_112" name="q112_numero" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_113">Complemento</label>
+                            <input type="text" id="input_113" name="q113_complemento" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_111">Bairro</label>
+                            <input type="text" id="input_111" name="q111_bairro" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_110">Cidade</label>
+                            <input type="text" id="input_110" name="q110_cidade" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_114">Estado</label>
+                            <select class="form-control" id="input_114" name="q114_estado" required>
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required" for="input_118">Telefone</label>
+                            <div class="phone-input-container">
+                                <div id="country-select" class="country-select">
+                                    <img src="https://flagcdn.com/br.svg" alt="Brasil" id="selected-flag">
+                                    <span class="country-code" id="selected-code">+55</span>
+                                    <span class="dropdown-icon">▼</span>
+                                </div>
+                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
+                                <!-- Campo oculto para armazenar o código do país -->
+                                <input type="hidden" id="input_118_country_code" value="+55">
+                                <div id="country-dropdown" class="country-dropdown">
+                                    <!-- Lista de países será gerada via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_117">E-mail</label>
+                            <input type="email" id="input_117" name="q117_email" class="form-control" placeholder="exemplo@exemplo.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="nav-button prev prev-tab" data-prev="tab-1" tabindex="-1">Anterior</button>
+                        <button type="button" class="nav-button next-tab" data-next="tab-3">Próximo</button>
+                    </div>
+                </div>
+                
+                <!-- Seção de Envio de Documentos -->
+                <div id="tab-3" class="tab-content">
+                    <div class="form-section-header">
+                        <h2 class="form-section-title">Envio de Documentos</h2>
+                    </div>
+                    
+                    <div class="required-note">
+                        <span>*</span> Campos obrigatórios
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_127">Documento de Identidade</label>
+                            <input type="file" id="input_127" name="q127_envioDocumentoIdentidade[]" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.html" required>
+                            <span class="form-hint">Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, HTML</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_128">Comprovante de Residência</label>
+                            <input type="file" id="input_128" name="q128_envioComprovanteResidencia[]" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.html" required>
+                            <span class="form-hint">Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, HTML</span>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="nav-button prev prev-tab" data-prev="tab-2">Anterior</button>
+                        <button type="button" class="nav-button next-tab" data-next="tab-4">Próximo</button>
+                    </div>
+                </div>
+                
+                <!-- Seção de Conformidade e Termos -->
+                <div id="tab-4" class="tab-content">
+                    <div class="form-section-header">
+                        <h2 class="form-section-title">Conformidade e Termos</h2>
+                    </div>
+                    
+                    <div class="required-note">
+                        <span>*</span> Campos obrigatórios
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Você é uma Pessoa Politicamente Exposta (PPE)?</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="q121_pessoaPoliticaExposta" value="Sim" class="radio-input" required>
+                                    <span class="radio-label">Sim</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="q121_pessoaPoliticaExposta" value="Não" class="radio-input" required>
+                                    <span class="radio-label">Não</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Você é parente ou possui relacionamento próximo com uma Pessoa Politicamente Exposta?</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="q122_parentePessoaPoliticaExposta" value="Sim" class="radio-input" required>
+                                    <span class="radio-label">Sim</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="q122_parentePessoaPoliticaExposta" value="Não" class="radio-input" required>
+                                    <span class="radio-label">Não</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_123">Se respondeu "Sim" a alguma das perguntas acima, forneça detalhes:</label>
+                            <textarea id="input_123" name="q123_seSim" class="form-control form-textarea"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Relacionamento com outros países</h3>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Você atesta que nasceu, é cidadão, possui nacionalidade, residência permanente ou domicílio fiscal diferente de Brasil?</label>
+                            <div class="radio-group">
+                                <label class="radio-item">
+                                    <input type="radio" name="q129_cidadaoBrasileiro" value="Sim" class="radio-input" required>
+                                    <span class="radio-label">Sim</span>
+                                </label>
+                                <label class="radio-item">
+                                    <input type="radio" name="q129_cidadaoBrasileiro" value="Não" class="radio-input" required>
+                                    <span class="radio-label">Não</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Origem dos Recursos</h3>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Declaração de Origem dos Recursos</label>
+                            <div class="checkbox-group" style="flex-direction: column;">
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="q124_declaracaoOrigemRecursos[]" value="Declaro que os recursos a serem investidos são próprios e de origem lícita" class="checkbox-input" required>
+                                    <span class="checkbox-label">Declaro que os recursos a serem investidos são próprios e de origem lícita</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="q124_declaracaoOrigemRecursos[]" value="Declaro que estou ciente das normas e regulamentos da CVM e do Banco Central do Brasil" class="checkbox-input" required>
+                                    <span class="checkbox-label">Declaro que estou ciente das normas e regulamentos da CVM e do Banco Central do Brasil</span>
+                                </label>
+                                <label class="checkbox-item">
+                                    <input type="checkbox" name="q124_declaracaoOrigemRecursos[]" value="Declaro que li e aceito os termos e condições dos fundos de investimento" class="checkbox-input" required>
+                                    <span class="checkbox-label">Declaro que li e aceito os termos e condições dos fundos de investimento</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="nav-button prev prev-tab" data-prev="tab-3">Anterior</button>
+                        <button type="submit" class="btn-submit">Enviar</button>
+                    </div>
+                    
+                    <input type="hidden" class="simple_spc" id="simple_spc" name="simple_spc" value="250986205951665">
+                </div>
+            </div>
+            
+            <!-- Campos ocultos para processamento de datas pelo JotForm -->
+            <div style="display:none">
+                <!-- Campos ocultos para Data de Nascimento -->
+                <input type="hidden" id="day_104" name="q104_dataNascimento[day]" />
+                <input type="hidden" id="month_104" name="q104_dataNascimento[month]" />
+                <input type="hidden" id="year_104" name="q104_dataNascimento[year]" />
+                
+                <!-- Campos ocultos para Data de Expedição -->
+                <input type="hidden" id="day_106" name="q106_dataExpedicao[day]" />
+                <input type="hidden" id="month_106" name="q106_dataExpedicao[month]" />
+                <input type="hidden" id="year_106" name="q106_dataExpedicao[year]" />
+            </div>
+        </form>
+    </div>
+    
+    <!-- JavaScript próprio e bibliotecas -->
+    <script src="../assets/js/vendor/jquery-1.8.0.min.js"></script>
+    <script src="../assets/js/vendor/json2.js"></script>
+    <script src="../assets/js/vendor/maskedinput.min.js"></script>
+    <script src="../assets/js/vendor/smoothscroll.min.js"></script>
+    
+    <script src="../assets/js/prototype.js"></script>
+    <script src="../assets/js/protoplus.js"></script>
+    <script src="../assets/js/protoplus-ui-form.js"></script>
+    <script src="../assets/js/jotform.js"></script>
+    <script src="../assets/js/calendarview.js"></script>
+    <script src="../assets/js/location.js"></script>
+    <script src="../assets/js/errorNavigation.js"></script>
+</body>
+</html>
