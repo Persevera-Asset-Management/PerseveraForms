@@ -1,3 +1,17 @@
+/*
+ * FORM-STYLES.CSS - Estilos Genéricos para Formulários
+ * ---------------------------------------------------
+ * Este arquivo contém os estilos para todos os formulários do sistema Persevera.
+ * Ele estende os estilos base definidos em main.css, adicionando funcionalidades
+ * específicas para campos de formulário, validação, e layout de formulários.
+ *
+ * REGRAS DE USO:
+ * - As definições aqui sobrescrevem main.css
+ * - Personalizações para formulários específicos devem ser feitas em seus próprios arquivos
+ *   (ex: ficha-cadastral.css, termo-adesao.css, etc.)
+ * - Mantenha apenas estilos que se aplicam a TODOS os formulários
+ */
+
 :root {
     --primary-color: #124A81;
     --primary-dark: #2980b9;
@@ -93,13 +107,14 @@
     margin-left: 4px;
 }
 
+/* 
+ * Modificações específicas para .form-control em formulários genéricos 
+ * Nota: A definição base está em main.css
+ */
 .form-control {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
+    /* Ajustes específicos para formulários genéricos */
     border-radius: 4px;
-    font-size: 14px;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    padding: 12px 15px;  /* Padding específico para formulários genéricos */
 }
 
 .form-control:focus {

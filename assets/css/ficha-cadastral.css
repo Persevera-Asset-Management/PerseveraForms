@@ -1,3 +1,15 @@
+/*
+ * FICHA-CADASTRAL.CSS - Estilos Específicos para Ficha Cadastral
+ * -------------------------------------------------------------
+ * Este arquivo contém customizações exclusivas para a ficha cadastral.
+ * Ele depende de main.css e form-styles.css, e tem a maior especificidade.
+ *
+ * REGRAS DE USO:
+ * - Adicione apenas estilos específicos da ficha cadastral
+ * - Evite sobrescrever estilos globais a menos que seja absolutamente necessário
+ * - Para alterações que devem afetar todos os formulários, edite form-styles.css
+ */
+
 /* ficha-cadastral.css - Estilos específicos para a ficha cadastral */
 
 /* Estilo para as abas */
@@ -111,8 +123,29 @@
     font-size: 10px;
 }
 
+/* 
+ * Modificações específicas para campos de formulário na ficha cadastral
+ * Estas regras complementam as definições base em main.css e form-styles.css
+ */
+
+/* Estilo específico para o campo de telefone */
 .phone-input-container .form-control {
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 6px 6px 0; /* Border radius especial para o campo de telefone */
+}
+
+/* Estados específicos dos campos na ficha cadastral */
+.form-control.cep-valido {
+    border-color: var(--secondary-color) !important;
+    background-color: rgba(15, 117, 188, 0.1) !important;
+}
+
+/* Estilo para indicador de carregamento no campo CEP */
+.form-control.loading {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 38 38" stroke="rgba(0,0,0,0.5)"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".25" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 40px;
 }
 
 .country-dropdown {
@@ -209,21 +242,6 @@ input[type="file"].file-error + .file-error-message {
 
 select.doc-type-selected ~ .doc-type-warning {
     display: block;
-}
-
-/* Estilo para o campo com CEP válido */
-.form-control.cep-valido {
-    border-color: var(--secondary-color) !important;
-    background-color: rgba(15, 117, 188, 0.1) !important;
-}
-
-/* Estilo para indicador de carregamento no campo CEP */
-.form-control.loading {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 38 38" stroke="rgba(0,0,0,0.5)"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".25" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg>');
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 20px;
-    padding-right: 40px;
 }
 
 /* Ajuste responsivo específico para ficha cadastral */

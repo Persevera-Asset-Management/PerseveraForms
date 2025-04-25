@@ -1,3 +1,18 @@
+/*
+ * MAIN.CSS - Estilos Globais Persevera
+ * --------------------------------------
+ * Este arquivo contém os estilos base que se aplicam a todo o sistema.
+ * Aqui são definidas as variáveis CSS, tipografia e componentes fundamentais.
+ * 
+ * HIERARQUIA CSS:
+ * 1. main.css: Define os estilos fundamentais e padrões globais
+ * 2. form-styles.css: Adiciona estilos específicos para formulários
+ * 3. arquivos específicos (ex: ficha-cadastral.css): Personalizam componentes para casos específicos
+ *
+ * IMPORTANTE: Qualquer mudança aqui afeta todo o sistema. Para personalizações
+ * específicas, use os arquivos CSS dedicados de cada componente.
+ */
+
 @font-face {
     font-family: 'Avenir';
     src: url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff2') format('woff2'),
@@ -165,6 +180,7 @@ body {
 }
 
 .form-control {
+    /* Propriedades básicas de todos os inputs */
     width: 100%;
     padding: 10px 12px;
     border: 1px solid var(--input-border);
@@ -172,6 +188,11 @@ body {
     font-size: 14px;
     transition: all 0.3s ease;
     font-family: var(--font-light);
+    
+    /* Propriedades padrão para todos os controles de formulário */
+    background-color: var(--white);
+    color: var(--text-color);
+    box-sizing: border-box;
 }
 
 .form-control:hover {
