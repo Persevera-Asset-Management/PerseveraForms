@@ -970,354 +970,672 @@
     <script src="../assets/js/calendarview.js"></script>
     <script src="../assets/js/location.js"></script>
     <script src="../assets/js/errorNavigation.js"></script>
-    <script src="../assets/js/form-tabs.js"></script>
-
-    <!-- Script personalizado para validação de campos -->
+    
     <script>
+        // Formatação de campos
         document.addEventListener('DOMContentLoaded', function() {
+            // Detectar se o dispositivo é mobile
+            const isMobile = window.innerWidth < 768;
+            
             // Elementos
-            const formTabs = document.querySelectorAll('.form-tab');
+            const tabs = document.querySelectorAll('.form-tab');
             const tabContents = document.querySelectorAll('.tab-content');
             const nextButtons = document.querySelectorAll('.next-tab');
             const prevButtons = document.querySelectorAll('.prev-tab');
-            const form = document.getElementById('cadastro-form');
             
-            // Formatação para campos específicos
-            // CPF
-            const cpfInput = document.getElementById('input_95');
-            if (cpfInput) {
-                jQuery(cpfInput).mask('999.999.999-99');
-                cpfInput.addEventListener('blur', function() {
-                    validateCPF(this);
-                });
+            // Função para mudar de aba
+            function switchTab(tabId) {
+                // Remove a classe ativa de todas as abas
+                tabs.forEach(tab => tab.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Adiciona a classe ativa à aba selecionada
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Rola para o topo do formulário em dispositivos móveis
+                if (isMobile) {
+                    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+                }
             }
             
-            // Data de Nascimento e Expedição
-            const dateFields = [
-                document.getElementById('input_104'),
-                document.getElementById('input_106')
-            ];
-            
-            dateFields.forEach(function(field) {
-                if (field) {
-                    jQuery(field).mask('99/99/9999');
-                    field.addEventListener('blur', function() {
-                        validateDate(this);
-                    });
-                    field.addEventListener('input', function(e) {
-                        // Preencher os campos ocultos para o JotForm
-                        const fieldId = e.target.id;
-                        const parts = e.target.value.split('/');
-                        if (parts.length === 3 && parts[2].length === 4) {
-                            document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
-                            document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
-                            document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
-                        }
-                    });
-                }
+            // Adiciona event listeners para as abas
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
             });
             
-            // CEP
-            const cepField = document.getElementById('input_108');
-            if (cepField) {
-                jQuery(cepField).mask('99999-999');
-                cepField.addEventListener('blur', function() {
-                    if (this.value.replace(/\D/g, '').length === 8) {
-                        searchCEP(this.value);
-                    }
-                });
-            }
-            
-            // Telefone
-            const phoneField = document.getElementById('input_118');
-            if (phoneField) {
-                jQuery(phoneField).mask('(99) 99999-9999');
-            }
-            
-            // Email
-            const emailField = document.getElementById('input_117');
-            if (emailField) {
-                emailField.addEventListener('blur', function() {
-                    validateEmail(this);
-                });
-            }
-            
-            // Validação de CPF
-            function validateCPF(input) {
-                const cpf = input.value.replace(/\D/g, '');
-                if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
-                    showError(input, 'CPF inválido');
-                    return false;
-                }
-                
-                let sum = 0;
-                let remainder;
-                
-                for (let i = 1; i <= 9; i++) {
-                    sum = sum + parseInt(cpf.substring(i-1, i)) * (11 - i);
-                }
-                
-                remainder = (sum * 10) % 11;
-                
-                if ((remainder === 10) || (remainder === 11)) {
-                    remainder = 0;
-                }
-                
-                if (remainder !== parseInt(cpf.substring(9, 10))) {
-                    showError(input, 'CPF inválido');
-                    return false;
-                }
-                
-                sum = 0;
-                for (let i = 1; i <= 10; i++) {
-                    sum = sum + parseInt(cpf.substring(i-1, i)) * (12 - i);
-                }
-                
-                remainder = (sum * 10) % 11;
-                
-                if ((remainder === 10) || (remainder === 11)) {
-                    remainder = 0;
-                }
-                
-                if (remainder !== parseInt(cpf.substring(10, 11))) {
-                    showError(input, 'CPF inválido');
-                    return false;
-                }
-                
-                removeError(input);
-                return true;
-            }
-            
-            // Validação de Data
-            function validateDate(input) {
-                const dateValue = input.value;
-                if (!dateValue) return;
-                
-                const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-                const matches = dateValue.match(regex);
-                
-                if (!matches) {
-                    showError(input, 'Formato de data inválido');
-                    return false;
-                }
-                
-                const day = parseInt(matches[1]);
-                const month = parseInt(matches[2]);
-                const year = parseInt(matches[3]);
-                
-                // Verificar se a data é válida
-                if (month < 1 || month > 12) {
-                    showError(input, 'Mês inválido');
-                    return false;
-                }
-                
-                // Verificar os dias conforme o mês
-                const daysInMonth = new Date(year, month, 0).getDate();
-                if (day < 1 || day > daysInMonth) {
-                    showError(input, 'Dia inválido para o mês informado');
-                    return false;
-                }
-                
-                // Verificar idade mínima (18 anos) para data de nascimento
-                if (input.id === 'input_104') {
-                    const birthDate = new Date(year, month - 1, day);
-                    const today = new Date();
-                    const age = today.getFullYear() - birthDate.getFullYear();
+            // Botões de próximo
+            nextButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const nextTabId = this.getAttribute('data-next');
                     
-                    // Ajustar idade se ainda não completou aniversário no ano corrente
-                    const m = today.getMonth() - birthDate.getMonth();
-                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                        if (age - 1 < 18) {
-                            showError(input, 'É necessário ter pelo menos 18 anos');
-                            return false;
-                        }
-                    } else if (age < 18) {
-                        showError(input, 'É necessário ter pelo menos 18 anos');
-                        return false;
+                    // Valida os campos da aba atual antes de avançar
+                    const currentTabId = document.querySelector('.tab-content.active').id;
+                    if (validateTabFields(currentTabId)) {
+                        switchTab(nextTabId);
                     }
-                }
-                
-                removeError(input);
-                return true;
-            }
+                });
+            });
             
-            // Validação de Email
-            function validateEmail(input) {
-                if (!input.value) return;
-                
-                if (!EmailValidator.validate(input.value)) {
-                    showError(input, 'Email inválido');
-                    return false;
-                }
-                
-                removeError(input);
-                return true;
-            }
+            // Botões de anterior
+            prevButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const prevTabId = this.getAttribute('data-prev');
+                    switchTab(prevTabId);
+                });
+            });
             
-            // Busca CEP e preenche campos de endereço
-            function searchCEP(cep) {
-                cep = cep.replace(/\D/g, '');
-                if (cep.length !== 8) return;
+            // Função para validar campos de uma aba específica
+            function validateTabFields(tabId) {
+                const currentTab = document.getElementById(tabId);
+                const requiredFields = currentTab.querySelectorAll('input[required], select[required], textarea[required]');
                 
-                const cepField = document.getElementById('input_108');
-                cepField.classList.add('loading');
-                
-                fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                    .then(response => response.json())
-                    .then(data => {
-                        cepField.classList.remove('loading');
-                        
-                        if (data.erro) {
-                            showError(cepField, 'CEP não encontrado');
-                            return;
-                        }
-                        
-                        removeError(cepField);
-                        cepField.classList.add('cep-valido');
-                        
-                        // Preencher campos de endereço
-                        if (document.getElementById('input_109')) document.getElementById('input_109').value = data.logradouro;
-                        if (document.getElementById('input_111')) document.getElementById('input_111').value = data.bairro;
-                        if (document.getElementById('input_110')) document.getElementById('input_110').value = data.localidade;
-                        
-                        // Selecionar estado
-                        const estadoSelect = document.getElementById('input_114');
-                        if (estadoSelect) {
-                            for (let i = 0; i < estadoSelect.options.length; i++) {
-                                if (estadoSelect.options[i].value === data.uf) {
-                                    estadoSelect.selectedIndex = i;
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        // Focar no campo número
-                        if (document.getElementById('input_112')) {
-                            document.getElementById('input_112').focus();
-                        }
-                    })
-                    .catch(error => {
-                        cepField.classList.remove('loading');
-                        showError(cepField, 'Erro ao buscar CEP');
-                        console.error(error);
-                    });
-            }
-            
-            // Mostrar mensagem de erro
-            function showError(input, message) {
-                // Remover erro existente
-                removeError(input);
-                
-                // Adicionar classe de erro
-                input.classList.add('error');
-                
-                // Criar elemento de mensagem de erro
-                const errorElement = document.createElement('div');
-                errorElement.className = 'error-message';
-                errorElement.textContent = message;
-                
-                // Inserir após o input
-                input.parentNode.insertBefore(errorElement, input.nextSibling);
-            }
-            
-            // Remover mensagem de erro
-            function removeError(input) {
-                input.classList.remove('error');
-                
-                // Remover mensagem de erro se existir
-                const nextSibling = input.nextElementSibling;
-                if (nextSibling && nextSibling.classList.contains('error-message')) {
-                    nextSibling.remove();
-                }
-            }
-            
-            // Validar todos os campos obrigatórios
-            function validateRequiredFields(container) {
-                const requiredFields = container.querySelectorAll('input[required], select[required], textarea[required]');
                 let isValid = true;
+                let firstInvalidField = null;
                 
                 requiredFields.forEach(field => {
-                    // Remover mensagem de erro existente
-                    removeError(field);
-                    
-                    // Verificar se está vazio
                     if (!field.value.trim()) {
-                        showError(field, 'Este campo é obrigatório');
                         isValid = false;
+                        field.style.borderColor = 'var(--error-color)';
+                        field.style.backgroundColor = 'var(--error-bg)';
+                        
+                        // Armazena o primeiro campo inválido
+                        if (!firstInvalidField) {
+                            firstInvalidField = field;
+                        }
+                        
+                        // Adiciona mensagem de erro se não existir
+                        let errorMsg = field.nextElementSibling;
+                        if (!errorMsg || !errorMsg.classList.contains('error-message')) {
+                            errorMsg = document.createElement('div');
+                            errorMsg.className = 'error-message';
+                            errorMsg.textContent = 'Este campo é obrigatório';
+                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                        }
                     } else {
-                        // Validações específicas para cada tipo de campo
-                        if (field.id === 'input_95') { // CPF
-                            if (!validateCPF(field)) isValid = false;
-                        } else if (field.id === 'input_104' || field.id === 'input_106') { // Datas
-                            if (!validateDate(field)) isValid = false;
-                        } else if (field.id === 'input_117') { // Email
-                            if (!validateEmail(field)) isValid = false;
+                        // Remove estilo de erro
+                        field.style.borderColor = '';
+                        field.style.backgroundColor = '';
+                        
+                        // Remove mensagem de erro se existir
+                        const errorMsg = field.nextElementSibling;
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
                         }
                     }
                 });
+                
+                // Se não for válido, mostra uma mensagem para o usuário
+                if (!isValid) {
+                    // Em dispositivos móveis, rola suavemente até o primeiro campo inválido
+                    if (window.innerWidth < 768 && firstInvalidField) {
+                        setTimeout(() => {
+                            firstInvalidField.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center'
+                            });
+                            firstInvalidField.focus();
+                        }, 100);
+                    } else if (firstInvalidField) {
+                        firstInvalidField.focus();
+                    }
+                    
+                    alert('Por favor, preencha todos os campos obrigatórios antes de continuar.');
+                }
                 
                 return isValid;
             }
             
-            // Botões de próximo - validar campos antes de continuar
-            nextButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-next');
-                    const currentTabId = document.querySelector('.tab-content.active').id;
+            // Função para validar caracteres especiais
+            function validateSpecialChars(input) {
+                // Remove mensagem de erro existente
+                const errorMsgId = 'special-char-error-' + input.id;
+                let existingError = document.getElementById(errorMsgId);
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Se o campo estiver vazio, retorna sem validar
+                if (!input.value.trim()) {
+                    input.classList.remove('special-char-error');
+                    return true;
+                }
+                
+                // Regex para validar caracteres especiais (permite letras, números, espaços e alguns caracteres comuns como . , - /)
+                // Ajuste o regex conforme necessário para os seus requisitos específicos
+                let regex;
+                
+                // Regex específico para cada tipo de campo
+                if (input.id === 'input_95') { // CPF
+                    regex = /^[0-9.-]+$/;
+                } else if (input.id === 'input_98') { // Número Documento
+                    regex = /^[0-9a-zA-Z-]+$/;
+                } else if (input.id === 'input_104' || input.id === 'input_106') { // Datas
+                    regex = /^[0-9/]+$/;
+                } else if (input.id === 'input_108') { // CEP
+                    regex = /^[0-9-]+$/;
+                } else if (input.id === 'input_112') { // Número (endereço)
+                    regex = /^[0-9a-zA-Z-/]+$/;
+                } else if (input.id === 'input_117') { // Email
+                    // Email já possui validação específica
+                    return true;
+                } else {
+                    // Para os demais campos de texto (nomes, endereços, etc.)
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()_-]+$/;
+                }
+                
+                if (!regex.test(input.value)) {
+                    // Campo contém caracteres não permitidos
+                    input.classList.add('special-char-error');
                     
-                    // Validar campos da aba atual
-                    if (validateRequiredFields(document.getElementById(currentTabId))) {
-                        // Navegação para a próxima aba
-                        formTabs.forEach(tab => tab.classList.remove('active'));
-                        tabContents.forEach(content => content.classList.remove('active'));
-                        
-                        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-                        document.getElementById(tabId).classList.add('active');
+                    // Adiciona mensagem de erro
+                    const errorMsg = document.createElement('div');
+                    errorMsg.id = errorMsgId;
+                    errorMsg.className = 'error-message';
+                    errorMsg.textContent = 'Caracteres especiais não permitidos';
+                    input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                    
+                    return false;
+                } else {
+                    // Campo válido
+                    input.classList.remove('special-char-error');
+                    return true;
+                }
+            }
+            
+            // Aplica validação de caracteres especiais a todos os campos de texto
+            const textInputs = document.querySelectorAll('input[type="text"], textarea');
+            textInputs.forEach(input => {
+                // Ignora campos que não devem ser validados para caracteres especiais
+                if (input.id === 'input_118') return; // Campo de telefone tem validação própria
+                
+                input.addEventListener('input', function() {
+                    validateSpecialChars(this);
+                });
+                
+                input.addEventListener('blur', function() {
+                    validateSpecialChars(this);
+                });
+                
+                // Validação inicial se o campo já tiver valor
+                if (input.value) {
+                    validateSpecialChars(input);
+                }
+            });
+            
+            // Formatação de CPF
+            const cpfInput = document.getElementById('input_95');
+            if (cpfInput) {
+                // Format CPF as user types
+                cpfInput.addEventListener('input', function() {
+                    let value = this.value.replace(/\D/g, '');
+                    if (value.length > 11) {
+                        value = value.substring(0, 11);
+                    }
+                    
+                    if (value.length > 9) {
+                        this.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                    } else if (value.length > 6) {
+                        this.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                    } else if (value.length > 3) {
+                        this.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                    } else {
+                        this.value = value;
+                    }
+
+                    // Real-time validation as user types
+                    validateCPF(this);
+                });
+
+                // Validate on blur
+                cpfInput.addEventListener('blur', function() {
+                    validateCPF(this);
+                });
+
+                // Initial validation if field has a value
+                if (cpfInput.value) {
+                    validateCPF(cpfInput);
+                }
+            }
+            
+            // Formatação de Datas
+            const dateFields = document.querySelectorAll('#input_104, #input_106');
+            dateFields.forEach(function(field) {
+                field.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 8) value = value.slice(0, 8);
+                    
+                    if (value.length > 4) {
+                        value = value.replace(/^(\d{2})(\d{2})(\d{0,4})$/, '$1/$2/$3');
+                    } else if (value.length > 2) {
+                        value = value.replace(/^(\d{2})(\d{0,2})$/, '$1/$2');
+                    }
+                    
+                    e.target.value = value;
+                    
+                    // Preencher os campos ocultos para o JotForm
+                    const fieldId = e.target.id;
+                    const parts = value.split('/');
+                    if (parts.length === 3 && parts[2].length === 4) {
+                        document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
+                        document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
+                        document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
                     }
                 });
             });
             
-            // Envio do formulário
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
+            // Formatação de CEP
+            const cepField = document.getElementById('input_108');
+            if (cepField) {
+                let lastValue = '';
+                
+                cepField.addEventListener('input', function(e) {
+                    let value = this.value.replace(/\D/g, '');
+                    if (value.length > 8) value = value.slice(0, 8);
                     
-                    let allValid = true;
-                    tabContents.forEach(content => {
-                        if (!validateRequiredFields(content)) {
-                            allValid = false;
-                        }
-                    });
+                    if (value.length > 5) {
+                        value = value.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
+                    }
                     
-                    if (allValid) {
-                        // Enviar formulário
-                        this.submit();
-                    } else {
-                        // Encontrar a primeira aba com erros e mostrar
-                        let foundTab = false;
-                        tabContents.forEach((content, index) => {
-                            if (!foundTab && content.querySelector('.error-message')) {
-                                foundTab = true;
-                                
-                                // Ativar a aba com erro
-                                formTabs.forEach(tab => tab.classList.remove('active'));
-                                tabContents.forEach(c => c.classList.remove('active'));
-                                
-                                formTabs[index].classList.add('active');
-                                content.classList.add('active');
-                                
-                                // Focar no primeiro campo com erro
-                                const firstError = content.querySelector('.error');
-                                if (firstError) {
-                                    firstError.focus();
-                                }
-                            }
-                        });
+                    this.value = value;
+                    
+                    // Verifica se chegamos a 8 dígitos numéricos pela primeira vez neste evento
+                    const numericValue = value.replace(/\D/g, '');
+                    if (numericValue.length === 8 && numericValue !== lastValue) {
+                        // Guarda o valor para evitar buscas duplicadas
+                        lastValue = numericValue;
                         
-                        alert('Por favor, corrija os erros antes de enviar o formulário.');
+                        // Pequeno timeout para garantir que a formatação do valor foi aplicada antes da busca
+                        setTimeout(() => {
+                            buscarCep(numericValue);
+                        }, 50);
+                    } else if (numericValue.length > 0 && numericValue.length < 8) {
+                        // Se o CEP estiver incompleto, mostrar feedback visual
+                        this.classList.remove('cep-valido');
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+                        
+                        // Remover mensagem de erro se existir
+                        const errorEl = document.getElementById('cep-error-msg');
+                        if (errorEl) errorEl.remove();
+                        
+                        // Remover mensagem de sucesso se existir
+                        const successEl = document.getElementById('cep-success-msg');
+                        if (successEl) successEl.remove();
+                        
+                        // Resetar o lastValue quando o valor é apagado
+                        lastValue = numericValue;
+                    }
+                });
+                
+                // Busca também quando o campo perde o foco
+                cepField.addEventListener('blur', function() {
+                    const cep = this.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        buscarCep(cep);
                     }
                 });
             }
+            
+            // Formatação de Telefone
+            const phoneField = document.getElementById('input_118');
+            if (phoneField) {
+                // Formatação padrão para telefone brasileiro
+                phoneField.addEventListener('input', function() {
+                    let value = this.value.replace(/\D/g, '');
+                    
+                    if (value.length > 11) value = value.slice(0, 11);
+                    
+                    if (value.length > 6) {
+                        // Verifica se é celular (11 dígitos) ou fixo (10 dígitos)
+                        if (value.length > 10) {
+                            // Celular: (XX) 9XXXX-XXXX
+                            value = value.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
+                        } else {
+                            // Fixo: (XX) XXXX-XXXX
+                            value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+                        }
+                    } else if (value.length > 2) {
+                        // Formatação parcial
+                        value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+                    }
+                    
+                    this.value = value;
+                });
+            }
+            
+            // Validação de e-mail
+            const emailField = document.getElementById('input_117');
+            if (emailField) {
+                emailField.addEventListener('input', function() {
+                    validateEmail(this);
+                });
+                
+                emailField.addEventListener('blur', function() {
+                    validateEmail(this);
+                });
+                
+                // Validação inicial se o campo já tiver um valor
+                if (emailField.value) {
+                    validateEmail(emailField);
+                }
+            }
+            
+            // Função para validar e-mail
+            function validateEmail(input) {
+                const errorMsgId = 'email-error-msg';
+                let existingError = document.getElementById(errorMsgId);
+                
+                // Remove mensagem de erro existente
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Se vazio, retorna para o estilo padrão
+                if (!input.value.trim()) {
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
+                    return;
+                }
+                
+                // Usando a biblioteca email-validator
+                if (!EmailValidator.validate(input.value)) {
+                    showError(input, 'Por favor, insira um e-mail válido.', errorMsgId);
+                    return false;
+                }
+                
+                // E-mail é válido
+                input.style.borderColor = 'var(--secondary-color)';
+                input.style.backgroundColor = '';
+                return true;
+            }
+            
+            // Função para validar idade mínima (18 anos)
+            function validateAge(birthDateStr) {
+                const parts = birthDateStr.split('/');
+                if (parts.length !== 3) return false;
+                
+                const day = parseInt(parts[0], 10);
+                const month = parseInt(parts[1], 10) - 1;
+                const year = parseInt(parts[2], 10);
+                
+                const birthDate = new Date(year, month, day);
+                const today = new Date();
+                
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                
+                return age >= 18;
+            }
+            
+            // CPF validation function
+            function validateCPF(input) {
+                const errorMsgId = 'cpf-error-msg';
+                let existingError = document.getElementById(errorMsgId);
+                
+                // Remove existing error message
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // If empty, reset to default style and return
+                if (!input.value.trim()) {
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
+                    return;
+                }
+                
+                // Extract only numbers
+                const cpf = input.value.replace(/\D/g, '');
+                
+                // Check if CPF has 11 digits
+                if (cpf.length !== 11) {
+                    showError(input, 'CPF deve conter 11 dígitos.', errorMsgId);
+                    return false;
+                }
+                
+                // Check if all digits are the same
+                if (/^(\d)\1{10}$/.test(cpf)) {
+                    showError(input, 'CPF inválido: todos os dígitos são iguais.', errorMsgId);
+                    return false;
+                }
+                
+                // Calculate first verification digit
+                let sum = 0;
+                for (let i = 0; i < 9; i++) {
+                    sum += parseInt(cpf.charAt(i)) * (10 - i);
+                }
+                let remainder = sum % 11;
+                let digit1 = remainder < 2 ? 0 : 11 - remainder;
+                
+                // Calculate second verification digit
+                sum = 0;
+                for (let i = 0; i < 10; i++) {
+                    sum += parseInt(cpf.charAt(i)) * (11 - i);
+                }
+                remainder = sum % 11;
+                let digit2 = remainder < 2 ? 0 : 11 - remainder;
+                
+                // Check if calculated digits match the provided ones
+                if (parseInt(cpf.charAt(9)) !== digit1 || parseInt(cpf.charAt(10)) !== digit2) {
+                    showError(input, 'CPF inválido.', errorMsgId);
+                    return false;
+                }
+                
+                // CPF is valid
+                input.style.borderColor = 'var(--secondary-color)';
+                input.style.backgroundColor = '';
+                return true;
+            }
+            
+            // Helper function to show validation error
+            function showError(input, message, errorMsgId) {
+                // Não aplicar estilos de erro se o elemento for um CEP válido
+                if (input.id === 'input_108' && input.classList.contains('cep-valido')) {
+                    return;
+                }
+                
+                input.style.borderColor = 'var(--error-color)';
+                input.style.backgroundColor = 'var(--error-bg)';
+                
+                const errorMsg = document.createElement('div');
+                errorMsg.id = errorMsgId;
+                errorMsg.className = 'error-message';
+                errorMsg.textContent = message;
+                errorMsg.style.color = 'var(--error-color)';
+                errorMsg.style.fontSize = '0.8rem';
+                errorMsg.style.marginTop = '4px';
+                
+                // Insert error message after the input or its container
+                if (input.id === 'input_118') {
+                    // Para o campo de telefone, inserir a mensagem após o container do telefone
+                    const phoneContainer = input.closest('.phone-input-container');
+                    phoneContainer.parentNode.insertBefore(errorMsg, phoneContainer.nextSibling);
+                } else {
+                    // Para outros campos, inserir a mensagem após o input
+                    input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                }
+            }
+            
+            // Função para buscar CEP na API ViaCEP
+            function buscarCep(cep) {
+                const cepInput = document.getElementById('input_108');
+                
+                // Remove classes anteriores
+                cepInput.classList.remove('cep-valido');
+                
+                // Também remover qualquer estilo de erro que possa ter sido aplicado anteriormente
+                cepInput.style.borderColor = '';
+                cepInput.style.backgroundColor = '';
+                
+                // Remove mensagem de erro anterior se existir
+                const errorEl = document.getElementById('cep-error-msg');
+                if (errorEl) errorEl.remove();
+                
+                // Remove mensagem de sucesso anterior se existir
+                const successEl = document.getElementById('cep-success-msg');
+                if (successEl) successEl.remove();
+                
+                // Mostra indicador de carregamento
+                cepInput.classList.add('loading');
+                
+                // Adiciona mensagem de busca
+                const statusMsg = document.createElement('div');
+                statusMsg.id = 'cep-status-msg';
+                statusMsg.className = 'form-hint';
+                statusMsg.textContent = 'Buscando endereço...';
+                cepInput.parentNode.appendChild(statusMsg);
+                
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao buscar o CEP');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Remove indicador de carregamento
+                        cepInput.classList.remove('loading');
+                        
+                        // Remove mensagem de status
+                        const statusEl = document.getElementById('cep-status-msg');
+                        if (statusEl) statusEl.remove();
+                        
+                        // Verifica se a API retornou erro
+                        if (data.erro) {
+                            showError(cepInput, 'CEP não encontrado', 'cep-error-msg');
+                            return;
+                        }
+                        
+                        // Preenche os campos com os dados retornados
+                        document.getElementById('input_109').value = data.logradouro || '';
+                        document.getElementById('input_111').value = data.bairro || '';
+                        document.getElementById('input_110').value = data.localidade || '';
+                        
+                        // Seleciona o estado no dropdown
+                        const estadoSelect = document.getElementById('input_114');
+                        for (let i = 0; i < estadoSelect.options.length; i++) {
+                            if (estadoSelect.options[i].value === data.uf) {
+                                estadoSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // Adiciona estilo visual de CEP válido
+                        cepInput.classList.add('cep-valido');
+                        cepInput.style.borderColor = 'var(--secondary-color)';
+                        
+                        // Adiciona mensagem de sucesso
+                        const successMsg = document.createElement('div');
+                        successMsg.id = 'cep-success-msg';
+                        successMsg.className = 'form-hint';
+                        successMsg.textContent = 'CEP válido! Endereço encontrado.';
+                        successMsg.style.color = 'var(--secondary-color)';
+                        cepInput.parentNode.appendChild(successMsg);
+                        
+                        // Foca no campo de número após preencher o endereço
+                        document.getElementById('input_112').focus();
+                    })
+                    .catch(error => {
+                        // Remove indicador de carregamento
+                        cepInput.classList.remove('loading');
+                        
+                        // Remove mensagem de status
+                        const statusEl = document.getElementById('cep-status-msg');
+                        if (statusEl) statusEl.remove();
+                        
+                        // Mostra mensagem de erro
+                        showError(cepInput, 'Erro ao buscar o CEP', 'cep-error-msg');
+                        console.error('Erro:', error);
+                    });
+            }
+            
+            // Validar o formulário antes do envio
+            document.getElementById('cadastro-form').addEventListener('submit', function(e) {
+                // Impedir o envio padrão inicialmente
+                e.preventDefault();
+                
+                const dataNascimento = document.getElementById('input_104').value;
+                const cpf = document.getElementById('input_95').value;
+                
+                // Validação de idade
+                if (!validateAge(dataNascimento)) {
+                    alert('Você deve ter pelo menos 18 anos para se cadastrar.');
+                    return false;
+                }
+                
+                // Validação de CPF
+                if (!validateCPF(document.getElementById('input_95'))) {
+                    alert('CPF inválido. Por favor, verifique o número informado.');
+                    return false;
+                }
+                
+                // Validação de e-mail
+                if (!validateEmail(document.getElementById('input_117'))) {
+                    alert('E-mail inválido. Por favor, verifique o endereço informado.');
+                    return false;
+                }
+                
+                // Validação de caracteres especiais em todos os campos de texto
+                let hasSpecialCharsError = false;
+                let firstInvalidField = null;
+                
+                // Percorre todos os inputs de texto e verifica caracteres especiais
+                const textInputs = document.querySelectorAll('input[type="text"], textarea');
+                textInputs.forEach(input => {
+                    // Ignora campos que têm validação própria
+                    if (input.id === 'input_118') return;
+                    
+                    // Valida o campo
+                    if (!validateSpecialChars(input)) {
+                        hasSpecialCharsError = true;
+                        if (!firstInvalidField) {
+                            firstInvalidField = input;
+                        }
+                    }
+                });
+                
+                // Se encontrou erros de caracteres especiais
+                if (hasSpecialCharsError) {
+                    // Em dispositivos móveis, rola suavemente até o primeiro campo inválido
+                    if (window.innerWidth < 768 && firstInvalidField) {
+                        setTimeout(() => {
+                            firstInvalidField.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center'
+                            });
+                            firstInvalidField.focus();
+                        }, 100);
+                    } else if (firstInvalidField) {
+                        firstInvalidField.focus();
+                    }
+                    
+                    alert('Por favor, remova os caracteres especiais dos campos destacados.');
+                    return false;
+                }
+                
+                // Garantir que os campos ocultos de data estejam preenchidos
+                const dateFields = document.querySelectorAll('#input_104, #input_106');
+                dateFields.forEach(function(field) {
+                    const fieldId = field.id;
+                    const parts = field.value.split('/');
+                    if (parts.length === 3) {
+                        document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
+                        document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
+                        document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
+                    }
+                });
+                
+                // Para garantir que todos os campos sejam enviados
+                this.submit();
+            });
         });
     </script>
 </body>
