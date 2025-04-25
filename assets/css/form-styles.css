@@ -1,0 +1,274 @@
+:root {
+    --primary-color: #3498db;
+    --primary-dark: #2980b9;
+    --secondary-color: #2ecc71;
+    --text-color: #333;
+    --text-light: #777;
+    --border-color: #ddd;
+    --error-color: #e74c3c;
+    --error-bg: #fde2e2;
+    --success-color: #27ae60;
+    --bg-color: #f9f9f9;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.form-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 20px;
+    text-align: center;
+}
+
+.form-header h1 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.form-header p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* Estilos para as abas */
+.form-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #f5f5f5;
+}
+
+.form-tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.form-tab.active {
+    color: var(--primary-color);
+    background-color: var(--white);
+}
+
+.form-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+.form-tab:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.form-tab span {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    background-color: #ddd;
+    color: #666;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.form-tab.active span {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Estilos para o conteúdo das abas */
+.tab-content {
+    display: none;
+    padding: 30px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group label.required::after {
+    content: '*';
+    color: var(--error-color);
+    margin-left: 4px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.form-control.invalid {
+    border-color: var(--error-color);
+    background-color: var(--error-bg);
+}
+
+.error-message {
+    display: none;
+    color: var(--error-color);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Estilo para select */
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+/* Estilo para checkbox */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Botões de navegação */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: #f5f5f5;
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background-color: #e9e9e9;
+}
+
+.btn-success {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .form-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+    
+    .form-tab {
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    .form-tab.active::after {
+        display: none;
+    }
+    
+    .form-tab.active {
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .tab-content {
+        padding: 20px 15px;
+    }
+    
+    .form-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+} 
