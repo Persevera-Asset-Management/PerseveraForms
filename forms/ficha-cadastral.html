@@ -294,7 +294,7 @@
                                 </div>
                                 <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
                                 <!-- Campo oculto para armazenar o código do país -->
-                                <input type="hidden" id="input_118_country_code" value="+55">
+                                <input type="hidden" id="input_118_country_code" name="q118_paisTelefone" value="+55">
                                 <div id="country-dropdown" class="country-dropdown">
                                     <!-- Lista de países será gerada via JavaScript -->
                                 </div>
@@ -482,6 +482,37 @@
     <script src="../assets/js/errorNavigation.js"></script>
     
     <script>
+        // Adicionar no início do script, após a declaração de variáveis
+        function addRealTimeErrorClearing() {
+            // Selecionar todos os campos do formulário
+            const formFields = document.querySelectorAll('input, select, textarea');
+            
+            formFields.forEach(field => {
+                field.addEventListener('input', function() {
+                    // Se o campo está com erro (borda vermelha)
+                    if (this.style.borderColor === 'var(--error-color)' || 
+                        this.style.backgroundColor === 'var(--error-bg)') {
+                        
+                        // Para campos obrigatórios, verificar se está preenchido
+                        if (this.required && !this.value.trim()) return;
+                        
+                        // Remover estilo de erro
+                        this.style.borderColor = '';
+                        this.style.backgroundColor = '';
+                        
+                        // Remover mensagem de erro se existir
+                        const nextEl = this.nextElementSibling;
+                        if (nextEl && nextEl.classList.contains('error-message')) {
+                            nextEl.remove();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Chamar esta função após o DOM ser carregado
+        addRealTimeErrorClearing();
+
         // Formatação de campos
         document.addEventListener('DOMContentLoaded', function() {
             // Detectar se o dispositivo é mobile
@@ -1193,24 +1224,50 @@
             // Formatação de Telefone
             const phoneField = document.getElementById('input_118');
             if (phoneField) {
-                // Formatação padrão para telefone brasileiro
                 phoneField.addEventListener('input', function() {
+                    // Obter o código do país selecionado
+                    const countryCode = document.getElementById('input_118_country_code').value;
                     let value = this.value.replace(/\D/g, '');
                     
-                    if (value.length > 11) value = value.slice(0, 11);
-                    
-                    if (value.length > 6) {
-                        // Verifica se é celular (11 dígitos) ou fixo (10 dígitos)
-                        if (value.length > 10) {
-                            // Celular: (XX) 9XXXX-XXXX
-                            value = value.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
-                        } else {
-                            // Fixo: (XX) XXXX-XXXX
-                            value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+                    // Formatação específica para cada país
+                    if (countryCode === '+55') {
+                        // Brasil
+                        if (value.length > 11) value = value.slice(0, 11);
+                        
+                        if (value.length > 6) {
+                            // Verifica se é celular (11 dígitos) ou fixo (10 dígitos)
+                            if (value.length > 10) {
+                                // Celular: (XX) 9XXXX-XXXX
+                                value = value.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
+                            } else {
+                                // Fixo: (XX) XXXX-XXXX
+                                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+                            }
+                        } else if (value.length > 2) {
+                            // Formatação parcial
+                            value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
                         }
-                    } else if (value.length > 2) {
-                        // Formatação parcial
-                        value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+                    } else if (countryCode === '+1') {
+                        // EUA/Canadá
+                        if (value.length > 10) value = value.slice(0, 10);
+                        
+                        if (value.length > 6) {
+                            // Formato: (XXX) XXX-XXXX
+                            value = value.replace(/^(\d{3})(\d{3})(\d{0,4})$/, '($1) $2-$3');
+                        } else if (value.length > 3) {
+                            // Formatação parcial
+                            value = value.replace(/^(\d{3})(\d{0,3})$/, '($1) $2');
+                        }
+                    } else {
+                        // Outros países - formato genérico
+                        if (value.length > 15) value = value.slice(0, 15);
+                        
+                        // Adicionar alguma formatação básica
+                        if (value.length > 8) {
+                            value = value.replace(/^(\d{4})(\d{4})(\d{0,7})$/, '$1 $2 $3');
+                        } else if (value.length > 4) {
+                            value = value.replace(/^(\d{4})(\d{0,4})$/, '$1 $2');
+                        }
                     }
                     
                     this.value = value;
@@ -1403,6 +1460,9 @@
                     return true;
                 }
                 
+                // Obter o código do país selecionado
+                const countryCode = document.getElementById('input_118_country_code').value;
+                
                 // Verificar se contém apenas os caracteres permitidos
                 const regex = /^[()\d\s-]+$/;
                 if (!regex.test(input.value)) {
@@ -1413,25 +1473,42 @@
                 // Extrair apenas números
                 const numericValue = input.value.replace(/\D/g, '');
                 
-                // Verificar o comprimento do número
-                if (numericValue.length < 10 || numericValue.length > 11) {
-                    showError(input, 'Telefone deve ter 10 ou 11 dígitos.', errorMsgId);
-                    return false;
-                }
-                
-                // Verificar DDD
-                const ddd = numericValue.substring(0, 2);
-                const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
-                
-                if (!validDDDs.includes(ddd)) {
-                    showError(input, 'DDD inválido.', errorMsgId);
-                    return false;
-                }
-                
-                // Se for celular (11 dígitos), verificar se começa com 9
-                if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
-                    showError(input, 'Celular deve começar com 9 após o DDD.', errorMsgId);
-                    return false;
+                // Validação específica para cada país
+                if (countryCode === '+55') {
+                    // Brasil: validação específica para números brasileiros
+                    
+                    // Verificar o comprimento do número
+                    if (numericValue.length < 10 || numericValue.length > 11) {
+                        showError(input, 'Telefone deve ter 10 ou 11 dígitos.', errorMsgId);
+                        return false;
+                    }
+                    
+                    // Verificar DDD
+                    const ddd = numericValue.substring(0, 2);
+                    const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
+                    
+                    if (!validDDDs.includes(ddd)) {
+                        showError(input, 'DDD inválido.', errorMsgId);
+                        return false;
+                    }
+                    
+                    // Se for celular (11 dígitos), verificar se começa com 9
+                    if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
+                        showError(input, 'Celular deve começar com 9 após o DDD.', errorMsgId);
+                        return false;
+                    }
+                } else if (countryCode === '+1') {
+                    // EUA/Canadá: deve ter 10 dígitos
+                    if (numericValue.length !== 10) {
+                        showError(input, 'Telefone dos EUA/Canadá deve ter 10 dígitos.', errorMsgId);
+                        return false;
+                    }
+                } else {
+                    // Para outros países, apenas verificar se o número tem pelo menos 8 dígitos
+                    if (numericValue.length < 8) {
+                        showError(input, 'O número de telefone deve ter pelo menos 8 dígitos.', errorMsgId);
+                        return false;
+                    }
                 }
                 
                 // Telefone válido
@@ -1840,6 +1917,22 @@
             
             // Validar todos os campos ao enviar o formulário
             document.getElementById('cadastro-form').addEventListener('submit', function(e) {
+                // Concatenar código do país com o número de telefone
+                const phoneInput = document.getElementById('input_118');
+                const countryCodeInput = document.getElementById('input_118_country_code');
+                
+                if (phoneInput && phoneInput.value && countryCodeInput && countryCodeInput.value) {
+                    // Criar um campo temporário com o telefone completo (código + número)
+                    const fullPhoneInput = document.createElement('input');
+                    fullPhoneInput.type = 'hidden';
+                    fullPhoneInput.name = 'q118_telefoneCompleto';
+                    fullPhoneInput.value = countryCodeInput.value + ' ' + phoneInput.value;
+                    this.appendChild(fullPhoneInput);
+                    
+                    // Log para teste
+                    console.log('Telefone completo:', fullPhoneInput.value);
+                }
+                
                 // Incluir validações adicionais
                 
                 // Validação de datas
@@ -2181,6 +2274,41 @@
                 errorMsg.className = 'error-message';
                 errorMsg.textContent = message;
                 input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                
+                // Adiciona event listener para remover erro assim que o usuário começar a digitar
+                const clearErrorOnInput = function() {
+                    // Verificação básica se o campo agora é válido
+                    if (input.required && !input.value.trim()) return; // Mantém erro se ainda estiver vazio
+                    
+                    // Para validações específicas
+                    if (input.id === 'input_95' && input.value.trim()) { // CPF
+                        if (input.value.replace(/\D/g, '').length !== 11) return; // Mantém erro se CPF ainda não tiver 11 dígitos
+                    } else if (input.id === 'input_117' && input.value.trim()) { // Email
+                        if (!input.value.includes('@') || !input.value.includes('.')) return; // Validação básica de email
+                    } else if (input.id === 'input_104' || input.id === 'input_106') { // Datas
+                        const parts = input.value.split('/');
+                        if (parts.length !== 3 || parts[2].length !== 4) return; // Mantém erro se formato incorreto
+                    }
+                    
+                    // Remove estilos de erro
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
+                    
+                    // Remove mensagem de erro
+                    const errorToRemove = document.getElementById(errorId);
+                    if (errorToRemove) {
+                        errorToRemove.remove();
+                    }
+                    
+                    // Remove este listener para evitar duplicação
+                    input.removeEventListener('input', clearErrorOnInput);
+                };
+                
+                // Remove listener anterior se existir para evitar duplicação
+                input.removeEventListener('input', clearErrorOnInput);
+                
+                // Adiciona o novo listener
+                input.addEventListener('input', clearErrorOnInput);
                 
                 return false;
             }

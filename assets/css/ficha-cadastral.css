@@ -99,7 +99,7 @@
 .country-select {
     display: flex;
     align-items: center;
-    padding: 8px 10px;
+    padding: 10px 10px;
     border: 1px solid var(--input-border);
     border-right: none;
     border-radius: 6px 0 0 6px;
@@ -155,12 +155,29 @@
     left: 0;
     z-index: 1000;
     width: 250px;
-    max-height: 200px;
+    max-height: 120px; /* Exatamente 3 países com 40px cada */
     overflow-y: auto;
     background-color: white;
     border: 1px solid var(--input-border);
     border-radius: 6px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) var(--light-color);
+}
+
+/* Estilização da barra de rolagem para navegadores WebKit (Chrome, Safari) */
+.country-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.country-dropdown::-webkit-scrollbar-track {
+    background: var(--light-color);
+    border-radius: 4px;
+}
+
+.country-dropdown::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color);
+    border-radius: 4px;
 }
 
 .country-item {
@@ -168,6 +185,8 @@
     align-items: center;
     padding: 8px 10px;
     cursor: pointer;
+    height: 40px; /* Altura fixa para cada item */
+    box-sizing: border-box;
 }
 
 .country-item:hover {
