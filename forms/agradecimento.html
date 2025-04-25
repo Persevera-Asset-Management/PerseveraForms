@@ -2,71 +2,54 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro Recebido - Persevera</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Obrigado - Persevera</title>
+    
+    <!-- CSS Reset e variáveis -->
+    <link rel="stylesheet" href="../assets/css/reset.css">
+    <link rel="stylesheet" href="../assets/css/variables.css">
+    
+    <!-- CSS Base -->
     <link rel="stylesheet" href="../assets/css/main.css">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        
-        .success-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: var(--form-bg);
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .success-icon {
-            font-size: 80px;
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-        }
-        
-        .success-title {
-            color: var(--primary-color);
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-        
-        .success-text {
-            color: var(--sub-text-color);
-            font-size: 16px;
-            margin-bottom: 30px;
-        }
-        
-        .header-logo {
-            max-width: 265px;
-            height: auto;
-            margin: 0 auto 30px;
-            display: block;
-        }
-        
-        .btn {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../assets/css/utilities.css">
+    
+    <!-- CSS específico da página -->
+    <link rel="stylesheet" href="../assets/css/thank-you.css">
 </head>
-<body>
-    <div class="success-container">
-        <img src="../assets/img/logo_persevera_horizontal_monocrome_preto.png" alt="Persevera Logo" class="header-logo">
-        
-        <div class="success-icon">✓</div>
-        
-        <h1 class="success-title">Cadastro Recebido com Sucesso!</h1>
-        
-        <p class="success-text">
-            Suas informações foram enviadas com sucesso.
-        </p>
-        
-        <a href="https://www.persevera.com.br/" class="btn">Voltar para o site</a>
+<body class="thank-you-page">
+    <div class="form-container thank-you-container">
+        <div class="form-header">
+            <img src="../assets/img/logo_persevera.png" alt="Persevera Logo" class="header-logo">
+        </div>
+        <div class="thank-you-content">
+            <div class="thank-you-icon">
+                <div class="success-checkmark">
+                    <div class="check-icon">
+                        <!-- Símbolo de check simplificado por CSS -->
+                    </div>
+                </div>
+            </div>
+            <h2 class="thank-you-title">Obrigado!</h2>
+            <p class="thank-you-message">Suas informações foram enviadas com sucesso.</p>
+            <div class="thank-you-actions">
+                <a href="https://www.persevera.com.br/" class="btn-voltar" target="_top" rel="noopener" onclick="window.top.location.href='https://www.persevera.com.br/'; return false;">Voltar para o site</a>
+            </div>
+        </div>
     </div>
+    
+    <script>
+        // Script para garantir o redirecionamento
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnVoltar = document.querySelector('.btn-voltar');
+            
+            if (btnVoltar) {
+                btnVoltar.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Usar window.top para garantir que a navegação ocorra na janela principal, não no iframe
+                    window.top.location.href = 'https://www.persevera.com.br/';
+                });
+            }
+        });
+    </script>
 </body>
 </html> 

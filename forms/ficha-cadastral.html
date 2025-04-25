@@ -16,6 +16,12 @@
     <!-- CSS Principal -->
     <link rel="stylesheet" href="../assets/css/main.css">
     
+    <!-- CSS de formulários -->
+    <link rel="stylesheet" href="../assets/css/form-styles.css">
+    
+    <!-- CSS específico para ficha cadastral -->
+    <link rel="stylesheet" href="../assets/css/ficha-cadastral.css">
+    
     <!-- Email Validator via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/index.min.js"></script>
     
@@ -54,523 +60,11 @@
             });
         });
     </script>
-    
-    <!-- Carregando fontes Avenir via @font-face -->
-    <style>
-        @font-face {
-            font-family: 'Avenir';
-            src: url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff2') format('woff2'),
-                 url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff') format('woff');
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-        }
-        
-        @font-face {
-            font-family: 'Avenir Light';
-            src: url('https://assets.persevera.com.br/fonts/Avenir-Light.woff2') format('woff2'),
-                 url('https://assets.persevera.com.br/fonts/Avenir-Light.woff') format('woff');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-        
-        /* Fallback para fontes web seguras caso as fontes Avenir não carreguem */
-        :root {
-            --primary-color: #124A81;
-            --secondary-color: #0F75BC;
-            --hover-color: #2554CC;
-            --submit-hover: #16AA52;
-            --background-color: #F3F3FE;
-            --form-bg: #FFFFFF;
-            --divider-color: #F3F3FE;
-            --text-color: #000000;
-            --sub-text-color: #57647e;
-            --input-border: rgba(195, 202, 216, 0.75);
-            --input-focus-border: rgba(46, 105, 255, 1);
-            --input-focus-shadow: rgba(201, 216, 254, 0.25);
-            --error-color: #e74c3c;
-            --error-bg: rgba(231, 76, 60, 0.1);
-            --light-color: #F5F5F5;
-            --dark-color: #333;
-            --font-primary: 'Avenir', 'avenir', 'Nunito', Helvetica, Arial, sans-serif;
-            --font-light: 'Avenir Light', 'avenir', 'Nunito Light', 'Nunito', Helvetica, Arial, sans-serif;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            background-color: var(--background-color);
-            padding: 20px;
-            color: var(--text-color);
-            font-family: var(--font-primary);
-        }
-        
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: var(--form-bg);
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
-        
-        .form-header {
-            padding: 40px 52px;
-            border-bottom: 1px solid var(--divider-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #FFFFFF;
-        }
-        
-        .header-logo {
-            max-width: 265px;
-            height: auto;
-            display: block;
-        }
-        
-        .form-logo {
-            width: 120px;
-            margin-right: 20px;
-        }
-        
-        .form-title {
-            font-size: 28px;
-            font-weight: 600;
-            font-family: var(--font-primary);
-            letter-spacing: -0.02em;
-            color: var(--primary-color);
-        }
-        
-        .form-content {
-            padding: 30px 38px;
-        }
-        
-        .form-section-header {
-            margin-top: 25px;
-            margin-bottom: 24px;
-        }
-        
-        .form-section-title {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-family: var(--font-primary);
-            color: var(--primary-color);
-            letter-spacing: -0.01em;
-            position: relative;
-            padding-bottom: 8px;
-        }
-        
-        .form-section-title:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background-color: var(--secondary-color);
-            border-radius: 3px;
-        }
-        
-        .divider {
-            height: 1px;
-            background-color: var(--divider-color);
-            margin: 25px 0;
-        }
-        
-        .form-row {
-            margin-bottom: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .form-group {
-            flex: 1;
-            min-width: 250px;
-        }
-        
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 14px;
-            font-family: var(--font-primary);
-        }
-        
-        .form-label.required::after {
-            content: " *";
-            color: var(--error-color);
-            font-weight: bold;
-        }
-        
-        .required-note {
-            font-size: 13px;
-            color: var(--sub-text-color);
-            margin-bottom: 15px;
-            font-style: italic;
-            text-align: right;
-        }
-        
-        .required-note span {
-            color: var(--error-color);
-            font-weight: bold;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            font-family: var(--font-light);
-        }
-        
-        .form-control:hover {
-            border-color: rgba(195, 202, 216, 0.5);
-            box-shadow: 0 0 0 2px rgba(195, 202, 216, 0.25);
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 3px var(--input-focus-shadow);
-        }
-        
-        select.form-control {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 16px;
-            padding-right: 36px;
-            font-family: var(--font-light);
-        }
-        
-        .radio-group, .checkbox-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 5px;
-        }
-        
-        .radio-item, .checkbox-item {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .radio-input, .checkbox-input {
-            margin-right: 8px;
-        }
-        
-        .radio-label, .checkbox-label {
-            font-size: 14px;
-            font-family: var(--font-light);
-        }
-        
-        .form-textarea {
-            min-height: 100px;
-            font-family: var(--font-light);
-        }
-        
-        .form-hint {
-            display: block;
-            font-size: 12px;
-            color: var(--sub-text-color);
-            margin-top: 4px;
-            font-family: var(--font-light);
-        }
-        
-        .form-submit {
-            text-align: right;
-            margin-top: 30px;
-        }
-        
-        .btn-submit {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-family: var(--font-primary);
-        }
-        
-        .btn-submit:hover {
-            background-color: var(--submit-hover);
-        }
-        
-        .error {
-            color: var(--error-color);
-            font-size: 12px;
-            margin-top: 4px;
-            font-family: var(--font-light);
-        }
-        
-        .form-control.error {
-            border-color: var(--error-color);
-            background-color: var(--error-bg);
-        }
-        
-        /* Estilo para indicador de carregamento no campo CEP */
-        .form-control.loading {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 38 38" stroke="rgba(0,0,0,0.5)"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".25" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg>');
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 20px;
-            padding-right: 40px;
-        }
-        
-        /* Estilos para mensagens de erro */
-        .error-message {
-            color: var(--error-color);
-            font-size: 12px;
-            margin-top: 4px;
-            font-family: var(--font-light);
-        }
-        
-        /* Estilos para validação de CEP */
-        .form-control.cep-valido {
-            border-color: var(--secondary-color) !important;
-            background-color: rgba(15, 117, 188, 0.1) !important;
-        }
-        
-        /* Estilo para as abas */
-        .form-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--divider-color);
-            background-color: var(--light-color);
-        }
-        
-        .form-tab {
-            padding: 15px 20px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            color: var(--sub-text-color);
-            flex: 1;
-            text-align: center;
-        }
-        
-        .form-tab.active {
-            border-bottom-color: var(--secondary-color);
-            color: var(--primary-color);
-            background-color: #fff;
-        }
-        
-        .form-tab:hover:not(.active) {
-            background-color: rgba(15, 117, 188, 0.05);
-            color: var(--secondary-color);
-        }
-        
-        /* Estilo para o conteúdo das abas */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        /* Estilo para os botões de navegação entre as abas */
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        
-        .nav-button {
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        
-        .nav-button:hover {
-            background-color: var(--hover-color);
-        }
-        
-        .nav-button.prev {
-            background-color: var(--light-color);
-            color: var(--secondary-color);
-        }
-        
-        .nav-button.prev:hover {
-            background-color: var(--divider-color);
-        }
-        
-        /* Ajuste responsivo */
-        @media (max-width: 576px) {
-            .form-tab {
-                padding: 12px 10px;
-                font-size: 14px;
-            }
-            
-            /* Ícones para as abas no mobile */
-            .form-tab[data-tab="tab-1"]::before {
-                content: "";
-                display: none;
-            }
-            
-            .form-tab[data-tab="tab-2"]::before {
-                content: "";
-                display: none;
-            }
-            
-            .form-tab[data-tab="tab-3"]::before {
-                content: "";
-                display: none;
-            }
-            
-            .form-tab[data-tab="tab-4"]::before {
-                content: "";
-                display: none;
-            }
-            
-            .form-tabs {
-                position: sticky;
-                top: 0;
-                z-index: 100;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            
-            .nav-button, .btn-submit {
-                padding: 12px 24px;
-                font-size: 16px;
-                width: 48%;  /* Ligeiramente aumentado para ficar melhor em telas menores */
-                height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                margin: 0;
-            }
-            
-            .form-container {
-                border-radius: 10px;
-                overflow: hidden;
-                margin: 10px;
-                width: calc(100% - 20px);
-                max-width: 100%;
-            }
-            
-            .nav-buttons {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 30px;
-            }
-        }
-        
-        /* Estilos para o seletor de país para telefone */
-        .phone-input-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        
-        .country-select {
-            display: flex;
-            align-items: center;
-            padding: 8px 10px;
-            border: 1px solid var(--input-border);
-            border-right: none;
-            border-radius: 6px 0 0 6px;
-            background-color: var(--light-color);
-            cursor: pointer;
-        }
-        
-        .country-select img {
-            width: 20px;
-            height: auto;
-            margin-right: 5px;
-        }
-        
-        .country-code {
-            font-size: 14px;
-            color: var(--sub-text-color);
-        }
-        
-        .dropdown-icon {
-            margin-left: 5px;
-            font-size: 10px;
-        }
-        
-        .phone-input-container .form-control {
-            border-radius: 0 6px 6px 0;
-        }
-        
-        .country-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            z-index: 1000;
-            width: 250px;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: white;
-            border: 1px solid var(--input-border);
-            border-radius: 6px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        
-        .country-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 10px;
-            cursor: pointer;
-        }
-        
-        .country-item:hover {
-            background-color: var(--light-color);
-        }
-        
-        .country-item img {
-            width: 20px;
-            height: auto;
-            margin-right: 8px;
-        }
-        
-        .country-item-name {
-            font-size: 14px;
-            margin-right: 5px;
-        }
-        
-        .country-item-code {
-            font-size: 13px;
-            color: var(--sub-text-color);
-        }
-    </style>
 </head>
 <body>
     <div class="form-container">
         <div class="form-header">
-            <img src="../assets/img/logo_persevera_horizontal_monocrome_preto.png" alt="Persevera Logo" class="header-logo">
+            <img src="../assets/img/logo_persevera.png" alt="Persevera Logo" class="header-logo">
         </div>
         <form id="cadastro-form" class="jotform-form" method="post" action="https://submit.jotform.com/submit/250986205951665">
             <input type="hidden" name="formID" value="250986205951665">
@@ -598,6 +92,7 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_94">Nome Completo</label>
                             <input type="text" id="input_94" name="q94_nomeCompleto" class="form-control" required>
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
                         </div>
                     </div>
                     
@@ -633,6 +128,7 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_96">Nacionalidade</label>
                             <input type="text" id="input_96" name="q96_nacionalidade" class="form-control" value="Brasileiro(a)" required>
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
                     
@@ -640,11 +136,13 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_97">Naturalidade</label>
                             <input type="text" id="input_97" name="q97_naturalidade" class="form-control" placeholder="Cidade e Estado de Nascimento" required>
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_104">Data de Nascimento</label>
                             <input type="text" id="input_104" name="q104_dataNascimento[full]" class="form-control" placeholder="DD/MM/AAAA" required>
+                            <div class="name-error-message">Data inválida ou menor de 18 anos</div>
                         </div>
                     </div>
                     
@@ -662,6 +160,7 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_98">Nº do Documento</label>
                             <input type="text" id="input_98" name="q98_numeroDocumento" class="form-control" required>
+                            <div class="name-error-message">Formato inválido para o tipo de documento selecionado</div>
                         </div>
                     </div>
                     
@@ -669,11 +168,13 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_106">Data de Expedição</label>
                             <input type="text" id="input_106" name="q106_dataExpedicao[full]" class="form-control" placeholder="DD/MM/AAAA" required>
+                            <div class="name-error-message">Data inválida ou posterior à data atual</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_99">Órgão Emissor</label>
                             <input type="text" id="input_99" name="q99_orgaoEmissor" class="form-control" required>
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
                     
@@ -681,6 +182,7 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_100">Nome da Mãe</label>
                             <input type="text" id="input_100" name="q100_nomeMae" class="form-control" required>
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
                         </div>
                     </div>
 
@@ -688,6 +190,7 @@
                         <div class="form-group">
                             <label class="form-label" for="input_101">Nome do Pai</label>
                             <input type="text" id="input_101" name="q101_nomePai" class="form-control">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
                         </div>
                     </div>
                     
@@ -716,6 +219,7 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_109">Logradouro</label>
                             <input type="text" id="input_109" name="q109_logradouro" class="form-control" required>
+                            <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                     </div>
                     
@@ -728,6 +232,7 @@
                         <div class="form-group">
                             <label class="form-label" for="input_113">Complemento</label>
                             <input type="text" id="input_113" name="q113_complemento" class="form-control">
+                            <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                     </div>
                     
@@ -735,11 +240,13 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_111">Bairro</label>
                             <input type="text" id="input_111" name="q111_bairro" class="form-control" required>
+                            <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_110">Cidade</label>
                             <input type="text" id="input_110" name="q110_cidade" class="form-control" required>
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
                     
@@ -823,6 +330,7 @@
                             <label class="form-label required" for="input_127">Documento de Identidade (com CPF)</label>
                             <input type="file" id="input_127" name="q127_envioDocumentoIdentidade[]" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.html" multiple required>
                             <span class="form-hint">Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, HTML</span>
+                            <div class="file-error-message">Arquivo inválido ou muito grande (máx. 10MB)</div>
                         </div>
                     </div>
                     
@@ -831,6 +339,7 @@
                             <label class="form-label required" for="input_128">Comprovante de Residência (válido por 3 meses)</label>
                             <input type="file" id="input_128" name="q128_envioComprovanteResidencia[]" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.html" required>
                             <span class="form-hint">Formatos aceitos: PDF, DOC, DOCX, JPG, JPEG, PNG, GIF, HTML</span>
+                            <div class="file-error-message">Arquivo inválido ou muito grande (máx. 10MB)</div>
                         </div>
                     </div>
                     
@@ -886,6 +395,7 @@
                         <div class="form-group">
                             <label class="form-label" for="input_123">Se respondeu "Sim" a alguma das perguntas acima, forneça detalhes:</label>
                             <textarea id="input_123" name="q123_seSim" class="form-control form-textarea"></textarea>
+                            <div class="name-error-message">Alguns caracteres especiais não são permitidos</div>
                         </div>
                     </div>
                     
@@ -1139,7 +649,55 @@
                 let regex;
                 
                 // Regex específico para cada tipo de campo
-                if (input.id === 'input_95') { // CPF
+                if (input.id === 'input_94' || input.id === 'input_100' || input.id === 'input_101') {
+                    // Validação para campos de nome: apenas letras e espaços
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]+$/;
+                    if (!regex.test(input.value)) {
+                        input.classList.add('special-char-error');
+                        const errorMsg = document.createElement('div');
+                        errorMsg.id = errorMsgId;
+                        errorMsg.className = 'error-message';
+                        errorMsg.textContent = 'Apenas letras, espaços e caracteres simples como . \' - são permitidos em nomes';
+                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                        return false;
+                    }
+                } else if (input.id === 'input_96' || input.id === 'input_97' || input.id === 'input_110') {
+                    // Validação para nacionalidade, naturalidade e cidade: apenas letras e espaços
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.-]+$/;
+                    if (!regex.test(input.value)) {
+                        input.classList.add('special-char-error');
+                        const errorMsg = document.createElement('div');
+                        errorMsg.id = errorMsgId;
+                        errorMsg.className = 'error-message';
+                        errorMsg.textContent = 'Apenas letras, espaços e caracteres simples são permitidos';
+                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                        return false;
+                    }
+                } else if (input.id === 'input_99') {
+                    // Validação para órgão emissor: apenas letras, números e alguns caracteres
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s./-]+$/;
+                    if (!regex.test(input.value)) {
+                        input.classList.add('special-char-error');
+                        const errorMsg = document.createElement('div');
+                        errorMsg.id = errorMsgId;
+                        errorMsg.className = 'error-message';
+                        errorMsg.textContent = 'Apenas letras, números, espaços e caracteres simples são permitidos';
+                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                        return false;
+                    }
+                } else if (input.id === 'input_109' || input.id === 'input_111') {
+                    // Validação para logradouro e bairro: permitir letras, números e caracteres comuns em endereços
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,º°ª\-/]+$/;
+                    if (!regex.test(input.value)) {
+                        input.classList.add('special-char-error');
+                        const errorMsg = document.createElement('div');
+                        errorMsg.id = errorMsgId;
+                        errorMsg.className = 'error-message';
+                        errorMsg.textContent = 'Caracteres não permitidos no endereço';
+                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                        return false;
+                    }
+                } else if (input.id === 'input_95') { // CPF
                     regex = /^[0-9.-]+$/;
                 } else if (input.id === 'input_98') { // Número Documento
                     regex = /^[0-9a-zA-Z-]+$/;
@@ -1149,11 +707,23 @@
                     regex = /^[0-9-]+$/;
                 } else if (input.id === 'input_112') { // Número (endereço)
                     regex = /^[0-9a-zA-Z-/]+$/;
+                } else if (input.id === 'input_123') { // Textarea de detalhes de PPE
+                    // Para textarea, permitimos mais caracteres, mas ainda evitamos alguns potencialmente perigosos
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()[\]{}:;!?@#$%&*+=/\-'"`]+$/;
+                    if (!regex.test(input.value)) {
+                        input.classList.add('special-char-error');
+                        const errorMsg = document.createElement('div');
+                        errorMsg.id = errorMsgId;
+                        errorMsg.className = 'error-message';
+                        errorMsg.textContent = 'Alguns caracteres especiais não são permitidos';
+                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                        return false;
+                    }
                 } else if (input.id === 'input_117') { // Email
                     // Email já possui validação específica
                     return true;
                 } else {
-                    // Para os demais campos de texto (nomes, endereços, etc.)
+                    // Para os demais campos de texto (endereços, etc.)
                     regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()_-]+$/;
                 }
                 
@@ -1182,13 +752,156 @@
                 // Ignora campos que não devem ser validados para caracteres especiais
                 if (input.id === 'input_118') return; // Campo de telefone tem validação própria
                 
-                input.addEventListener('input', function() {
-                    validateSpecialChars(this);
-                });
-                
-                input.addEventListener('blur', function() {
-                    validateSpecialChars(this);
-                });
+                // Adiciona validação específica para campos de nome
+                if (input.id === 'input_94' || input.id === 'input_100' || input.id === 'input_101') {
+                    input.addEventListener('input', function() {
+                        // Remover números e caracteres especiais enquanto o usuário digita
+                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]/g, '');
+                        if (cleanedValue !== this.value) {
+                            const cursorPos = this.selectionStart;
+                            const lenDiff = this.value.length - cleanedValue.length;
+                            this.value = cleanedValue;
+                            // Manter posição do cursor após a limpeza
+                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                            
+                            // Mostra um feedback visual temporário
+                            this.classList.add('name-error');
+                            setTimeout(() => {
+                                this.classList.remove('name-error');
+                            }, 500);
+                        }
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]+$/;
+                        if (!regex.test(this.value) && this.value.trim() !== '') {
+                            this.classList.add('name-error');
+                        } else {
+                            this.classList.remove('name-error');
+                        }
+                        validateSpecialChars(this);
+                    });
+                } 
+                // Validação específica para nacionalidade, naturalidade e cidade
+                else if (input.id === 'input_96' || input.id === 'input_97' || input.id === 'input_110') {
+                    input.addEventListener('input', function() {
+                        // Remover caracteres não permitidos enquanto o usuário digita
+                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s.-]/g, '');
+                        if (cleanedValue !== this.value) {
+                            const cursorPos = this.selectionStart;
+                            const lenDiff = this.value.length - cleanedValue.length;
+                            this.value = cleanedValue;
+                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                            
+                            this.classList.add('name-error');
+                            setTimeout(() => {
+                                this.classList.remove('name-error');
+                            }, 500);
+                        }
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        validateSpecialChars(this);
+                    });
+                }
+                // Validação específica para órgão emissor
+                else if (input.id === 'input_99') {
+                    input.addEventListener('input', function() {
+                        // Permitir letras, números e alguns caracteres específicos
+                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s./-]/g, '');
+                        if (cleanedValue !== this.value) {
+                            const cursorPos = this.selectionStart;
+                            const lenDiff = this.value.length - cleanedValue.length;
+                            this.value = cleanedValue;
+                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                            
+                            this.classList.add('name-error');
+                            setTimeout(() => {
+                                this.classList.remove('name-error');
+                            }, 500);
+                        }
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        validateSpecialChars(this);
+                    });
+                }
+                // Validação específica para logradouro e bairro
+                else if (input.id === 'input_109' || input.id === 'input_111') {
+                    input.addEventListener('input', function() {
+                        // Permitir letras, números e caracteres comuns em endereços
+                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,º°ª\-/]/g, '');
+                        if (cleanedValue !== this.value) {
+                            const cursorPos = this.selectionStart;
+                            const lenDiff = this.value.length - cleanedValue.length;
+                            this.value = cleanedValue;
+                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                            
+                            this.classList.add('name-error');
+                            setTimeout(() => {
+                                this.classList.remove('name-error');
+                            }, 500);
+                        }
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        validateSpecialChars(this);
+                    });
+                }
+                // Validação específica para o campo de textarea de PPE
+                else if (input.id === 'input_123') {
+                    input.addEventListener('input', function() {
+                        // Permitir mais caracteres, mas ainda evitar alguns potencialmente perigosos
+                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()[\]{}:;!?@#$%&*+=/\-'"`]/g, '');
+                        if (cleanedValue !== this.value) {
+                            const cursorPos = this.selectionStart;
+                            const lenDiff = this.value.length - cleanedValue.length;
+                            this.value = cleanedValue;
+                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                            
+                            this.classList.add('name-error');
+                            setTimeout(() => {
+                                this.classList.remove('name-error');
+                            }, 500);
+                        }
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        validateSpecialChars(this);
+                    });
+                }
+                // Validação específica para complemento de endereço
+                else if (input.id === 'input_113') {
+                    input.addEventListener('input', function() {
+                        // Permitir letras, números e caracteres comuns em complementos de endereço
+                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()º°ª\-/]+/g, '');
+                        if (cleanedValue !== this.value) {
+                            const cursorPos = this.selectionStart;
+                            const lenDiff = this.value.length - cleanedValue.length;
+                            this.value = cleanedValue;
+                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                            
+                            this.classList.add('name-error');
+                            setTimeout(() => {
+                                this.classList.remove('name-error');
+                            }, 500);
+                        }
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        validateSpecialChars(this);
+                    });
+                }
+                else {
+                    // Para outros campos, aplica a validação padrão
+                    input.addEventListener('input', function() {
+                        validateSpecialChars(this);
+                    });
+                    
+                    input.addEventListener('blur', function() {
+                        validateSpecialChars(this);
+                    });
+                }
                 
                 // Validação inicial se o campo já tiver valor
                 if (input.value) {
@@ -1253,6 +966,27 @@
                         document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
                         document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
                         document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
+                        
+                        // Validação específica para cada tipo de data
+                        if (fieldId === 'input_104') {
+                            validateAge(parts);
+                        } else if (fieldId === 'input_106') {
+                            validateIssuanceDate(parts);
+                        }
+                    }
+                });
+                
+                field.addEventListener('blur', function() {
+                    const parts = this.value.split('/');
+                    if (parts.length === 3 && parts[2].length === 4) {
+                        if (this.id === 'input_104') {
+                            validateAge(parts);
+                        } else if (this.id === 'input_106') {
+                            validateIssuanceDate(parts);
+                        }
+                    } else if (this.value.trim() !== '') {
+                        // Data incompleta ou inválida
+                        this.classList.add('date-error');
                     }
                 });
             });
@@ -1350,60 +1084,6 @@
                 }
             }
             
-            // Função para validar telefone
-            function validatePhone(input) {
-                const errorMsgId = 'phone-error-msg';
-                let existingError = document.getElementById(errorMsgId);
-                
-                // Remove mensagem de erro existente
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // Se vazio, retorna para o estilo padrão
-                if (!input.value.trim()) {
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    return true;
-                }
-                
-                // Verificar se contém apenas os caracteres permitidos
-                const regex = /^[()\d\s-]+$/;
-                if (!regex.test(input.value)) {
-                    showError(input, 'Telefone contém caracteres não permitidos.', errorMsgId);
-                    return false;
-                }
-                
-                // Extrair apenas números
-                const numericValue = input.value.replace(/\D/g, '');
-                
-                // Verificar o comprimento do número
-                if (numericValue.length < 10 || numericValue.length > 11) {
-                    showError(input, 'Telefone deve ter 10 ou 11 dígitos.', errorMsgId);
-                    return false;
-                }
-                
-                // Verificar DDD
-                const ddd = numericValue.substring(0, 2);
-                const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
-                
-                if (!validDDDs.includes(ddd)) {
-                    showError(input, 'DDD inválido.', errorMsgId);
-                    return false;
-                }
-                
-                // Se for celular (11 dígitos), verificar se começa com 9
-                if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
-                    showError(input, 'Celular deve começar com 9 após o DDD.', errorMsgId);
-                    return false;
-                }
-                
-                // Telefone válido
-                input.style.borderColor = 'var(--secondary-color)';
-                input.style.backgroundColor = '';
-                return true;
-            }
-            
             // Validação de e-mail
             const emailField = document.getElementById('input_117');
             if (emailField) {
@@ -1421,34 +1101,33 @@
                 }
             }
             
-            // Função para validar e-mail
-            function validateEmail(input) {
-                const errorMsgId = 'email-error-msg';
-                let existingError = document.getElementById(errorMsgId);
+            // Validação específica para campos de nome
+            const nameFields = document.querySelectorAll('#input_94, #input_100, #input_101');
+            nameFields.forEach(function(field) {
+                field.addEventListener('input', function() {
+                    // Remover números e caracteres especiais enquanto o usuário digita
+                    const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]/g, '');
+                    if (cleanedValue !== this.value) {
+                        const cursorPos = this.selectionStart;
+                        const lenDiff = this.value.length - cleanedValue.length;
+                        this.value = cleanedValue;
+                        // Manter posição do cursor após a limpeza
+                        this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                    }
+                    
+                    // Aplicar validação padrão
+                    validateSpecialChars(this);
+                });
                 
-                // Remove mensagem de erro existente
-                if (existingError) {
-                    existingError.remove();
+                field.addEventListener('blur', function() {
+                    validateSpecialChars(this);
+                });
+                
+                // Validação inicial
+                if (field.value) {
+                    validateSpecialChars(field);
                 }
-                
-                // Se vazio, retorna para o estilo padrão
-                if (!input.value.trim()) {
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    return;
-                }
-                
-                // Usando a biblioteca email-validator
-                if (!EmailValidator.validate(input.value)) {
-                    showError(input, 'Por favor, insira um e-mail válido.', errorMsgId);
-                    return false;
-                }
-                
-                // E-mail é válido
-                input.style.borderColor = 'var(--secondary-color)';
-                input.style.backgroundColor = '';
-                return true;
-            }
+            });
             
             // Função para validar idade mínima (18 anos)
             function validateAge(birthDateStr) {
@@ -1532,33 +1211,87 @@
                 return true;
             }
             
-            // Helper function to show validation error
-            function showError(input, message, errorMsgId) {
-                // Não aplicar estilos de erro se o elemento for um CEP válido
-                if (input.id === 'input_108' && input.classList.contains('cep-valido')) {
+            // Função para validar e-mail
+            function validateEmail(input) {
+                const errorMsgId = 'email-error-msg';
+                let existingError = document.getElementById(errorMsgId);
+                
+                // Remove mensagem de erro existente
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Se vazio, retorna para o estilo padrão
+                if (!input.value.trim()) {
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
                     return;
                 }
                 
-                input.style.borderColor = 'var(--error-color)';
-                input.style.backgroundColor = 'var(--error-bg)';
-                
-                const errorMsg = document.createElement('div');
-                errorMsg.id = errorMsgId;
-                errorMsg.className = 'error-message';
-                errorMsg.textContent = message;
-                errorMsg.style.color = 'var(--error-color)';
-                errorMsg.style.fontSize = '0.8rem';
-                errorMsg.style.marginTop = '4px';
-                
-                // Insert error message after the input or its container
-                if (input.id === 'input_118') {
-                    // Para o campo de telefone, inserir a mensagem após o container do telefone
-                    const phoneContainer = input.closest('.phone-input-container');
-                    phoneContainer.parentNode.insertBefore(errorMsg, phoneContainer.nextSibling);
-                } else {
-                    // Para outros campos, inserir a mensagem após o input
-                    input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                // Usando a biblioteca email-validator
+                if (!EmailValidator.validate(input.value)) {
+                    showError(input, 'Por favor, insira um e-mail válido.', errorMsgId);
+                    return false;
                 }
+                
+                // E-mail é válido
+                input.style.borderColor = 'var(--secondary-color)';
+                input.style.backgroundColor = '';
+                return true;
+            }
+            
+            // Função para validar telefone
+            function validatePhone(input) {
+                const errorMsgId = 'phone-error-msg';
+                let existingError = document.getElementById(errorMsgId);
+                
+                // Remove mensagem de erro existente
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Se vazio, retorna para o estilo padrão
+                if (!input.value.trim()) {
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
+                    return true;
+                }
+                
+                // Verificar se contém apenas os caracteres permitidos
+                const regex = /^[()\d\s-]+$/;
+                if (!regex.test(input.value)) {
+                    showError(input, 'Telefone contém caracteres não permitidos.', errorMsgId);
+                    return false;
+                }
+                
+                // Extrair apenas números
+                const numericValue = input.value.replace(/\D/g, '');
+                
+                // Verificar o comprimento do número
+                if (numericValue.length < 10 || numericValue.length > 11) {
+                    showError(input, 'Telefone deve ter 10 ou 11 dígitos.', errorMsgId);
+                    return false;
+                }
+                
+                // Verificar DDD
+                const ddd = numericValue.substring(0, 2);
+                const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
+                
+                if (!validDDDs.includes(ddd)) {
+                    showError(input, 'DDD inválido.', errorMsgId);
+                    return false;
+                }
+                
+                // Se for celular (11 dígitos), verificar se começa com 9
+                if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
+                    showError(input, 'Celular deve começar com 9 após o DDD.', errorMsgId);
+                    return false;
+                }
+                
+                // Telefone válido
+                input.style.borderColor = 'var(--secondary-color)';
+                input.style.backgroundColor = '';
+                return true;
             }
             
             // Função para buscar CEP na API ViaCEP
@@ -1654,76 +1387,518 @@
                     });
             }
             
-            // Validar o formulário antes do envio
-            document.getElementById('cadastro-form').addEventListener('submit', function(e) {
-                // Impedir o envio padrão inicialmente
-                e.preventDefault();
-                
-                // Verificar todas as abas
-                let isValid = true;
-                let activeTabBeforeValidation = document.querySelector('.tab-content.active').id;
-                
-                // Array com os IDs de todas as abas
-                const allTabs = ['tab-1', 'tab-2', 'tab-3', 'tab-4'];
-                
-                // Validar cada aba
-                for (let i = 0; i < allTabs.length; i++) {
-                    if (!validateTabFields(allTabs[i])) {
-                        isValid = false;
+            // Validação específica para campos de data
+            dateFields.forEach(function(field) {
+                field.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 8) value = value.slice(0, 8);
+                    
+                    if (value.length > 4) {
+                        value = value.replace(/^(\d{2})(\d{2})(\d{0,4})$/, '$1/$2/$3');
+                    } else if (value.length > 2) {
+                        value = value.replace(/^(\d{2})(\d{0,2})$/, '$1/$2');
+                    }
+                    
+                    e.target.value = value;
+                    
+                    // Preencher os campos ocultos para o JotForm
+                    const fieldId = e.target.id;
+                    const parts = value.split('/');
+                    if (parts.length === 3 && parts[2].length === 4) {
+                        document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
+                        document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
+                        document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
                         
-                        // Se esta for a primeira aba inválida, mudar para ela
-                        if (activeTabBeforeValidation !== allTabs[i]) {
-                            switchTab(allTabs[i]);
+                        // Validação específica para cada tipo de data
+                        if (fieldId === 'input_104') {
+                            validateAge(parts);
+                        } else if (fieldId === 'input_106') {
+                            validateIssuanceDate(parts);
+                        }
+                    }
+                });
+                
+                field.addEventListener('blur', function() {
+                    const parts = this.value.split('/');
+                    if (parts.length === 3 && parts[2].length === 4) {
+                        if (this.id === 'input_104') {
+                            validateAge(parts);
+                        } else if (this.id === 'input_106') {
+                            validateIssuanceDate(parts);
+                        }
+                    } else if (this.value.trim() !== '') {
+                        // Data incompleta ou inválida
+                        this.classList.add('date-error');
+                    }
+                });
+            });
+            
+            // Validação do complemento de endereço
+            const complementoField = document.getElementById('input_113');
+            if (complementoField) {
+                complementoField.addEventListener('input', function() {
+                    // Permitir letras, números e caracteres comuns em complementos de endereço
+                    const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()º°ª\-/]+/g, '');
+                    if (cleanedValue !== this.value) {
+                        const cursorPos = this.selectionStart;
+                        const lenDiff = this.value.length - cleanedValue.length;
+                        this.value = cleanedValue;
+                        this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
+                        
+                        // Feedback visual
+                        this.classList.add('name-error');
+                        setTimeout(() => {
+                            this.classList.remove('name-error');
+                        }, 500);
+                    }
+                });
+                
+                complementoField.addEventListener('blur', function() {
+                    validateSpecialChars(this);
+                });
+            }
+            
+            // Validação para números de documento com base no tipo selecionado
+            const tipoDocumentoSelect = document.getElementById('input_105');
+            const numeroDocumentoInput = document.getElementById('input_98');
+            
+            if (tipoDocumentoSelect && numeroDocumentoInput) {
+                tipoDocumentoSelect.addEventListener('change', function() {
+                    const tipoDoc = this.value;
+                    // Limpar o campo de número de documento quando o tipo mudar
+                    numeroDocumentoInput.value = '';
+                    numeroDocumentoInput.classList.remove('name-error');
+                    
+                    // Atualizar o placeholder conforme o tipo de documento
+                    if (tipoDoc === 'RG') {
+                        numeroDocumentoInput.placeholder = "00.000.000-0";
+                    } else if (tipoDoc === 'CNH') {
+                        numeroDocumentoInput.placeholder = "00000000000";
+                    } else if (tipoDoc === 'Passaporte') {
+                        numeroDocumentoInput.placeholder = "AA000000";
+                    } else {
+                        numeroDocumentoInput.placeholder = "";
+                    }
+                });
+                
+                numeroDocumentoInput.addEventListener('input', function() {
+                    const tipoDoc = tipoDocumentoSelect.value;
+                    let cleanedValue = this.value;
+                    
+                    if (tipoDoc === 'RG') {
+                        // Permitir apenas números, pontos e hífen para RG
+                        cleanedValue = cleanedValue.replace(/[^0-9.-]/g, '');
+                        // Tentar formatar como XX.XXX.XXX-X
+                        if (cleanedValue.length > 0) {
+                            const numericValue = cleanedValue.replace(/\D/g, '');
+                            if (numericValue.length > 8) {
+                                cleanedValue = numericValue.replace(/^(\d{2})(\d{3})(\d{3})(\d{1}).*/, '$1.$2.$3-$4');
+                            }
+                        }
+                    } else if (tipoDoc === 'CNH') {
+                        // Apenas números para CNH
+                        cleanedValue = cleanedValue.replace(/[^0-9]/g, '');
+                        // Limitar a 11 dígitos
+                        if (cleanedValue.length > 11) {
+                            cleanedValue = cleanedValue.substring(0, 11);
+                        }
+                    } else if (tipoDoc === 'Passaporte') {
+                        // Formato de passaporte: 2 letras seguidas de 6 números
+                        cleanedValue = cleanedValue.toUpperCase();
+                        cleanedValue = cleanedValue.replace(/[^A-Z0-9]/g, '');
+                        
+                        // Limitar a 8 caracteres (2 letras + 6 números)
+                        if (cleanedValue.length > 8) {
+                            cleanedValue = cleanedValue.substring(0, 8);
+                        }
+                    }
+                    
+                    // Atualizar o valor se foi modificado
+                    if (cleanedValue !== this.value) {
+                        const cursorPos = this.selectionStart;
+                        const lenDiff = this.value.length - cleanedValue.length;
+                        this.value = cleanedValue;
+                        if (cursorPos !== null) {
+                            this.setSelectionRange(Math.max(0, cursorPos - lenDiff), Math.max(0, cursorPos - lenDiff));
+                        }
+                    }
+                    
+                    // Validar formato específico para o tipo de documento
+                    if (tipoDoc === 'RG') {
+                        const rgValue = this.value.replace(/\D/g, '');
+                        if (rgValue.length > 0 && (rgValue.length < 8 || rgValue.length > 10)) {
+                            this.classList.add('name-error');
+                        } else {
+                            this.classList.remove('name-error');
+                        }
+                    } else if (tipoDoc === 'CNH') {
+                        const cnhValue = this.value.replace(/\D/g, '');
+                        if (cnhValue.length > 0 && cnhValue.length !== 11) {
+                            this.classList.add('name-error');
+                        } else {
+                            this.classList.remove('name-error');
+                        }
+                    } else if (tipoDoc === 'Passaporte') {
+                        const regex = /^[A-Z]{2}[0-9]{6}$/;
+                        if (this.value && !regex.test(this.value)) {
+                            this.classList.add('name-error');
+                        } else {
+                            this.classList.remove('name-error');
+                        }
+                    }
+                });
+                
+                numeroDocumentoInput.addEventListener('blur', function() {
+                    const tipoDoc = tipoDocumentoSelect.value;
+                    let isValid = true;
+                    
+                    if (!this.value.trim() || !tipoDoc) {
+                        this.classList.remove('name-error');
+                        return;
+                    }
+                    
+                    if (tipoDoc === 'RG') {
+                        const rgValue = this.value.replace(/\D/g, '');
+                        isValid = rgValue.length >= 8 && rgValue.length <= 10;
+                    } else if (tipoDoc === 'CNH') {
+                        const cnhValue = this.value.replace(/\D/g, '');
+                        isValid = cnhValue.length === 11;
+                    } else if (tipoDoc === 'Passaporte') {
+                        const regex = /^[A-Z]{2}[0-9]{6}$/;
+                        isValid = regex.test(this.value);
+                    }
+                    
+                    if (!isValid) {
+                        this.classList.add('name-error');
+                    } else {
+                        this.classList.remove('name-error');
+                    }
+                });
+            }
+            
+            // Validação de arquivos de upload
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            fileInputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    this.classList.remove('file-error');
+                    
+                    // Se nenhum arquivo selecionado, retornar
+                    if (!this.files || this.files.length === 0) {
+                        return true;
+                    }
+                    
+                    const maxSizeMB = 10; // Tamanho máximo em MB
+                    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+                    let isValid = true;
+                    
+                    // Verificar cada arquivo selecionado
+                    for (let i = 0; i < this.files.length; i++) {
+                        const file = this.files[i];
+                        
+                        // Verificar tamanho
+                        if (file.size > maxSizeBytes) {
+                            isValid = false;
                             break;
+                        }
+                        
+                        // Verificar tipo (já limitado pelo atributo accept, mas uma verificação adicional)
+                        const fileType = file.type.toLowerCase();
+                        const fileName = file.name.toLowerCase();
+                        
+                        // Lista de tipos MIME aceitáveis
+                        const validTypes = [
+                            'application/pdf', 
+                            'application/msword', 
+                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                            'image/jpeg', 
+                            'image/png', 
+                            'image/gif', 
+                            'text/html'
+                        ];
+                        
+                        // Lista de extensões aceitáveis
+                        const validExtensions = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.html'];
+                        
+                        // Verificar tipo MIME
+                        let validMimeType = validTypes.includes(fileType);
+                        
+                        // Se o tipo MIME não for válido, verificar a extensão do arquivo
+                        if (!validMimeType) {
+                            let validExt = false;
+                            for (const ext of validExtensions) {
+                                if (fileName.endsWith(ext)) {
+                                    validExt = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!validExt) {
+                                isValid = false;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (!isValid) {
+                        this.classList.add('file-error');
+                        
+                        // Se inválido, limpar a seleção
+                        try {
+                            this.value = '';
+                        } catch (e) {
+                            // Em alguns navegadores, não é possível limpar diretamente
+                            console.error('Não foi possível limpar o campo de arquivo:', e);
+                        }
+                        
+                        return false;
+                    }
+                    
+                    return true;
+                });
+            });
+            
+            // Adicionar validação para o país/código do telefone
+            const countrySelect = document.getElementById('country-select');
+            const phoneInput = document.getElementById('input_118');
+            const countryCodeInput = document.getElementById('input_118_country_code');
+            
+            if (countrySelect && phoneInput && countryCodeInput) {
+                countrySelect.addEventListener('click', function() {
+                    const dropdown = document.getElementById('country-dropdown');
+                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                    
+                    // Se o dropdown estiver vazio, preencher com a lista de países
+                    if (dropdown.children.length === 0) {
+                        // Lista simplificada de países com códigos
+                        const countries = [
+                            { code: '+55', name: 'Brasil', flag: 'br' },
+                            { code: '+1', name: 'Estados Unidos', flag: 'us' },
+                            { code: '+351', name: 'Portugal', flag: 'pt' },
+                            { code: '+34', name: 'Espanha', flag: 'es' },
+                            { code: '+44', name: 'Reino Unido', flag: 'gb' },
+                            { code: '+49', name: 'Alemanha', flag: 'de' },
+                            { code: '+33', name: 'França', flag: 'fr' },
+                            { code: '+39', name: 'Itália', flag: 'it' },
+                            { code: '+81', name: 'Japão', flag: 'jp' },
+                            { code: '+86', name: 'China', flag: 'cn' }
+                        ];
+                        
+                        countries.forEach(country => {
+                            const item = document.createElement('div');
+                            item.className = 'country-item';
+                            item.innerHTML = `
+                                <img src="https://flagcdn.com/${country.flag}.svg" alt="${country.name}">
+                                <span class="country-item-name">${country.name}</span>
+                                <span class="country-item-code">${country.code}</span>
+                            `;
+                            
+                            item.addEventListener('click', function() {
+                                // Atualizar o código do país selecionado
+                                document.getElementById('selected-flag').src = `https://flagcdn.com/${country.flag}.svg`;
+                                document.getElementById('selected-flag').alt = country.name;
+                                document.getElementById('selected-code').textContent = country.code;
+                                countryCodeInput.value = country.code;
+                                
+                                // Fechar o dropdown
+                                dropdown.style.display = 'none';
+                                
+                                // Limpar o campo de telefone se o país mudar
+                                if (country.code !== '+55') {
+                                    phoneInput.value = '';
+                                    phoneInput.placeholder = country.code === '+1' ? '(XXX) XXX-XXXX' : 'Digite o telefone';
+                                } else {
+                                    phoneInput.placeholder = '(00) 00000-0000';
+                                }
+                                
+                                // Validar o telefone com o novo código de país
+                                validatePhone(phoneInput);
+                            });
+                            
+                            dropdown.appendChild(item);
+                        });
+                    }
+                });
+                
+                // Fechar o dropdown quando clicar fora dele
+                document.addEventListener('click', function(e) {
+                    const dropdown = document.getElementById('country-dropdown');
+                    if (dropdown && e.target !== countrySelect && !countrySelect.contains(e.target) && 
+                        e.target !== dropdown && !dropdown.contains(e.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Validar todos os campos ao enviar o formulário
+            document.getElementById('cadastro-form').addEventListener('submit', function(e) {
+                // Incluir validações adicionais
+                
+                // Validação de datas
+                let isValid = true;
+                const birthDateField = document.getElementById('input_104');
+                const issuanceDateField = document.getElementById('input_106');
+                
+                if (birthDateField && birthDateField.value) {
+                    const parts = birthDateField.value.split('/');
+                    if (parts.length === 3) {
+                        if (!validateAge(birthDateField.value)) {
+                            isValid = false;
+                            switchTab('tab-1');
+                            alert('Data de nascimento inválida ou menor de 18 anos.');
+                            return false;
                         }
                     }
                 }
                 
-                if (!isValid) {
-                    return false;
-                }
-                
-                // Validação de idade
-                const dataNascimento = document.getElementById('input_104').value;
-                if (!validateAge(dataNascimento)) {
-                    switchTab('tab-1'); // Mudar para a aba onde está o campo de data de nascimento
-                    alert('Você deve ter pelo menos 18 anos para se cadastrar.');
-                    return false;
-                }
-                
-                // Validação de CPF
-                if (!validateCPF(document.getElementById('input_95'))) {
-                    switchTab('tab-1'); // Mudar para a aba onde está o campo de CPF
-                    return false;
-                }
-                
-                // Validação de e-mail
-                if (!validateEmail(document.getElementById('input_117'))) {
-                    switchTab('tab-2'); // Mudar para a aba onde está o campo de e-mail
-                    return false;
-                }
-                
-                // Validação de telefone
-                if (!validatePhone(document.getElementById('input_118'))) {
-                    switchTab('tab-2'); // Mudar para a aba onde está o campo de telefone
-                    return false;
-                }
-                
-                // Garantir que os campos ocultos de data estejam preenchidos
-                const dateFields = document.querySelectorAll('#input_104, #input_106');
-                dateFields.forEach(function(field) {
-                    const fieldId = field.id;
-                    const parts = field.value.split('/');
+                if (issuanceDateField && issuanceDateField.value) {
+                    const parts = issuanceDateField.value.split('/');
                     if (parts.length === 3) {
-                        document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
-                        document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
-                        document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
+                        if (!validateIssuanceDate(parts)) {
+                            isValid = false;
+                            switchTab('tab-1');
+                            alert('Data de expedição inválida ou posterior à data atual.');
+                            return false;
+                        }
+                    }
+                }
+                
+                // Validação de número de documento
+                const tipoDocumentoSelect = document.getElementById('input_105');
+                const numeroDocumentoInput = document.getElementById('input_98');
+                if (tipoDocumentoSelect && numeroDocumentoInput && 
+                    tipoDocumentoSelect.value && numeroDocumentoInput.value) {
+                    if (!validateDocumentNumber(numeroDocumentoInput, tipoDocumentoSelect.value)) {
+                        isValid = false;
+                        switchTab('tab-1');
+                        alert('Número de documento inválido para o tipo selecionado.');
+                        return false;
+                    }
+                }
+                
+                // Validação de arquivos
+                const fileInputs = document.querySelectorAll('input[type="file"]');
+                fileInputs.forEach(function(input) {
+                    if (input.required || (input.files && input.files.length > 0)) {
+                        if (!validateFileUpload(input)) {
+                            isValid = false;
+                            switchTab('tab-3');
+                            alert('Um ou mais arquivos são inválidos ou muito grandes (máx. 10MB).');
+                            return false;
+                        }
                     }
                 });
                 
-                // Para garantir que todos os campos sejam enviados
-                this.submit();
+                if (!isValid) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Continuar com a validação original do formulário
             });
+            
+            // Validação específica para data de nascimento (maior de 18 anos)
+            const dataNascField = document.getElementById('input_104');
+            if (dataNascField) {
+                dataNascField.addEventListener('blur', function() {
+                    this.classList.remove('date-error');
+                    
+                    if (!this.value) return true;
+                    
+                    const parts = this.value.split('/');
+                    if (parts.length !== 3) {
+                        this.classList.add('date-error');
+                        return false;
+                    }
+                    
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    // Verificar se a data é válida
+                    const birthDate = new Date(year, month, day);
+                    if (
+                        birthDate.getDate() !== day || 
+                        birthDate.getMonth() !== month || 
+                        birthDate.getFullYear() !== year ||
+                        birthDate > new Date() // Data futura
+                    ) {
+                        this.classList.add('date-error');
+                        return false;
+                    }
+                    
+                    // Verificar idade mínima (18 anos)
+                    const today = new Date();
+                    let age = today.getFullYear() - year;
+                    const m = today.getMonth() - month;
+                    
+                    if (m < 0 || (m === 0 && today.getDate() < day)) {
+                        age--;
+                    }
+                    
+                    if (age < 18) {
+                        this.classList.add('date-error');
+                        return false;
+                    }
+                    
+                    return true;
+                });
+            }
+            
+            // Validação específica para data de expedição (não futura e após nascimento)
+            const dataExpField = document.getElementById('input_106');
+            if (dataExpField) {
+                dataExpField.addEventListener('blur', function() {
+                    this.classList.remove('date-error');
+                    
+                    if (!this.value) return true;
+                    
+                    const parts = this.value.split('/');
+                    if (parts.length !== 3) {
+                        this.classList.add('date-error');
+                        return false;
+                    }
+                    
+                    const day = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const year = parseInt(parts[2], 10);
+                    
+                    // Verificar se a data é válida
+                    const expeditionDate = new Date(year, month, day);
+                    if (
+                        expeditionDate.getDate() !== day || 
+                        expeditionDate.getMonth() !== month || 
+                        expeditionDate.getFullYear() !== year
+                    ) {
+                        this.classList.add('date-error');
+                        return false;
+                    }
+                    
+                    // Verificar se não é futura
+                    if (expeditionDate > new Date()) {
+                        this.classList.add('date-error');
+                        return false;
+                    }
+                    
+                    // Verificar se é posterior à data de nascimento
+                    const birthDateField = document.getElementById('input_104');
+                    if (birthDateField && birthDateField.value) {
+                        const birthParts = birthDateField.value.split('/');
+                        if (birthParts.length === 3) {
+                            const birthDay = parseInt(birthParts[0], 10);
+                            const birthMonth = parseInt(birthParts[1], 10) - 1;
+                            const birthYear = parseInt(birthParts[2], 10);
+                            
+                            const birthDate = new Date(birthYear, birthMonth, birthDay);
+                            if (expeditionDate < birthDate) {
+                                this.classList.add('date-error');
+                                return false;
+                            }
+                        }
+                    }
+                    
+                    return true;
+                });
+            }
         });
     </script>
 </body>

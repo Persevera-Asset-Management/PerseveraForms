@@ -1,0 +1,262 @@
+/* ficha-cadastral.css - Estilos específicos para a ficha cadastral */
+
+/* Estilo para as abas */
+.form-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--divider-color);
+    background-color: var(--light-color);
+}
+
+.form-tab {
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    color: var(--sub-text-color);
+    flex: 1;
+    text-align: center;
+}
+
+.form-tab.active {
+    border-bottom-color: var(--secondary-color);
+    color: var(--primary-color);
+    background-color: #fff;
+}
+
+.form-tab:hover:not(.active) {
+    background-color: rgba(15, 117, 188, 0.05);
+    color: var(--secondary-color);
+}
+
+/* Estilo para o conteúdo das abas */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Estilo para os botões de navegação entre as abas */
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.nav-button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--hover-color);
+}
+
+.nav-button.prev {
+    background-color: var(--light-color);
+    color: var(--secondary-color);
+}
+
+.nav-button.prev:hover {
+    background-color: var(--divider-color);
+}
+
+/* Estilos para o seletor de país para telefone */
+.phone-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.country-select {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border: 1px solid var(--input-border);
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    background-color: var(--light-color);
+    cursor: pointer;
+}
+
+.country-select img {
+    width: 20px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.country-code {
+    font-size: 14px;
+    color: var(--sub-text-color);
+}
+
+.dropdown-icon {
+    margin-left: 5px;
+    font-size: 10px;
+}
+
+.phone-input-container .form-control {
+    border-radius: 0 6px 6px 0;
+}
+
+.country-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    width: 250px;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.country-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+.country-item:hover {
+    background-color: var(--light-color);
+}
+
+.country-item img {
+    width: 20px;
+    height: auto;
+    margin-right: 8px;
+}
+
+.country-item-name {
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.country-item-code {
+    font-size: 13px;
+    color: var(--sub-text-color);
+}
+
+/* Estilos para validação de campos */
+.name-error-message {
+    color: var(--error-color);
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: var(--font-light);
+    display: none;
+}
+
+input[type="text"].name-error + .name-error-message {
+    display: block;
+}
+
+input[type="text"].name-error {
+    border-color: var(--error-color);
+    background-color: var(--error-bg);
+}
+
+/* Estilos específicos para campos de data */
+input[type="text"].date-error {
+    border-color: var(--error-color);
+    background-color: var(--error-bg);
+}
+
+.file-error-message {
+    color: var(--error-color);
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: var(--font-light);
+    display: none;
+}
+
+input[type="file"].file-error {
+    border-color: var(--error-color);
+    background-color: var(--error-bg);
+}
+
+input[type="file"].file-error + .file-error-message {
+    display: block;
+}
+
+/* Estilos para validação de tipo de documento */
+.doc-type-warning {
+    color: #ff9800; /* cor laranja para alertas */
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: var(--font-light);
+    display: none;
+}
+
+select.doc-type-selected ~ .doc-type-warning {
+    display: block;
+}
+
+/* Estilo para o campo com CEP válido */
+.form-control.cep-valido {
+    border-color: var(--secondary-color) !important;
+    background-color: rgba(15, 117, 188, 0.1) !important;
+}
+
+/* Estilo para indicador de carregamento no campo CEP */
+.form-control.loading {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 38 38" stroke="rgba(0,0,0,0.5)"><g fill="none" fill-rule="evenodd"><g transform="translate(1 1)" stroke-width="2"><circle stroke-opacity=".25" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+/* Ajuste responsivo específico para ficha cadastral */
+@media (max-width: 576px) {
+    .form-tab {
+        padding: 12px 10px;
+        font-size: 14px;
+    }
+    
+    .form-tabs {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .nav-button, .btn-submit {
+        padding: 12px 24px;
+        font-size: 16px;
+        width: 48%;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 0;
+    }
+    
+    .form-container {
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 10px;
+        width: calc(100% - 20px);
+        max-width: 100%;
+    }
+}
