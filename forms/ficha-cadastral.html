@@ -1065,6 +1065,36 @@
                         if (errorMsg && errorMsg.classList.contains('error-message')) {
                             errorMsg.remove();
                         }
+                        
+                        // Validação adicional para campos específicos
+                        if (field.id === 'input_95') { // CPF
+                            if (!validateCPF(field)) isValid = false;
+                        } else if (field.id === 'input_104' || field.id === 'input_106') { // Datas
+                            const parts = field.value.split('/');
+                            if (parts.length !== 3 || parts[2].length !== 4) {
+                                showError(field, 'Formato de data inválido. Use DD/MM/AAAA', 'date-error-' + field.id);
+                                isValid = false;
+                            }
+                        } else if (field.id === 'input_117') { // Email
+                            if (!validateEmail(field)) isValid = false;
+                        } else if (field.id === 'input_118') { // Telefone
+                            if (!validatePhone(field)) isValid = false;
+                        }
+                    }
+                });
+                
+                // Validar também os caracteres especiais dos campos de texto na aba atual
+                const textInputs = currentTab.querySelectorAll('input[type="text"], textarea');
+                textInputs.forEach(input => {
+                    // Ignora campos que têm validação própria
+                    if (input.id === 'input_118') return; // Campo de telefone tem validação própria
+                    
+                    // Valida o campo apenas se ele tiver algum valor
+                    if (input.value.trim() && !validateSpecialChars(input)) {
+                        isValid = false;
+                        if (!firstInvalidField) {
+                            firstInvalidField = input;
+                        }
                     }
                 });
                 
@@ -1083,7 +1113,7 @@
                         firstInvalidField.focus();
                     }
                     
-                    alert('Por favor, preencha todos os campos obrigatórios antes de continuar.');
+                    alert('Por favor, corrija os campos destacados antes de continuar.');
                 }
                 
                 return isValid;
@@ -1304,7 +1334,74 @@
                     }
                     
                     this.value = value;
+
+                    // Validar após formatação
+                    validatePhone(this);
                 });
+
+                // Adicionar validação no blur
+                phoneField.addEventListener('blur', function() {
+                    validatePhone(this);
+                });
+
+                // Validação inicial se o campo já tiver um valor
+                if (phoneField.value) {
+                    validatePhone(phoneField);
+                }
+            }
+            
+            // Função para validar telefone
+            function validatePhone(input) {
+                const errorMsgId = 'phone-error-msg';
+                let existingError = document.getElementById(errorMsgId);
+                
+                // Remove mensagem de erro existente
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Se vazio, retorna para o estilo padrão
+                if (!input.value.trim()) {
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
+                    return true;
+                }
+                
+                // Verificar se contém apenas os caracteres permitidos
+                const regex = /^[()\d\s-]+$/;
+                if (!regex.test(input.value)) {
+                    showError(input, 'Telefone contém caracteres não permitidos.', errorMsgId);
+                    return false;
+                }
+                
+                // Extrair apenas números
+                const numericValue = input.value.replace(/\D/g, '');
+                
+                // Verificar o comprimento do número
+                if (numericValue.length < 10 || numericValue.length > 11) {
+                    showError(input, 'Telefone deve ter 10 ou 11 dígitos.', errorMsgId);
+                    return false;
+                }
+                
+                // Verificar DDD
+                const ddd = numericValue.substring(0, 2);
+                const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
+                
+                if (!validDDDs.includes(ddd)) {
+                    showError(input, 'DDD inválido.', errorMsgId);
+                    return false;
+                }
+                
+                // Se for celular (11 dígitos), verificar se começa com 9
+                if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
+                    showError(input, 'Celular deve começar com 9 após o DDD.', errorMsgId);
+                    return false;
+                }
+                
+                // Telefone válido
+                input.style.borderColor = 'var(--secondary-color)';
+                input.style.backgroundColor = '';
+                return true;
             }
             
             // Validação de e-mail
@@ -1562,62 +1659,53 @@
                 // Impedir o envio padrão inicialmente
                 e.preventDefault();
                 
-                const dataNascimento = document.getElementById('input_104').value;
-                const cpf = document.getElementById('input_95').value;
+                // Verificar todas as abas
+                let isValid = true;
+                let activeTabBeforeValidation = document.querySelector('.tab-content.active').id;
+                
+                // Array com os IDs de todas as abas
+                const allTabs = ['tab-1', 'tab-2', 'tab-3', 'tab-4'];
+                
+                // Validar cada aba
+                for (let i = 0; i < allTabs.length; i++) {
+                    if (!validateTabFields(allTabs[i])) {
+                        isValid = false;
+                        
+                        // Se esta for a primeira aba inválida, mudar para ela
+                        if (activeTabBeforeValidation !== allTabs[i]) {
+                            switchTab(allTabs[i]);
+                            break;
+                        }
+                    }
+                }
+                
+                if (!isValid) {
+                    return false;
+                }
                 
                 // Validação de idade
+                const dataNascimento = document.getElementById('input_104').value;
                 if (!validateAge(dataNascimento)) {
+                    switchTab('tab-1'); // Mudar para a aba onde está o campo de data de nascimento
                     alert('Você deve ter pelo menos 18 anos para se cadastrar.');
                     return false;
                 }
                 
                 // Validação de CPF
                 if (!validateCPF(document.getElementById('input_95'))) {
-                    alert('CPF inválido. Por favor, verifique o número informado.');
+                    switchTab('tab-1'); // Mudar para a aba onde está o campo de CPF
                     return false;
                 }
                 
                 // Validação de e-mail
                 if (!validateEmail(document.getElementById('input_117'))) {
-                    alert('E-mail inválido. Por favor, verifique o endereço informado.');
+                    switchTab('tab-2'); // Mudar para a aba onde está o campo de e-mail
                     return false;
                 }
                 
-                // Validação de caracteres especiais em todos os campos de texto
-                let hasSpecialCharsError = false;
-                let firstInvalidField = null;
-                
-                // Percorre todos os inputs de texto e verifica caracteres especiais
-                const textInputs = document.querySelectorAll('input[type="text"], textarea');
-                textInputs.forEach(input => {
-                    // Ignora campos que têm validação própria
-                    if (input.id === 'input_118') return;
-                    
-                    // Valida o campo
-                    if (!validateSpecialChars(input)) {
-                        hasSpecialCharsError = true;
-                        if (!firstInvalidField) {
-                            firstInvalidField = input;
-                        }
-                    }
-                });
-                
-                // Se encontrou erros de caracteres especiais
-                if (hasSpecialCharsError) {
-                    // Em dispositivos móveis, rola suavemente até o primeiro campo inválido
-                    if (window.innerWidth < 768 && firstInvalidField) {
-                        setTimeout(() => {
-                            firstInvalidField.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'center'
-                            });
-                            firstInvalidField.focus();
-                        }, 100);
-                    } else if (firstInvalidField) {
-                        firstInvalidField.focus();
-                    }
-                    
-                    alert('Por favor, remova os caracteres especiais dos campos destacados.');
+                // Validação de telefone
+                if (!validatePhone(document.getElementById('input_118'))) {
+                    switchTab('tab-2'); // Mudar para a aba onde está o campo de telefone
                     return false;
                 }
                 
