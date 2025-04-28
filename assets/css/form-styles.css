@@ -290,3 +290,62 @@ option {
         width: 100%;
     }
 }
+
+/* Estilos para cabeçalhos de seção */
+.form-section-header {
+    margin-bottom: 20px;
+}
+
+.form-section-title {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 0 10px 0;
+}
+
+/* Estilos para subseções */
+.form-subsection-header {
+    margin: 20px 0 15px 0;
+}
+
+.form-subsection-title {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+}
+
+/* Estilos para checkbox "mesmo endereço" */
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.form-check-input {
+    margin-right: 8px;
+    width: 18px;
+    height: 18px;
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+/* Dicas e mensagens de validação */
+.form-hint {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 4px;
+    display: block;
+}
+
+#cep-success-msg {
+    font-size: 0.75rem;
+    color: var(--success-color);
+}
+
+#cep-error-msg, #cep-status-msg {
+    font-size: 0.75rem;
+}

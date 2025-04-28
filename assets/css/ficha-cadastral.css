@@ -297,3 +297,109 @@ select.doc-type-selected ~ .doc-type-warning {
         max-width: 100%;
     }
 }
+
+/* 
+ * Estilos para Validação e Feedback Visual
+ * ----------------------------------------
+ * Estilos para melhorar a experiência do usuário durante a validação de campos
+ */
+
+/* Estilos para campos com CEP válido */
+.cep-valido {
+    border-color: var(--success-color, green) !important;
+    background-color: var(--success-bg, #f0fff0) !important;
+}
+
+/* Estilos para indicação de carregamento */
+.loading {
+    background-image: url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}
+
+/* Estilos para campos com erro */
+.phone-error {
+    border-color: var(--error-color, red) !important;
+    background-color: var(--error-bg, #fff8f8) !important;
+}
+
+/* Estilos para campos de CPF com erro */
+.cpf-error {
+    border-color: var(--error-color, red) !important;
+    background-color: var(--error-bg, #fff8f8) !important;
+}
+
+/* Estilos para campos com erro de validação geral */
+.validation-error {
+    border-color: var(--error-color, red) !important;
+    background-color: var(--error-bg, #fff8f8) !important;
+}
+
+/* Estilo para mensagens de erro */
+.error-message {
+    color: var(--error-color, red);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+/* Estilos para mensagens de erro de telefone */
+.phone-error-message {
+    color: var(--error-color, red);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Classe auxiliar para sucesso */
+.success-message {
+    color: var(--success-color, green);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Classe para mensagens de status de CEP */
+.cep-status-msg {
+    color: var(--secondary-color);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Classe para mensagens de sucesso de CEP */
+.cep-success-msg {
+    color: var(--success-color, green);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Classe para mensagens de erro de CEP */
+.cep-error-msg {
+    color: var(--error-color, red);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Estilo para data inválida */
+.date-error {
+    border-color: var(--error-color, red) !important;
+    background-color: var(--error-bg, #fff8f8) !important;
+}
+
+/* 
+ * Estilos para elementos que usavam estilo inline
+ * ----------------------------------------------
+ */
+
+/* Seção de endereço de correspondência oculta */
+.hidden-section {
+    display: none;
+}
+
+/* Grupo de checkboxes em coluna */
+.checkbox-group-column {
+    flex-direction: column;
+}
+
+/* Campos ocultos para processamento de datas */
+.hidden-date-fields {
+    display: none;
+}

@@ -91,7 +91,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_94">Nome Completo</label>
-                            <input type="text" id="input_94" name="q94_nomeCompleto" class="form-control" required>
+                            <input type="text" id="input_94" name="q94_nomeCompleto" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples como . ' - são permitidos" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
                         </div>
                     </div>
@@ -122,12 +122,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_95">CPF</label>
-                            <input type="text" id="input_95" name="q95_cpf" class="form-control" placeholder="000.000.000-00" required>
+                            <input type="text" id="input_95" name="q95_cpf" class="form-control" data-validate="true" data-validate-cpf="true" data-error-cpf="CPF inválido. Verifique o número informado." placeholder="000.000.000-00" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_96">Nacionalidade</label>
-                            <input type="text" id="input_96" name="q96_nacionalidade" class="form-control" value="Brasileiro(a)" required>
+                            <input type="text" id="input_96" name="q96_nacionalidade" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" value="Brasileiro(a)" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
@@ -135,13 +135,13 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_97">Naturalidade</label>
-                            <input type="text" id="input_97" name="q97_naturalidade" class="form-control" placeholder="Cidade e Estado de Nascimento" required>
+                            <input type="text" id="input_97" name="q97_naturalidade" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" placeholder="Cidade e Estado de Nascimento" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_104">Data de Nascimento</label>
-                            <input type="text" id="input_104" name="q104_dataNascimento[full]" class="form-control" placeholder="DD/MM/AAAA" required>
+                            <input type="text" id="input_104" name="q104_dataNascimento[full]" class="form-control" data-validate="true" data-validate-date="true" data-validate-age="true" data-error-date="Data inválida. Use o formato DD/MM/AAAA." data-error-age="É necessário ter pelo menos 18 anos." placeholder="DD/MM/AAAA" required>
                             <div class="name-error-message">Data inválida ou menor de 18 anos</div>
                         </div>
                     </div>
@@ -167,13 +167,13 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_106">Data de Expedição</label>
-                            <input type="text" id="input_106" name="q106_dataExpedicao[full]" class="form-control" placeholder="DD/MM/AAAA" required>
+                            <input type="text" id="input_106" name="q106_dataExpedicao[full]" class="form-control" data-validate="true" data-validate-date="true" data-validate-issuance-date="true" data-error-date="Data inválida. Use o formato DD/MM/AAAA." data-error-issuance-date="Data de expedição não pode ser futura." placeholder="DD/MM/AAAA" required>
                             <div class="name-error-message">Data inválida ou posterior à data atual</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_99">Órgão Emissor</label>
-                            <input type="text" id="input_99" name="q99_orgaoEmissor" class="form-control" required>
+                            <input type="text" id="input_99" name="q99_orgaoEmissor" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_100">Nome da Mãe</label>
-                            <input type="text" id="input_100" name="q100_nomeMae" class="form-control" required>
+                            <input type="text" id="input_100" name="q100_nomeMae" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples como . ' - são permitidos" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
                         </div>
                     </div>
@@ -189,7 +189,119 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="input_101">Nome do Pai</label>
-                            <input type="text" id="input_101" name="q101_nomePai" class="form-control">
+                            <input type="text" id="input_101" name="q101_nomePai" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples como . ' - são permitidos">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dados do Cônjuge -->
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Dados do Cônjuge</h3>
+                        <p class="form-section-description">Preencha apenas se for casado(a) ou em união estável</p>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_225">Nome Completo</label>
+                            <input type="text" id="input_225" name="q225_nomeCompletoConjuge" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples como . ' - são permitidos">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_226">Sexo</label>
+                            <select class="form-control" id="input_226" name="q226_sexoConjuge">
+                                <option value="">Selecione</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Feminino">Feminino</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_227">Estado Civil</label>
+                            <select class="form-control" id="input_227" name="q227_estadoCivilConjuge">
+                                <option value="">Selecione</option>
+                                <option value="Solteiro(a)">Solteiro(a)</option>
+                                <option value="Casado(a)">Casado(a)</option>
+                                <option value="Divorciado(a)">Divorciado(a)</option>
+                                <option value="Viúvo(a)">Viúvo(a)</option>
+                                <option value="União Estável">União Estável</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_228">CPF</label>
+                            <input type="text" id="input_228" name="q228_cpfConjuge" class="form-control" data-validate="true" data-validate-cpf="true" data-error-cpf="CPF inválido. Verifique o número informado." placeholder="000.000.000-00">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_229">Nacionalidade</label>
+                            <input type="text" id="input_229" name="q229_nacionalidadeConjuge" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" value="Brasileiro(a)">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_230">Naturalidade</label>
+                            <input type="text" id="input_230" name="q230_naturalidadeConjuge" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" placeholder="Cidade e Estado de Nascimento">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_231">Data de Nascimento</label>
+                            <input type="text" id="input_231" name="q231_dataNascimentoConjuge[full]" class="form-control" data-validate="true" data-validate-date="true" data-error-date="Data inválida. Use o formato DD/MM/AAAA." placeholder="DD/MM/AAAA">
+                            <div class="name-error-message">Data inválida</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_232">Tipo de Documento</label>
+                            <select class="form-control" id="input_232" name="q232_tipoDocumentoConjuge">
+                                <option value="">Selecione</option>
+                                <option value="RG">RG</option>
+                                <option value="CNH">CNH</option>
+                                <option value="Passaporte">Passaporte</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_233">Nº do Documento</label>
+                            <input type="text" id="input_233" name="q233_numeroDocumentoConjuge" class="form-control">
+                            <div class="name-error-message">Formato inválido para o tipo de documento selecionado</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_234">Data de Expedição</label>
+                            <input type="text" id="input_234" name="q234_dataExpedicaoConjuge[full]" class="form-control" data-validate="true" data-validate-date="true" data-validate-issuance-date="true" data-error-date="Data inválida. Use o formato DD/MM/AAAA." data-error-issuance-date="Data de expedição não pode ser futura." placeholder="DD/MM/AAAA">
+                            <div class="name-error-message">Data inválida ou posterior à data atual</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_235">Órgão Emissor</label>
+                            <input type="text" id="input_235" name="q235_orgaoEmissorConjuge" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_236">Nome da Mãe</label>
+                            <input type="text" id="input_236" name="q236_nomeMaeConjuge" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples como . ' - são permitidos">
+                            <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="input_237">Nome do Pai</label>
+                            <input type="text" id="input_237" name="q237_nomePaiConjuge" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples como . ' - são permitidos">
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples como . ' - são permitidos</div>
                         </div>
                     </div>
@@ -210,15 +322,20 @@
                         <span>*</span> Campos obrigatórios
                     </div>
                     
+                    <!-- Endereço de Residência -->
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Endereço de Residência</h3>
+                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_108">CEP</label>
-                            <input type="text" id="input_108" name="q108_cep" class="form-control" placeholder="00000-000" required>
+                            <input type="text" id="input_108" name="q108_cepResidencia" class="form-control" data-validate="true" data-validate-cep="true" data-error-cep="CEP inválido. Deve conter 8 dígitos." placeholder="00000-000" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_109">Logradouro</label>
-                            <input type="text" id="input_109" name="q109_logradouro" class="form-control" required>
+                            <input type="text" id="input_109" name="q109_logradouroResidencia" class="form-control" required>
                             <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                     </div>
@@ -226,12 +343,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_112">Número</label>
-                            <input type="text" id="input_112" name="q112_numero" class="form-control" required>
+                            <input type="text" id="input_112" name="q112_numeroResidencia" class="form-control" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="input_113">Complemento</label>
-                            <input type="text" id="input_113" name="q113_complemento" class="form-control">
+                            <input type="text" id="input_113" name="q113_complementoResidencia" class="form-control">
                             <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                     </div>
@@ -239,13 +356,13 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_111">Bairro</label>
-                            <input type="text" id="input_111" name="q111_bairro" class="form-control" required>
+                            <input type="text" id="input_111" name="q111_bairroResidencia" class="form-control" required>
                             <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_110">Cidade</label>
-                            <input type="text" id="input_110" name="q110_cidade" class="form-control" required>
+                            <input type="text" id="input_110" name="q110_cidadeResidencia" class="form-control" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
@@ -253,7 +370,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_114">Estado</label>
-                            <select class="form-control" id="input_114" name="q114_estado" required>
+                            <select class="form-control" id="input_114" name="q114_estadoResidencia" required>
                                 <option value="">Selecione</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -284,6 +401,106 @@
                                 <option value="TO">Tocantins</option>
                             </select>
                         </div>
+                    </div>
+                    
+                    <!-- Opção para usar o mesmo endereço -->
+                    <div class="form-row">
+                        <div class="form-group checkbox-full-width">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="same_address_checkbox" name="same_address" class="checkbox-input" checked>
+                                <span class="checkbox-label">Usar o mesmo endereço para correspondência</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Endereço de Correspondência (inicialmente oculto) -->
+                    <div id="correspondence_address_section" class="hidden-section">
+                        <div class="form-section-header">
+                            <h3 class="form-section-title">Endereço de Correspondência</h3>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="input_215">CEP</label>
+                                <input type="text" id="input_215" name="q215_cepCorrespondencia" class="form-control" data-validate="true" data-validate-cep="true" data-error-cep="CEP inválido. Deve conter 8 dígitos." placeholder="00000-000" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required" for="input_216">Logradouro</label>
+                                <input type="text" id="input_216" name="q216_logradouroCorrespondencia" class="form-control" required>
+                                <div class="name-error-message">Caracteres especiais não permitidos</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="input_217">Número</label>
+                                <input type="text" id="input_217" name="q217_numeroCorrespondencia" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="input_219">Complemento</label>
+                                <input type="text" id="input_219" name="q219_complementoCorrespondencia" class="form-control">
+                                <div class="name-error-message">Caracteres especiais não permitidos</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="input_220">Bairro</label>
+                                <input type="text" id="input_220" name="q220_bairroCorrespondencia" class="form-control" required>
+                                <div class="name-error-message">Caracteres especiais não permitidos</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label required" for="input_221">Cidade</label>
+                                <input type="text" id="input_221" name="q221_cidadeCorrespondencia" class="form-control" required>
+                                <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label required" for="input_222">Estado</label>
+                                <select class="form-control" id="input_222" name="q222_estadoCorrespondencia" required>
+                                    <option value="">Selecione</option>
+                                    <option value="AC">Acre</option>
+                                    <option value="AL">Alagoas</option>
+                                    <option value="AP">Amapá</option>
+                                    <option value="AM">Amazonas</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="DF">Distrito Federal</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="GO">Goiás</option>
+                                    <option value="MA">Maranhão</option>
+                                    <option value="MT">Mato Grosso</option>
+                                    <option value="MS">Mato Grosso do Sul</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="PB">Paraíba</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="PI">Piauí</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="RN">Rio Grande do Norte</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="RO">Rondônia</option>
+                                    <option value="RR">Roraima</option>
+                                    <option value="SC">Santa Catarina</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="SE">Sergipe</option>
+                                    <option value="TO">Tocantins</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Informações de Contato</h3>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_118">Telefone</label>
                             <div class="phone-input-container">
@@ -292,7 +509,7 @@
                                     <span class="country-code" id="selected-code">+55</span>
                                     <span class="dropdown-icon">▼</span>
                                 </div>
-                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
+                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" data-validate="true" data-validate-phone="true" data-error-phone="Telefone inválido. Use (XX) XXXX-XXXX para fixo ou (XX) XXXXX-XXXX para celular." placeholder="(00) 00000-0000" required>
                                 <!-- Campo oculto para armazenar o código do país -->
                                 <input type="hidden" id="input_118_country_code" name="q118_paisTelefone" value="+55">
                                 <div id="country-dropdown" class="country-dropdown">
@@ -305,7 +522,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_117">E-mail</label>
-                            <input type="email" id="input_117" name="q117_email" class="form-control" placeholder="exemplo@exemplo.com" required>
+                            <input type="email" id="input_117" name="q117_email" class="form-control" data-validate="true" data-validate-email="true" data-error-email="E-mail inválido. Por favor, verifique." placeholder="exemplo@exemplo.com" required>
                         </div>
                     </div>
                     
@@ -426,7 +643,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required">Declaração de Origem dos Recursos</label>
-                            <div class="checkbox-group" style="flex-direction: column;">
+                            <div class="checkbox-group checkbox-group-column">
                                 <label class="checkbox-item">
                                     <input type="checkbox" name="q124_declaracaoOrigemRecursos[]" value="Declaro que os recursos a serem investidos são próprios e de origem lícita" class="checkbox-input" required>
                                     <span class="checkbox-label">Declaro que os recursos a serem investidos são próprios e de origem lícita</span>
@@ -453,7 +670,7 @@
             </div>
             
             <!-- Campos ocultos para processamento de datas pelo JotForm -->
-            <div style="display:none">
+            <div class="hidden-date-fields">
                 <!-- Campos ocultos para Data de Nascimento -->
                 <input type="hidden" id="day_104" name="q104_dataNascimento[day]" />
                 <input type="hidden" id="month_104" name="q104_dataNascimento[month]" />
@@ -463,6 +680,16 @@
                 <input type="hidden" id="day_106" name="q106_dataExpedicao[day]" />
                 <input type="hidden" id="month_106" name="q106_dataExpedicao[month]" />
                 <input type="hidden" id="year_106" name="q106_dataExpedicao[year]" />
+                
+                <!-- Campos ocultos para Data de Nascimento do Cônjuge -->
+                <input type="hidden" id="day_231" name="q231_dataNascimentoConjuge[day]" />
+                <input type="hidden" id="month_231" name="q231_dataNascimentoConjuge[month]" />
+                <input type="hidden" id="year_231" name="q231_dataNascimentoConjuge[year]" />
+                
+                <!-- Campos ocultos para Data de Expedição do Cônjuge -->
+                <input type="hidden" id="day_234" name="q234_dataExpedicaoConjuge[day]" />
+                <input type="hidden" id="month_234" name="q234_dataExpedicaoConjuge[month]" />
+                <input type="hidden" id="year_234" name="q234_dataExpedicaoConjuge[year]" />
             </div>
         </form>
     </div>
@@ -471,2285 +698,20 @@
     <script src="../assets/js/vendor/jquery-1.8.0.min.js"></script>
     <script src="../assets/js/vendor/json2.js"></script>
     <script src="../assets/js/vendor/maskedinput.min.js"></script>
-    <script src="../assets/js/vendor/smoothscroll.min.js"></script>
+    <script src="../assets/js/vendor/smoothscroll.min.js" defer></script>
     
-    <script src="../assets/js/prototype.js"></script>
-    <script src="../assets/js/protoplus.js"></script>
-    <script src="../assets/js/protoplus-ui-form.js"></script>
+    <!-- Apenas o JotForm é necessário para envio do formulário -->
     <script src="../assets/js/jotform.js"></script>
-    <script src="../assets/js/calendarview.js"></script>
-    <script src="../assets/js/location.js"></script>
-    <script src="../assets/js/errorNavigation.js"></script>
     
-    <script>
-        // Adicionar no início do script, após a declaração de variáveis
-        function addRealTimeErrorClearing() {
-            // Selecionar todos os campos do formulário
-            const formFields = document.querySelectorAll('input, select, textarea');
-            
-            formFields.forEach(field => {
-                field.addEventListener('input', function() {
-                    // Se o campo está com erro (borda vermelha)
-                    if (this.style.borderColor === 'var(--error-color)' || 
-                        this.style.backgroundColor === 'var(--error-bg)') {
-                        
-                        // Para campos obrigatórios, verificar se está preenchido
-                        if (this.required && !this.value.trim()) return;
-                        
-                        // Remover estilo de erro
-                        this.style.borderColor = '';
-                        this.style.backgroundColor = '';
-                        
-                        // Remover mensagem de erro se existir
-                        const nextEl = this.nextElementSibling;
-                        if (nextEl && nextEl.classList.contains('error-message')) {
-                            nextEl.remove();
-                        }
-                    }
-                });
-            });
-        }
-
-        // Chamar esta função após o DOM ser carregado
-        addRealTimeErrorClearing();
-
-        // Formatação de campos
-        document.addEventListener('DOMContentLoaded', function() {
-            // Detectar se o dispositivo é mobile
-            const isMobile = window.innerWidth < 768;
-            
-            // Elementos
-            const tabs = document.querySelectorAll('.form-tab');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const nextButtons = document.querySelectorAll('.next-tab');
-            const prevButtons = document.querySelectorAll('.prev-tab');
-            
-            // Função para mudar de aba
-            function switchTab(tabId) {
-                // Remove a classe ativa de todas as abas
-                tabs.forEach(tab => tab.classList.remove('active'));
-                tabContents.forEach(content => content.classList.remove('active'));
-                
-                // Adiciona a classe ativa à aba selecionada
-                document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-                
-                // Rola para o topo do formulário em dispositivos móveis
-                if (isMobile) {
-                    document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-            
-            // Adiciona event listeners para as abas
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
-                });
-            });
-            
-            // Botões de próximo
-            nextButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const nextTabId = this.getAttribute('data-next');
-                    
-                    // Valida os campos da aba atual antes de avançar
-                    const currentTabId = document.querySelector('.tab-content.active').id;
-                    if (validateTabFields(currentTabId)) {
-                        switchTab(nextTabId);
-                    }
-                });
-            });
-            
-            // Botões de anterior
-            prevButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const prevTabId = this.getAttribute('data-prev');
-                    switchTab(prevTabId);
-                });
-            });
-            
-            // Função para validar campos de uma aba específica
-            function validateTabFields(tabId) {
-                const currentTab = document.getElementById(tabId);
-                const requiredFields = currentTab.querySelectorAll('input[required], select[required], textarea[required]');
-                
-                let isValid = true;
-                let firstInvalidField = null;
-                let invalidFieldNames = [];
-                
-                requiredFields.forEach(field => {
-                    if (!field.value.trim()) {
-                        isValid = false;
-                        field.style.borderColor = 'var(--error-color)';
-                        field.style.backgroundColor = 'var(--error-bg)';
-                        
-                        // Armazena o primeiro campo inválido
-                        if (!firstInvalidField) {
-                            firstInvalidField = field;
-                        }
-                        
-                        // Adiciona mensagem de erro se não existir
-                        let errorMsg = field.nextElementSibling;
-                        if (!errorMsg || !errorMsg.classList.contains('error-message')) {
-                            errorMsg = document.createElement('div');
-                            errorMsg.className = 'error-message';
-                            errorMsg.textContent = 'Este campo é obrigatório';
-                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
-                        }
-                        
-                        // Coleta o nome do campo (label)
-                        const fieldLabel = field.closest('.form-group').querySelector('label');
-                        if (fieldLabel) {
-                            let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                            invalidFieldNames.push(fieldName);
-                        }
-                    } else {
-                        // Remove estilo de erro
-                        field.style.borderColor = '';
-                        field.style.backgroundColor = '';
-                        
-                        // Remove mensagem de erro se existir
-                        const errorMsg = field.nextElementSibling;
-                        if (errorMsg && errorMsg.classList.contains('error-message')) {
-                            errorMsg.remove();
-                        }
-                        
-                        // Validação adicional para campos específicos
-                        if (field.id === 'input_95') { // CPF
-                            if (!validateCPF(field)) {
-                                isValid = false;
-                                // Coleta o nome do campo (label)
-                                const fieldLabel = field.closest('.form-group').querySelector('label');
-                                if (fieldLabel) {
-                                    let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                    invalidFieldNames.push(fieldName + ' (formato inválido)');
-                                }
-                            }
-                        } else if (field.id === 'input_104' || field.id === 'input_106') { // Datas
-                            const parts = field.value.split('/');
-                            if (parts.length !== 3 || parts[2].length !== 4) {
-                                showError(field, 'Formato de data inválido. Use DD/MM/AAAA', 'date-error-' + field.id);
-                                isValid = false;
-                                
-                                // Coleta o nome do campo (label)
-                                const fieldLabel = field.closest('.form-group').querySelector('label');
-                                if (fieldLabel) {
-                                    let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                    invalidFieldNames.push(fieldName + ' (formato inválido)');
-                                }
-                            } else if (field.id === 'input_104' && !validateAge(field.value)) {
-                                isValid = false;
-                                // Coleta o nome do campo (label)
-                                const fieldLabel = field.closest('.form-group').querySelector('label');
-                                if (fieldLabel) {
-                                    let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                    invalidFieldNames.push(fieldName + ' (menor de 18 anos)');
-                                }
-                            } else if (field.id === 'input_106' && !validateIssuanceDate(parts)) {
-                                isValid = false;
-                                // Coleta o nome do campo (label)
-                                const fieldLabel = field.closest('.form-group').querySelector('label');
-                                if (fieldLabel) {
-                                    let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                    invalidFieldNames.push(fieldName + ' (data inválida)');
-                                }
-                            }
-                        } else if (field.id === 'input_117') { // Email
-                            if (!validateEmail(field)) {
-                                isValid = false;
-                                // Coleta o nome do campo (label)
-                                const fieldLabel = field.closest('.form-group').querySelector('label');
-                                if (fieldLabel) {
-                                    let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                    invalidFieldNames.push(fieldName + ' (formato inválido)');
-                                }
-                            }
-                        } else if (field.id === 'input_118') { // Telefone
-                            if (!validatePhone(field)) {
-                                isValid = false;
-                                // Coleta o nome do campo (label)
-                                const fieldLabel = field.closest('.form-group').querySelector('label');
-                                if (fieldLabel) {
-                                    let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                    invalidFieldNames.push(fieldName + ' (formato inválido)');
-                                }
-                            }
-                        }
-                    }
-                });
-                
-                // Validar também os caracteres especiais dos campos de texto na aba atual
-                const textInputs = currentTab.querySelectorAll('input[type="text"], textarea');
-                textInputs.forEach(input => {
-                    // Ignora campos que têm validação própria
-                    if (input.id === 'input_118') return; // Campo de telefone tem validação própria
-                    
-                    // Valida o campo apenas se ele tiver algum valor
-                    if (input.value.trim() && !validateSpecialChars(input)) {
-                        isValid = false;
-                        if (!firstInvalidField) {
-                            firstInvalidField = input;
-                        }
-                        
-                        // Coleta o nome do campo (label)
-                        const fieldLabel = input.closest('.form-group').querySelector('label');
-                        if (fieldLabel) {
-                            let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                            invalidFieldNames.push(fieldName + ' (caracteres inválidos)');
-                        }
-                    }
-                });
-                
-                // Validar arquivos de upload na aba atual
-                const fileInputs = currentTab.querySelectorAll('input[type="file"]');
-                fileInputs.forEach(input => {
-                    if (input.required || (input.files && input.files.length > 0)) {
-                        if (!validateFileUpload(input)) {
-                            isValid = false;
-                            if (!firstInvalidField) {
-                                firstInvalidField = input;
-                            }
-                            
-                            // Coleta o nome do campo (label)
-                            const fieldLabel = input.closest('.form-group').querySelector('label');
-                            if (fieldLabel) {
-                                let fieldName = fieldLabel.textContent.replace('*', '').trim();
-                                invalidFieldNames.push(fieldName + ' (arquivo inválido)');
-                            }
-                        }
-                    }
-                });
-                
-                // Se não for válido, mostra uma mensagem para o usuário
-                if (!isValid) {
-                    // Em dispositivos móveis, rola suavemente até o primeiro campo inválido
-                    if (window.innerWidth < 768 && firstInvalidField) {
-                        setTimeout(() => {
-                            firstInvalidField.scrollIntoView({ 
-                                behavior: 'smooth', 
-                                block: 'center'
-                            });
-                            firstInvalidField.focus();
-                        }, 100);
-                    } else if (firstInvalidField) {
-                        firstInvalidField.focus();
-                    }
-                    
-                    // Criar mensagem de erro com os campos inválidos listados
-                    let errorMessage = 'Por favor, corrija os seguintes campos antes de continuar:\n';
-                    
-                    // Se tiver muitos campos com erro, limitar a exibição
-                    if (invalidFieldNames.length > 0) {
-                        invalidFieldNames.forEach((fieldName, index) => {
-                            errorMessage += `\n• ${fieldName}`;
-                        });
-                    } else {
-                        errorMessage = 'Por favor, corrija os campos destacados antes de continuar.';
-                    }
-                    
-                    alert(errorMessage);
-                }
-                
-                return isValid;
-            }
-            
-            // Função para validar caracteres especiais
-            function validateSpecialChars(input) {
-                // Remove mensagem de erro existente
-                const errorMsgId = 'special-char-error-' + input.id;
-                let existingError = document.getElementById(errorMsgId);
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // Se o campo estiver vazio, retorna sem validar
-                if (!input.value.trim()) {
-                    input.classList.remove('special-char-error');
-                    return true;
-                }
-                
-                // Regex para validar caracteres especiais (permite letras, números, espaços e alguns caracteres comuns como . , - /)
-                // Ajuste o regex conforme necessário para os seus requisitos específicos
-                let regex;
-                
-                // Regex específico para cada tipo de campo
-                if (input.id === 'input_94' || input.id === 'input_100' || input.id === 'input_101') {
-                    // Validação para campos de nome: apenas letras e espaços
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Apenas letras, espaços e caracteres simples como . \' - são permitidos em nomes';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_96') {
-                    // Validação para nacionalidade: permitir letras, espaços, pontos, hífens e parênteses
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.\-()]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Apenas letras, espaços e caracteres simples como . - ( ) são permitidos';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_97') {
-                    // Validação para naturalidade: permitir letras, espaços, pontos, hífens e parênteses
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.\-()]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Apenas letras, espaços e caracteres simples como . - ( ) são permitidos';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_110') {
-                    // Validação para cidade: apenas letras e espaços
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.-]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Apenas letras, espaços e caracteres simples são permitidos';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_99') {
-                    // Validação para órgão emissor: apenas letras, números e alguns caracteres
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s./-]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Apenas letras, números, espaços e caracteres simples são permitidos';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_109' || input.id === 'input_111') {
-                    // Validação para logradouro e bairro: permitir letras, números e caracteres comuns em endereços
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,º°ª\-/]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Caracteres não permitidos no endereço';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_95') { // CPF
-                    regex = /^[0-9.-]+$/;
-                } else if (input.id === 'input_98') { // Número Documento
-                    // Validação específica baseada no tipo de documento selecionado
-                    const tipoDoc = document.getElementById('input_105').value;
-                    if (tipoDoc === 'RG' || tipoDoc === 'CNH') {
-                        regex = /^[0-9.-]+$/;
-                    } else if (tipoDoc === 'Passaporte') {
-                        regex = /^[A-Z0-9.-]+$/;
-                    } else {
-                        regex = /^[0-9a-zA-Z-]+$/;
-                    }
-                    
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Formato inválido para o tipo de documento selecionado';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_104' || input.id === 'input_106') { // Datas
-                    regex = /^[0-9/]+$/;
-                } else if (input.id === 'input_108') { // CEP
-                    regex = /^[0-9-]+$/;
-                } else if (input.id === 'input_112') { // Número (endereço)
-                    regex = /^[0-9a-zA-Z-/]+$/;
-                } else if (input.id === 'input_123') { // Textarea de detalhes de PPE
-                    // Para textarea, permitimos mais caracteres, mas ainda evitamos alguns potencialmente perigosos
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()[\]{}:;!?@#$%&*+=/\-'"`]+$/;
-                    if (!regex.test(input.value)) {
-                        input.classList.add('special-char-error');
-                        const errorMsg = document.createElement('div');
-                        errorMsg.id = errorMsgId;
-                        errorMsg.className = 'error-message';
-                        errorMsg.textContent = 'Alguns caracteres especiais não são permitidos';
-                        input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                        return false;
-                    }
-                } else if (input.id === 'input_117') { // Email
-                    // Email já possui validação específica
-                    return true;
-                } else {
-                    // Para os demais campos de texto (endereços, etc.)
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()_-]+$/;
-                }
-                
-                if (!regex.test(input.value)) {
-                    // Campo contém caracteres não permitidos
-                    input.classList.add('special-char-error');
-                    
-                    // Adiciona mensagem de erro
-                    const errorMsg = document.createElement('div');
-                    errorMsg.id = errorMsgId;
-                    errorMsg.className = 'error-message';
-                    errorMsg.textContent = 'Caracteres especiais não permitidos';
-                    input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                    
-                    return false;
-                } else {
-                    // Campo válido
-                    input.classList.remove('special-char-error');
-                    return true;
-                }
-            }
-            
-            // Aplica validação de caracteres especiais a todos os campos de texto
-            const textInputs = document.querySelectorAll('input[type="text"], textarea');
-            textInputs.forEach(input => {
-                // Ignora campos que não devem ser validados para caracteres especiais
-                if (input.id === 'input_118') return; // Campo de telefone tem validação própria
-                
-                // Adiciona validação específica para campos de nome
-                if (input.id === 'input_94' || input.id === 'input_100' || input.id === 'input_101') {
-                    input.addEventListener('input', function() {
-                        // Remover números e caracteres especiais enquanto o usuário digita
-                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]/g, '');
-                        if (cleanedValue !== this.value) {
-                            const cursorPos = this.selectionStart;
-                            const lenDiff = this.value.length - cleanedValue.length;
-                            this.value = cleanedValue;
-                            // Manter posição do cursor após a limpeza
-                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                            
-                            // Mostra um feedback visual temporário
-                            this.classList.add('name-error');
-                            setTimeout(() => {
-                                this.classList.remove('name-error');
-                            }, 500);
-                        }
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]+$/;
-                        if (!regex.test(this.value) && this.value.trim() !== '') {
-                            this.classList.add('name-error');
-                        } else {
-                            this.classList.remove('name-error');
-                        }
-                        validateSpecialChars(this);
-                    });
-                } 
-                // Validação específica para nacionalidade, naturalidade e cidade
-                else if (input.id === 'input_96' || input.id === 'input_97' || input.id === 'input_110') {
-                    input.addEventListener('input', function() {
-                        // Remover caracteres não permitidos enquanto o usuário digita
-                        // Permitir parênteses para o campo de nacionalidade
-                        let regex;
-                        if (input.id === 'input_96' || input.id === 'input_97') {
-                            // Regex para nacionalidade e naturalidade: permite letras, espaços, hífens, pontos e parênteses
-                            regex = /[^a-zA-ZÀ-ÖØ-öø-ÿ\s.\-()]/g;
-                        } else {
-                            // Regex para cidade: permite letras, espaços, hífens e pontos
-                            regex = /[^a-zA-ZÀ-ÖØ-öø-ÿ\s.-]/g;
-                        }
-                        
-                        const cleanedValue = this.value.replace(regex, '');
-                        if (cleanedValue !== this.value) {
-                            const cursorPos = this.selectionStart;
-                            const lenDiff = this.value.length - cleanedValue.length;
-                            this.value = cleanedValue;
-                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                            
-                            this.classList.add('name-error');
-                            setTimeout(() => {
-                                this.classList.remove('name-error');
-                            }, 500);
-                        }
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        validateSpecialChars(this);
-                    });
-                }
-                // Validação específica para órgão emissor
-                else if (input.id === 'input_99') {
-                    input.addEventListener('input', function() {
-                        // Permitir letras, números e alguns caracteres específicos
-                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s./-]/g, '');
-                        if (cleanedValue !== this.value) {
-                            const cursorPos = this.selectionStart;
-                            const lenDiff = this.value.length - cleanedValue.length;
-                            this.value = cleanedValue;
-                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                            
-                            this.classList.add('name-error');
-                            setTimeout(() => {
-                                this.classList.remove('name-error');
-                            }, 500);
-                        }
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        validateSpecialChars(this);
-                    });
-                }
-                // Validação específica para logradouro e bairro
-                else if (input.id === 'input_109' || input.id === 'input_111') {
-                    input.addEventListener('input', function() {
-                        // Permitir letras, números e caracteres comuns em endereços
-                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,º°ª\-/]/g, '');
-                        if (cleanedValue !== this.value) {
-                            const cursorPos = this.selectionStart;
-                            const lenDiff = this.value.length - cleanedValue.length;
-                            this.value = cleanedValue;
-                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                            
-                            this.classList.add('name-error');
-                            setTimeout(() => {
-                                this.classList.remove('name-error');
-                            }, 500);
-                        }
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        validateSpecialChars(this);
-                    });
-                }
-                // Validação específica para o campo de textarea de PPE
-                else if (input.id === 'input_123') {
-                    input.addEventListener('input', function() {
-                        // Permitir mais caracteres, mas ainda evitar alguns potencialmente perigosos
-                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()[\]{}:;!?@#$%&*+=/\-'"`]/g, '');
-                        if (cleanedValue !== this.value) {
-                            const cursorPos = this.selectionStart;
-                            const lenDiff = this.value.length - cleanedValue.length;
-                            this.value = cleanedValue;
-                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                            
-                            this.classList.add('name-error');
-                            setTimeout(() => {
-                                this.classList.remove('name-error');
-                            }, 500);
-                        }
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        validateSpecialChars(this);
-                    });
-                }
-                // Validação específica para complemento de endereço
-                else if (input.id === 'input_113') {
-                    input.addEventListener('input', function() {
-                        // Permitir letras, números e caracteres comuns em complementos de endereço
-                        const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()º°ª\-/]+/g, '');
-                        if (cleanedValue !== this.value) {
-                            const cursorPos = this.selectionStart;
-                            const lenDiff = this.value.length - cleanedValue.length;
-                            this.value = cleanedValue;
-                            this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                            
-                            this.classList.add('name-error');
-                            setTimeout(() => {
-                                this.classList.remove('name-error');
-                            }, 500);
-                        }
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        validateSpecialChars(this);
-                    });
-                }
-                else {
-                    // Para outros campos, aplica a validação padrão
-                    input.addEventListener('input', function() {
-                        validateSpecialChars(this);
-                    });
-                    
-                    input.addEventListener('blur', function() {
-                        validateSpecialChars(this);
-                    });
-                }
-                
-                // Validação inicial se o campo já tiver valor
-                if (input.value) {
-                    validateSpecialChars(input);
-                }
-            });
-            
-            // Formatação de CPF
-            const cpfInput = document.getElementById('input_95');
-            if (cpfInput) {
-                // Format CPF as user types
-                cpfInput.addEventListener('input', function() {
-                    let value = this.value.replace(/\D/g, '');
-                    if (value.length > 11) {
-                        value = value.substring(0, 11);
-                    }
-                    
-                    if (value.length > 9) {
-                        this.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-                    } else if (value.length > 6) {
-                        this.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-                    } else if (value.length > 3) {
-                        this.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-                    } else {
-                        this.value = value;
-                    }
-
-                    // Real-time validation as user types
-                    validateCPF(this);
-                });
-
-                // Validate on blur
-                cpfInput.addEventListener('blur', function() {
-                    validateCPF(this);
-                });
-
-                // Initial validation if field has a value
-                if (cpfInput.value) {
-                    validateCPF(cpfInput);
-                }
-            }
-            
-            // Formatação de Datas
-            const dateFields = document.querySelectorAll('#input_104, #input_106');
-            dateFields.forEach(function(field) {
-                field.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length > 8) value = value.slice(0, 8);
-                    
-                    if (value.length > 4) {
-                        value = value.replace(/^(\d{2})(\d{2})(\d{0,4})$/, '$1/$2/$3');
-                    } else if (value.length > 2) {
-                        value = value.replace(/^(\d{2})(\d{0,2})$/, '$1/$2');
-                    }
-                    
-                    e.target.value = value;
-                    
-                    // Preencher os campos ocultos para o JotForm
-                    const fieldId = e.target.id;
-                    const parts = value.split('/');
-                    if (parts.length === 3 && parts[2].length === 4) {
-                        document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
-                        document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
-                        document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
-                        
-                        // Validação específica para cada tipo de data
-                        if (fieldId === 'input_104') {
-                            validateAge(parts);
-                        } else if (fieldId === 'input_106') {
-                            validateIssuanceDate(parts);
-                        }
-                    }
-                });
-                
-                field.addEventListener('blur', function() {
-                    const parts = this.value.split('/');
-                    if (parts.length === 3 && parts[2].length === 4) {
-                        if (this.id === 'input_104') {
-                            validateAge(parts);
-                        } else if (this.id === 'input_106') {
-                            validateIssuanceDate(parts);
-                        }
-                    } else if (this.value.trim() !== '') {
-                        // Data incompleta ou inválida
-                        this.classList.add('date-error');
-                    }
-                });
-            });
-            
-            // Formatação de CEP
-            const cepField = document.getElementById('input_108');
-            if (cepField) {
-                let lastValue = '';
-                
-                cepField.addEventListener('input', function(e) {
-                    let value = this.value.replace(/\D/g, '');
-                    if (value.length > 8) value = value.slice(0, 8);
-                    
-                    if (value.length > 5) {
-                        value = value.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
-                    }
-                    
-                    this.value = value;
-                    
-                    // Verifica se chegamos a 8 dígitos numéricos pela primeira vez neste evento
-                    const numericValue = value.replace(/\D/g, '');
-                    if (numericValue.length === 8 && numericValue !== lastValue) {
-                        // Guarda o valor para evitar buscas duplicadas
-                        lastValue = numericValue;
-                        
-                        // Pequeno timeout para garantir que a formatação do valor foi aplicada antes da busca
-                        setTimeout(() => {
-                            buscarCep(numericValue);
-                        }, 50);
-                    } else if (numericValue.length > 0 && numericValue.length < 8) {
-                        // Se o CEP estiver incompleto, mostrar feedback visual
-                        this.classList.remove('cep-valido');
-                        this.style.borderColor = '';
-                        this.style.backgroundColor = '';
-                        
-                        // Remover mensagem de erro se existir
-                        const errorEl = document.getElementById('cep-error-msg');
-                        if (errorEl) errorEl.remove();
-                        
-                        // Remover mensagem de sucesso se existir
-                        const successEl = document.getElementById('cep-success-msg');
-                        if (successEl) successEl.remove();
-                        
-                        // Resetar o lastValue quando o valor é apagado
-                        lastValue = numericValue;
-                    }
-                });
-                
-                // Busca também quando o campo perde o foco
-                cepField.addEventListener('blur', function() {
-                    const cep = this.value.replace(/\D/g, '');
-                    if (cep.length === 8) {
-                        buscarCep(cep);
-                    }
-                });
-            }
-            
-            // Formatação de Telefone
-            const phoneField = document.getElementById('input_118');
-            if (phoneField) {
-                phoneField.addEventListener('input', function() {
-                    // Obter o código do país selecionado
-                    const countryCode = document.getElementById('input_118_country_code').value;
-                    let value = this.value.replace(/\D/g, '');
-                    
-                    // Formatação específica para cada país
-                    if (countryCode === '+55') {
-                        // Brasil
-                        if (value.length > 11) value = value.slice(0, 11);
-                        
-                        if (value.length > 6) {
-                            // Verifica se é celular (11 dígitos) ou fixo (10 dígitos)
-                            if (value.length > 10) {
-                                // Celular: (XX) 9XXXX-XXXX
-                                value = value.replace(/^(\d{2})(\d{5})(\d{0,4})$/, '($1) $2-$3');
-                            } else {
-                                // Fixo: (XX) XXXX-XXXX
-                                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
-                            }
-                        } else if (value.length > 2) {
-                            // Formatação parcial
-                            value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
-                        }
-                    } else if (countryCode === '+1') {
-                        // EUA/Canadá
-                        if (value.length > 10) value = value.slice(0, 10);
-                        
-                        if (value.length > 6) {
-                            // Formato: (XXX) XXX-XXXX
-                            value = value.replace(/^(\d{3})(\d{3})(\d{0,4})$/, '($1) $2-$3');
-                        } else if (value.length > 3) {
-                            // Formatação parcial
-                            value = value.replace(/^(\d{3})(\d{0,3})$/, '($1) $2');
-                        }
-                    } else {
-                        // Outros países - formato genérico
-                        if (value.length > 15) value = value.slice(0, 15);
-                        
-                        // Adicionar alguma formatação básica
-                        if (value.length > 8) {
-                            value = value.replace(/^(\d{4})(\d{4})(\d{0,7})$/, '$1 $2 $3');
-                        } else if (value.length > 4) {
-                            value = value.replace(/^(\d{4})(\d{0,4})$/, '$1 $2');
-                        }
-                    }
-                    
-                    this.value = value;
-
-                    // Validar após formatação
-                    validatePhone(this);
-                });
-
-                // Adicionar validação no blur
-                phoneField.addEventListener('blur', function() {
-                    validatePhone(this);
-                });
-
-                // Validação inicial se o campo já tiver um valor
-                if (phoneField.value) {
-                    validatePhone(phoneField);
-                }
-            }
-            
-            // Validação de e-mail
-            const emailField = document.getElementById('input_117');
-            if (emailField) {
-                emailField.addEventListener('input', function() {
-                    validateEmail(this);
-                });
-                
-                emailField.addEventListener('blur', function() {
-                    validateEmail(this);
-                });
-                
-                // Validação inicial se o campo já tiver um valor
-                if (emailField.value) {
-                    validateEmail(emailField);
-                }
-            }
-            
-            // Validação específica para campos de nome
-            const nameFields = document.querySelectorAll('#input_94, #input_100, #input_101');
-            nameFields.forEach(function(field) {
-                field.addEventListener('input', function() {
-                    // Remover números e caracteres especiais enquanto o usuário digita
-                    const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s.'-]/g, '');
-                    if (cleanedValue !== this.value) {
-                        const cursorPos = this.selectionStart;
-                        const lenDiff = this.value.length - cleanedValue.length;
-                        this.value = cleanedValue;
-                        // Manter posição do cursor após a limpeza
-                        this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                    }
-                    
-                    // Aplicar validação padrão
-                    validateSpecialChars(this);
-                });
-                
-                field.addEventListener('blur', function() {
-                    validateSpecialChars(this);
-                });
-                
-                // Validação inicial
-                if (field.value) {
-                    validateSpecialChars(field);
-                }
-            });
-            
-            // Função para validar idade mínima (18 anos)
-            function validateAge(birthDateStr) {
-                const parts = birthDateStr.split('/');
-                if (parts.length !== 3) return false;
-                
-                const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1;
-                const year = parseInt(parts[2], 10);
-                
-                const birthDate = new Date(year, month, day);
-                const today = new Date();
-                
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const monthDiff = today.getMonth() - birthDate.getMonth();
-                
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-                
-                return age >= 18;
-            }
-            
-            // CPF validation function
-            function validateCPF(input) {
-                const errorMsgId = 'cpf-error-msg';
-                let existingError = document.getElementById(errorMsgId);
-                
-                // Remove existing error message
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // If empty, reset to default style and return
-                if (!input.value.trim()) {
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    return;
-                }
-                
-                // Extract only numbers
-                const cpf = input.value.replace(/\D/g, '');
-                
-                // Check if CPF has 11 digits
-                if (cpf.length !== 11) {
-                    showError(input, 'CPF deve conter 11 dígitos.', errorMsgId);
-                    return false;
-                }
-                
-                // Check if all digits are the same
-                if (/^(\d)\1{10}$/.test(cpf)) {
-                    showError(input, 'CPF inválido: todos os dígitos são iguais.', errorMsgId);
-                    return false;
-                }
-                
-                // Calculate first verification digit
-                let sum = 0;
-                for (let i = 0; i < 9; i++) {
-                    sum += parseInt(cpf.charAt(i)) * (10 - i);
-                }
-                let remainder = sum % 11;
-                let digit1 = remainder < 2 ? 0 : 11 - remainder;
-                
-                // Calculate second verification digit
-                sum = 0;
-                for (let i = 0; i < 10; i++) {
-                    sum += parseInt(cpf.charAt(i)) * (11 - i);
-                }
-                remainder = sum % 11;
-                let digit2 = remainder < 2 ? 0 : 11 - remainder;
-                
-                // Check if calculated digits match the provided ones
-                if (parseInt(cpf.charAt(9)) !== digit1 || parseInt(cpf.charAt(10)) !== digit2) {
-                    showError(input, 'CPF inválido.', errorMsgId);
-                    return false;
-                }
-                
-                // CPF is valid
-                input.style.borderColor = 'var(--secondary-color)';
-                input.style.backgroundColor = '';
-                return true;
-            }
-            
-            // Função para validar e-mail
-            function validateEmail(input) {
-                const errorMsgId = 'email-error-msg';
-                let existingError = document.getElementById(errorMsgId);
-                
-                // Remove mensagem de erro existente
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // Se vazio, retorna para o estilo padrão
-                if (!input.value.trim()) {
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    return;
-                }
-                
-                // Usando a biblioteca email-validator
-                if (!EmailValidator.validate(input.value)) {
-                    showError(input, 'Por favor, insira um e-mail válido.', errorMsgId);
-                    return false;
-                }
-                
-                // E-mail é válido
-                input.style.borderColor = 'var(--secondary-color)';
-                input.style.backgroundColor = '';
-                return true;
-            }
-            
-            // Função para validar telefone
-            function validatePhone(input) {
-                const errorMsgId = 'phone-error-msg';
-                let existingError = document.getElementById(errorMsgId);
-                
-                // Remove mensagem de erro existente
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // Se vazio, retorna para o estilo padrão
-                if (!input.value.trim()) {
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    return true;
-                }
-                
-                // Obter o código do país selecionado
-                const countryCode = document.getElementById('input_118_country_code').value;
-                
-                // Verificar se contém apenas os caracteres permitidos
-                const regex = /^[()\d\s-]+$/;
-                if (!regex.test(input.value)) {
-                    showError(input, 'Telefone contém caracteres não permitidos.', errorMsgId);
-                    return false;
-                }
-                
-                // Extrair apenas números
-                const numericValue = input.value.replace(/\D/g, '');
-                
-                // Validação específica para cada país
-                if (countryCode === '+55') {
-                    // Brasil: validação específica para números brasileiros
-                    
-                    // Verificar o comprimento do número
-                    if (numericValue.length < 10 || numericValue.length > 11) {
-                        showError(input, 'Telefone deve ter 10 ou 11 dígitos.', errorMsgId);
-                        return false;
-                    }
-                    
-                    // Verificar DDD
-                    const ddd = numericValue.substring(0, 2);
-                    const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
-                    
-                    if (!validDDDs.includes(ddd)) {
-                        showError(input, 'DDD inválido.', errorMsgId);
-                        return false;
-                    }
-                    
-                    // Se for celular (11 dígitos), verificar se começa com 9
-                    if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
-                        showError(input, 'Celular deve começar com 9 após o DDD.', errorMsgId);
-                        return false;
-                    }
-                } else if (countryCode === '+1') {
-                    // EUA/Canadá: deve ter 10 dígitos
-                    if (numericValue.length !== 10) {
-                        showError(input, 'Telefone dos EUA/Canadá deve ter 10 dígitos.', errorMsgId);
-                        return false;
-                    }
-                } else {
-                    // Para outros países, apenas verificar se o número tem pelo menos 8 dígitos
-                    if (numericValue.length < 8) {
-                        showError(input, 'O número de telefone deve ter pelo menos 8 dígitos.', errorMsgId);
-                        return false;
-                    }
-                }
-                
-                // Telefone válido
-                input.style.borderColor = 'var(--secondary-color)';
-                input.style.backgroundColor = '';
-                return true;
-            }
-            
-            // Função para buscar CEP na API ViaCEP
-            function buscarCep(cep) {
-                const cepInput = document.getElementById('input_108');
-                
-                // Remove classes anteriores
-                cepInput.classList.remove('cep-valido');
-                
-                // Também remover qualquer estilo de erro que possa ter sido aplicado anteriormente
-                cepInput.style.borderColor = '';
-                cepInput.style.backgroundColor = '';
-                
-                // Remove mensagem de erro anterior se existir
-                const errorEl = document.getElementById('cep-error-msg');
-                if (errorEl) errorEl.remove();
-                
-                // Remove mensagem de sucesso anterior se existir
-                const successEl = document.getElementById('cep-success-msg');
-                if (successEl) successEl.remove();
-                
-                // Mostra indicador de carregamento
-                cepInput.classList.add('loading');
-                
-                // Adiciona mensagem de busca
-                const statusMsg = document.createElement('div');
-                statusMsg.id = 'cep-status-msg';
-                statusMsg.className = 'form-hint';
-                statusMsg.textContent = 'Buscando endereço...';
-                cepInput.parentNode.appendChild(statusMsg);
-                
-                fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Erro ao buscar o CEP');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Remove indicador de carregamento
-                        cepInput.classList.remove('loading');
-                        
-                        // Remove mensagem de status
-                        const statusEl = document.getElementById('cep-status-msg');
-                        if (statusEl) statusEl.remove();
-                        
-                        // Verifica se a API retornou erro
-                        if (data.erro) {
-                            showError(cepInput, 'CEP não encontrado', 'cep-error-msg');
-                            return;
-                        }
-                        
-                        // Preenche os campos com os dados retornados
-                        document.getElementById('input_109').value = data.logradouro || '';
-                        document.getElementById('input_111').value = data.bairro || '';
-                        document.getElementById('input_110').value = data.localidade || '';
-                        
-                        // Seleciona o estado no dropdown
-                        const estadoSelect = document.getElementById('input_114');
-                        for (let i = 0; i < estadoSelect.options.length; i++) {
-                            if (estadoSelect.options[i].value === data.uf) {
-                                estadoSelect.selectedIndex = i;
-                                break;
-                            }
-                        }
-                        
-                        // Adiciona estilo visual de CEP válido
-                        cepInput.classList.add('cep-valido');
-                        cepInput.style.borderColor = 'var(--secondary-color)';
-                        
-                        // Adiciona mensagem de sucesso
-                        const successMsg = document.createElement('div');
-                        successMsg.id = 'cep-success-msg';
-                        successMsg.className = 'form-hint';
-                        successMsg.textContent = 'CEP válido! Endereço encontrado.';
-                        successMsg.style.color = 'var(--secondary-color)';
-                        cepInput.parentNode.appendChild(successMsg);
-                        
-                        // Foca no campo de número após preencher o endereço
-                        document.getElementById('input_112').focus();
-                    })
-                    .catch(error => {
-                        // Remove indicador de carregamento
-                        cepInput.classList.remove('loading');
-                        
-                        // Remove mensagem de status
-                        const statusEl = document.getElementById('cep-status-msg');
-                        if (statusEl) statusEl.remove();
-                        
-                        // Mostra mensagem de erro
-                        showError(cepInput, 'Erro ao buscar o CEP', 'cep-error-msg');
-                        console.error('Erro:', error);
-                    });
-            }
-            
-            // Validação específica para campos de data
-            dateFields.forEach(function(field) {
-                field.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length > 8) value = value.slice(0, 8);
-                    
-                    if (value.length > 4) {
-                        value = value.replace(/^(\d{2})(\d{2})(\d{0,4})$/, '$1/$2/$3');
-                    } else if (value.length > 2) {
-                        value = value.replace(/^(\d{2})(\d{0,2})$/, '$1/$2');
-                    }
-                    
-                    e.target.value = value;
-                    
-                    // Preencher os campos ocultos para o JotForm
-                    const fieldId = e.target.id;
-                    const parts = value.split('/');
-                    if (parts.length === 3 && parts[2].length === 4) {
-                        document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
-                        document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
-                        document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
-                        
-                        // Validação específica para cada tipo de data
-                        if (fieldId === 'input_104') {
-                            validateAge(parts);
-                        } else if (fieldId === 'input_106') {
-                            validateIssuanceDate(parts);
-                        }
-                    }
-                });
-                
-                field.addEventListener('blur', function() {
-                    const parts = this.value.split('/');
-                    if (parts.length === 3 && parts[2].length === 4) {
-                        if (this.id === 'input_104') {
-                            validateAge(parts);
-                        } else if (this.id === 'input_106') {
-                            validateIssuanceDate(parts);
-                        }
-                    } else if (this.value.trim() !== '') {
-                        // Data incompleta ou inválida
-                        this.classList.add('date-error');
-                    }
-                });
-            });
-            
-            // Validação do complemento de endereço
-            const complementoField = document.getElementById('input_113');
-            if (complementoField) {
-                complementoField.addEventListener('input', function() {
-                    // Permitir letras, números e caracteres comuns em complementos de endereço
-                    const cleanedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,()º°ª\-/]+/g, '');
-                    if (cleanedValue !== this.value) {
-                        const cursorPos = this.selectionStart;
-                        const lenDiff = this.value.length - cleanedValue.length;
-                        this.value = cleanedValue;
-                        this.setSelectionRange(cursorPos - lenDiff, cursorPos - lenDiff);
-                        
-                        // Feedback visual
-                        this.classList.add('name-error');
-                        setTimeout(() => {
-                            this.classList.remove('name-error');
-                        }, 500);
-                    }
-                });
-                
-                complementoField.addEventListener('blur', function() {
-                    validateSpecialChars(this);
-                });
-            }
-            
-            // Validação para números de documento com base no tipo selecionado
-            const tipoDocumentoSelect = document.getElementById('input_105');
-            const numeroDocumentoInput = document.getElementById('input_98');
-            
-            if (tipoDocumentoSelect && numeroDocumentoInput) {
-                tipoDocumentoSelect.addEventListener('change', function() {
-                    const tipoDoc = this.value;
-                    // Limpar o campo de número de documento quando o tipo mudar
-                    numeroDocumentoInput.value = '';
-                    numeroDocumentoInput.classList.remove('name-error');
-                    
-                    // Atualizar o placeholder conforme o tipo de documento
-                    if (tipoDoc === 'RG') {
-                        numeroDocumentoInput.placeholder = "00.000.000-0";
-                    } else if (tipoDoc === 'CNH') {
-                        numeroDocumentoInput.placeholder = "00000000000";
-                    } else if (tipoDoc === 'Passaporte') {
-                        numeroDocumentoInput.placeholder = "AA000000";
-                    } else {
-                        numeroDocumentoInput.placeholder = "";
-                    }
-                });
-                
-                numeroDocumentoInput.addEventListener('input', function() {
-                    const tipoDoc = tipoDocumentoSelect.value;
-                    let cleanedValue = this.value;
-                    
-                    if (tipoDoc === 'RG') {
-                        // Permitir apenas números, pontos e hífen para RG
-                        cleanedValue = cleanedValue.replace(/[^0-9.-]/g, '');
-                        // Tentar formatar como XX.XXX.XXX-X
-                        if (cleanedValue.length > 0) {
-                            const numericValue = cleanedValue.replace(/\D/g, '');
-                            if (numericValue.length > 8) {
-                                cleanedValue = numericValue.replace(/^(\d{2})(\d{3})(\d{3})(\d{1}).*/, '$1.$2.$3-$4');
-                            }
-                        }
-                    } else if (tipoDoc === 'CNH') {
-                        // Para CNH, permitir números, pontos e hífen
-                        cleanedValue = cleanedValue.replace(/[^0-9.-]/g, '');
-                        // Limitar a 11 dígitos (considerando apenas os números)
-                        const numericValue = cleanedValue.replace(/\D/g, '');
-                        if (numericValue.length > 11) {
-                            // Manter a formatação, mas limitar os números a 11 dígitos
-                            const limitedNumeric = numericValue.substring(0, 11);
-                            cleanedValue = limitedNumeric;
-                        }
-                    } else if (tipoDoc === 'Passaporte') {
-                        // Formato de passaporte: 2 letras seguidas de 6 números
-                        cleanedValue = cleanedValue.toUpperCase();
-                        cleanedValue = cleanedValue.replace(/[^A-Z0-9.-]/g, '');
-                        
-                        // Limitar a 8 caracteres para as letras e números, mais eventuais pontos e traços
-                        const alphanumericValue = cleanedValue.replace(/[^A-Z0-9]/g, '');
-                        if (alphanumericValue.length > 8) {
-                            // Implementar uma lógica para manter a formatação, mas limitar a 8 caracteres
-                            const limitedAlphanumeric = alphanumericValue.substring(0, 8);
-                            cleanedValue = limitedAlphanumeric;
-                        }
-                    }
-                    
-                    // Atualizar o valor se foi modificado
-                    if (cleanedValue !== this.value) {
-                        const cursorPos = this.selectionStart;
-                        const lenDiff = this.value.length - cleanedValue.length;
-                        this.value = cleanedValue;
-                        if (cursorPos !== null) {
-                            this.setSelectionRange(Math.max(0, cursorPos - lenDiff), Math.max(0, cursorPos - lenDiff));
-                        }
-                    }
-                    
-                    // Validar formato específico para o tipo de documento
-                    validateDocumentNumber(this, tipoDoc);
-                });
-                
-                numeroDocumentoInput.addEventListener('blur', function() {
-                    const tipoDoc = tipoDocumentoSelect.value;
-                    validateDocumentNumber(this, tipoDoc);
-                });
-            }
-            
-            // Validação de arquivos de upload
-            const fileInputs = document.querySelectorAll('input[type="file"]');
-            fileInputs.forEach(function(input) {
-                input.addEventListener('change', function() {
-                    this.classList.remove('file-error');
-                    
-                    // Se nenhum arquivo selecionado, retornar
-                    if (!this.files || this.files.length === 0) {
-                        return true;
-                    }
-                    
-                    const maxSizeMB = 10; // Tamanho máximo em MB
-                    const maxSizeBytes = maxSizeMB * 1024 * 1024;
-                    let isValid = true;
-                    
-                    // Verificar cada arquivo selecionado
-                    for (let i = 0; i < this.files.length; i++) {
-                        const file = this.files[i];
-                        
-                        // Verificar tamanho
-                        if (file.size > maxSizeBytes) {
-                            isValid = false;
-                            break;
-                        }
-                        
-                        // Verificar tipo (já limitado pelo atributo accept, mas uma verificação adicional)
-                        const fileType = file.type.toLowerCase();
-                        const fileName = file.name.toLowerCase();
-                        
-                        // Lista de tipos MIME aceitáveis
-                        const validTypes = [
-                            'application/pdf', 
-                            'application/msword', 
-                            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                            'image/jpeg', 
-                            'image/png', 
-                            'image/gif', 
-                            'text/html'
-                        ];
-                        
-                        // Lista de extensões aceitáveis
-                        const validExtensions = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.html'];
-                        
-                        // Verificar tipo MIME
-                        let validMimeType = validTypes.includes(fileType);
-                        
-                        // Se o tipo MIME não for válido, verificar a extensão do arquivo
-                        if (!validMimeType) {
-                            let validExt = false;
-                            for (const ext of validExtensions) {
-                                if (fileName.endsWith(ext)) {
-                                    validExt = true;
-                                    break;
-                                }
-                            }
-                            
-                            if (!validExt) {
-                                isValid = false;
-                                break;
-                            }
-                        }
-                    }
-                    
-                    if (!isValid) {
-                        this.classList.add('file-error');
-                        
-                        // Se inválido, limpar a seleção
-                        try {
-                            this.value = '';
-                        } catch (e) {
-                            // Em alguns navegadores, não é possível limpar diretamente
-                            console.error('Não foi possível limpar o campo de arquivo:', e);
-                        }
-                        
-                        return false;
-                    }
-                    
-                    return true;
-                });
-            });
-            
-            // Adicionar validação para o país/código do telefone
-            const countrySelect = document.getElementById('country-select');
-            const phoneInput = document.getElementById('input_118');
-            const countryCodeInput = document.getElementById('input_118_country_code');
-            
-            if (countrySelect && phoneInput && countryCodeInput) {
-                countrySelect.addEventListener('click', function() {
-                    const dropdown = document.getElementById('country-dropdown');
-                    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-                    
-                    // Se o dropdown estiver vazio, preencher com a lista de países
-                    if (dropdown.children.length === 0) {
-                        // Lista simplificada de países com códigos
-                        const countries = [
-                            { code: '+55', name: 'Brasil', flag: 'br' },
-                            { code: '+1', name: 'Estados Unidos', flag: 'us' },
-                            { code: '+351', name: 'Portugal', flag: 'pt' },
-                            { code: '+34', name: 'Espanha', flag: 'es' },
-                            { code: '+44', name: 'Reino Unido', flag: 'gb' },
-                            { code: '+49', name: 'Alemanha', flag: 'de' },
-                            { code: '+33', name: 'França', flag: 'fr' },
-                            { code: '+39', name: 'Itália', flag: 'it' },
-                            { code: '+81', name: 'Japão', flag: 'jp' },
-                            { code: '+86', name: 'China', flag: 'cn' }
-                        ];
-                        
-                        countries.forEach(country => {
-                            const item = document.createElement('div');
-                            item.className = 'country-item';
-                            item.innerHTML = `
-                                <img src="https://flagcdn.com/${country.flag}.svg" alt="${country.name}">
-                                <span class="country-item-name">${country.name}</span>
-                                <span class="country-item-code">${country.code}</span>
-                            `;
-                            
-                            item.addEventListener('click', function() {
-                                // Atualizar o código do país selecionado
-                                document.getElementById('selected-flag').src = `https://flagcdn.com/${country.flag}.svg`;
-                                document.getElementById('selected-flag').alt = country.name;
-                                document.getElementById('selected-code').textContent = country.code;
-                                countryCodeInput.value = country.code;
-                                
-                                // Fechar o dropdown
-                                dropdown.style.display = 'none';
-                                
-                                // Limpar o campo de telefone se o país mudar
-                                if (country.code !== '+55') {
-                                    phoneInput.value = '';
-                                    phoneInput.placeholder = country.code === '+1' ? '(XXX) XXX-XXXX' : 'Digite o telefone';
-                                } else {
-                                    phoneInput.placeholder = '(00) 00000-0000';
-                                }
-                                
-                                // Validar o telefone com o novo código de país
-                                validatePhone(phoneInput);
-                            });
-                            
-                            dropdown.appendChild(item);
-                        });
-                    }
-                });
-                
-                // Fechar o dropdown quando clicar fora dele
-                document.addEventListener('click', function(e) {
-                    const dropdown = document.getElementById('country-dropdown');
-                    if (dropdown && e.target !== countrySelect && !countrySelect.contains(e.target) && 
-                        e.target !== dropdown && !dropdown.contains(e.target)) {
-                        dropdown.style.display = 'none';
-                    }
-                });
-            }
-            
-            // Validar todos os campos ao enviar o formulário
-            document.getElementById('cadastro-form').addEventListener('submit', function(e) {
-                // Concatenar código do país com o número de telefone
-                const phoneInput = document.getElementById('input_118');
-                const countryCodeInput = document.getElementById('input_118_country_code');
-                
-                if (phoneInput && phoneInput.value && countryCodeInput && countryCodeInput.value) {
-                    // Criar um campo temporário com o telefone completo (código + número)
-                    const fullPhoneInput = document.createElement('input');
-                    fullPhoneInput.type = 'hidden';
-                    fullPhoneInput.name = 'q118_telefoneCompleto';
-                    fullPhoneInput.value = countryCodeInput.value + ' ' + phoneInput.value;
-                    this.appendChild(fullPhoneInput);
-                    
-                    // Log para teste
-                    console.log('Telefone completo:', fullPhoneInput.value);
-                }
-                
-                // Incluir validações adicionais
-                
-                // Validação de datas
-                let isValid = true;
-                const birthDateField = document.getElementById('input_104');
-                const issuanceDateField = document.getElementById('input_106');
-                
-                if (birthDateField && birthDateField.value) {
-                    const parts = birthDateField.value.split('/');
-                    if (parts.length === 3) {
-                        if (!validateAge(birthDateField.value)) {
-                            isValid = false;
-                            switchTab('tab-1');
-                            alert('Data de nascimento inválida ou menor de 18 anos.');
-                            return false;
-                        }
-                    }
-                }
-                
-                if (issuanceDateField && issuanceDateField.value) {
-                    const parts = issuanceDateField.value.split('/');
-                    if (parts.length === 3) {
-                        if (!validateIssuanceDate(parts)) {
-                            isValid = false;
-                            switchTab('tab-1');
-                            alert('Data de expedição inválida ou posterior à data atual.');
-                            return false;
-                        }
-                    }
-                }
-                
-                // Validação de número de documento
-                const tipoDocumentoSelect = document.getElementById('input_105');
-                const numeroDocumentoInput = document.getElementById('input_98');
-                if (tipoDocumentoSelect && numeroDocumentoInput && 
-                    tipoDocumentoSelect.value && numeroDocumentoInput.value) {
-                    if (!validateDocumentNumber(numeroDocumentoInput, tipoDocumentoSelect.value)) {
-                        isValid = false;
-                        switchTab('tab-1');
-                        alert('Número de documento inválido para o tipo selecionado.');
-                        return false;
-                    }
-                }
-                
-                // Validação de arquivos
-                const fileInputs = document.querySelectorAll('input[type="file"]');
-                fileInputs.forEach(function(input) {
-                    if (input.required || (input.files && input.files.length > 0)) {
-                        if (!validateFileUpload(input)) {
-                            isValid = false;
-                            switchTab('tab-3');
-                            alert('Um ou mais arquivos são inválidos ou muito grandes (máx. 10MB).');
-                            return false;
-                        }
-                    }
-                });
-                
-                if (!isValid) {
-                    e.preventDefault();
-                    return false;
-                }
-                
-                // Continuar com a validação original do formulário
-            });
-            
-            // Validação específica para data de nascimento (maior de 18 anos)
-            const dataNascField = document.getElementById('input_104');
-            if (dataNascField) {
-                dataNascField.addEventListener('blur', function() {
-                    this.classList.remove('date-error');
-                    
-                    if (!this.value) return true;
-                    
-                    const parts = this.value.split('/');
-                    if (parts.length !== 3) {
-                        this.classList.add('date-error');
-                        return false;
-                    }
-                    
-                    const day = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    
-                    // Verificar se a data é válida
-                    const birthDate = new Date(year, month, day);
-                    if (
-                        birthDate.getDate() !== day || 
-                        birthDate.getMonth() !== month || 
-                        birthDate.getFullYear() !== year ||
-                        birthDate > new Date() // Data futura
-                    ) {
-                        this.classList.add('date-error');
-                        return false;
-                    }
-                    
-                    // Verificar idade mínima (18 anos)
-                    const today = new Date();
-                    let age = today.getFullYear() - year;
-                    const m = today.getMonth() - month;
-                    
-                    if (m < 0 || (m === 0 && today.getDate() < day)) {
-                        age--;
-                    }
-                    
-                    if (age < 18) {
-                        this.classList.add('date-error');
-                        return false;
-                    }
-                    
-                    return true;
-                });
-            }
-            
-            // Validação específica para data de expedição (não futura e após nascimento)
-            const dataExpField = document.getElementById('input_106');
-            if (dataExpField) {
-                dataExpField.addEventListener('blur', function() {
-                    this.classList.remove('date-error');
-                    
-                    if (!this.value) return true;
-                    
-                    const parts = this.value.split('/');
-                    if (parts.length !== 3) {
-                        this.classList.add('date-error');
-                        return false;
-                    }
-                    
-                    const day = parseInt(parts[0], 10);
-                    const month = parseInt(parts[1], 10) - 1;
-                    const year = parseInt(parts[2], 10);
-                    
-                    // Verificar se a data é válida
-                    const expeditionDate = new Date(year, month, day);
-                    if (
-                        expeditionDate.getDate() !== day || 
-                        expeditionDate.getMonth() !== month || 
-                        expeditionDate.getFullYear() !== year
-                    ) {
-                        this.classList.add('date-error');
-                        return false;
-                    }
-                    
-                    // Verificar se não é futura
-                    if (expeditionDate > new Date()) {
-                        this.classList.add('date-error');
-                        return false;
-                    }
-                    
-                    // Verificar se é posterior à data de nascimento
-                    const birthDateField = document.getElementById('input_104');
-                    if (birthDateField && birthDateField.value) {
-                        const birthParts = birthDateField.value.split('/');
-                        if (birthParts.length === 3) {
-                            const birthDay = parseInt(birthParts[0], 10);
-                            const birthMonth = parseInt(birthParts[1], 10) - 1;
-                            const birthYear = parseInt(birthParts[2], 10);
-                            
-                            const birthDate = new Date(birthYear, birthMonth, birthDay);
-                            if (expeditionDate < birthDate) {
-                                this.classList.add('date-error');
-                                return false;
-                            }
-                        }
-                    }
-                    
-                    return true;
-                });
-            }
-            
-            // Função para validar data de expedição (não futura e posterior à data de nascimento)
-            function validateIssuanceDate(dateParts) {
-                if (dateParts.length !== 3) return false;
-                
-                const day = parseInt(dateParts[0], 10);
-                const month = parseInt(dateParts[1], 10) - 1;
-                const year = parseInt(dateParts[2], 10);
-                
-                // Verificar se a data é válida
-                const expeditionDate = new Date(year, month, day);
-                if (
-                    expeditionDate.getDate() !== day || 
-                    expeditionDate.getMonth() !== month || 
-                    expeditionDate.getFullYear() !== year
-                ) {
-                    return false;
-                }
-                
-                // Verificar se não é futura
-                if (expeditionDate > new Date()) {
-                    return false;
-                }
-                
-                // Verificar se é posterior à data de nascimento
-                const birthDateField = document.getElementById('input_104');
-                if (birthDateField && birthDateField.value) {
-                    const birthParts = birthDateField.value.split('/');
-                    if (birthParts.length === 3) {
-                        const birthDay = parseInt(birthParts[0], 10);
-                        const birthMonth = parseInt(birthParts[1], 10) - 1;
-                        const birthYear = parseInt(birthParts[2], 10);
-                        
-                        const birthDate = new Date(birthYear, birthMonth, birthDay);
-                        if (expeditionDate < birthDate) {
-                            return false;
-                        }
-                    }
-                }
-                
-                return true;
-            }
-            
-            // Função para validar número de documento de acordo com o tipo
-            function validateDocumentNumber(input, docType) {
-                input.classList.remove('name-error');
-                
-                if (!input.value.trim() || !docType) {
-                    return true;
-                }
-                
-                if (docType === 'RG') {
-                    // Para RG, aceitar o formato com pontos e traço, mas validar o comprimento dos números
-                    const rgValue = input.value.replace(/\D/g, '');
-                    const isValid = rgValue.length >= 8 && rgValue.length <= 10;
-                    
-                    if (!isValid) {
-                        input.classList.add('name-error');
-                    }
-                    
-                    return isValid;
-                } else if (docType === 'CNH') {
-                    // Para CNH, aceitar o formato com pontos e traços, mas validar o comprimento dos números
-                    const cnhValue = input.value.replace(/\D/g, '');
-                    const isValid = cnhValue.length === 11;
-                    
-                    if (!isValid) {
-                        input.classList.add('name-error');
-                    }
-                    
-                    return isValid;
-                } else if (docType === 'Passaporte') {
-                    // Para Passaporte, aceitar o formato XX.000000 ou XX-000000 além do padrão XX000000
-                    // Remover pontos e traços para verificar o formato básico
-                    const cleanValue = input.value.replace(/[.-]/g, '');
-                    const regex = /^[A-Z]{2}[0-9]{6}$/;
-                    const isValid = regex.test(cleanValue);
-                    
-                    if (!isValid) {
-                        input.classList.add('name-error');
-                    }
-                    
-                    return isValid;
-                }
-                
-                return true;
-            }
-            
-            // Função para validar arquivos de upload
-            function validateFileUpload(input) {
-                // Se nenhum arquivo selecionado, retornar
-                if (!input.files || input.files.length === 0) {
-                    return true;
-                }
-                
-                const maxSizeMB = 10; // Tamanho máximo em MB
-                const maxSizeBytes = maxSizeMB * 1024 * 1024;
-                let isValid = true;
-                
-                // Verificar cada arquivo selecionado
-                for (let i = 0; i < input.files.length; i++) {
-                    const file = input.files[i];
-                    
-                    // Verificar tamanho
-                    if (file.size > maxSizeBytes) {
-                        isValid = false;
-                        break;
-                    }
-                    
-                    // Verificar tipo (já limitado pelo atributo accept, mas uma verificação adicional)
-                    const fileType = file.type.toLowerCase();
-                    const fileName = file.name.toLowerCase();
-                    
-                    // Lista de tipos MIME aceitáveis
-                    const validTypes = [
-                        'application/pdf', 
-                        'application/msword', 
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                        'image/jpeg', 
-                        'image/png', 
-                        'image/gif', 
-                        'text/html'
-                    ];
-                    
-                    // Lista de extensões aceitáveis
-                    const validExtensions = ['.pdf', '.doc', '.docx', '.jpg', '.jpeg', '.png', '.gif', '.html'];
-                    
-                    // Verificar tipo MIME
-                    let validMimeType = validTypes.includes(fileType);
-                    
-                    // Se o tipo MIME não for válido, verificar a extensão do arquivo
-                    if (!validMimeType) {
-                        let validExt = false;
-                        for (const ext of validExtensions) {
-                            if (fileName.endsWith(ext)) {
-                                validExt = true;
-                                break;
-                            }
-                        }
-                        
-                        if (!validExt) {
-                            isValid = false;
-                            break;
-                        }
-                    }
-                }
-                
-                if (!isValid) {
-                    input.classList.add('file-error');
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            // Função para mostrar mensagens de erro
-            function showError(input, message, errorId) {
-                // Remove mensagem de erro existente com o mesmo ID
-                const existingError = document.getElementById(errorId);
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // Adiciona estilo de erro ao input
-                input.style.borderColor = 'var(--error-color)';
-                input.style.backgroundColor = 'var(--error-bg)';
-                
-                // Cria e insere mensagem de erro
-                const errorMsg = document.createElement('div');
-                errorMsg.id = errorId;
-                errorMsg.className = 'error-message';
-                errorMsg.textContent = message;
-                input.parentNode.insertBefore(errorMsg, input.nextSibling);
-                
-                // Adiciona event listener para remover erro assim que o usuário começar a digitar
-                const clearErrorOnInput = function() {
-                    // Verificação básica se o campo agora é válido
-                    if (input.required && !input.value.trim()) return; // Mantém erro se ainda estiver vazio
-                    
-                    // Para validações específicas
-                    if (input.id === 'input_95' && input.value.trim()) { // CPF
-                        if (input.value.replace(/\D/g, '').length !== 11) return; // Mantém erro se CPF ainda não tiver 11 dígitos
-                    } else if (input.id === 'input_117' && input.value.trim()) { // Email
-                        if (!input.value.includes('@') || !input.value.includes('.')) return; // Validação básica de email
-                    } else if (input.id === 'input_104' || input.id === 'input_106') { // Datas
-                        const parts = input.value.split('/');
-                        if (parts.length !== 3 || parts[2].length !== 4) return; // Mantém erro se formato incorreto
-                    }
-                    
-                    // Remove estilos de erro
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    
-                    // Remove mensagem de erro
-                    const errorToRemove = document.getElementById(errorId);
-                    if (errorToRemove) {
-                        errorToRemove.remove();
-                    }
-                    
-                    // Remove este listener para evitar duplicação
-                    input.removeEventListener('input', clearErrorOnInput);
-                };
-                
-                // Remove listener anterior se existir para evitar duplicação
-                input.removeEventListener('input', clearErrorOnInput);
-                
-                // Adiciona o novo listener
-                input.addEventListener('input', clearErrorOnInput);
-                
-                return false;
-            }
-            
-            // Implementação da funcionalidade de autosugestão para o campo Naturalidade usando API do IBGE
-            const naturalidadeInput = document.getElementById('input_97');
-            if (naturalidadeInput) {
-                // Criar elemento de sugestões
-                const suggestionsContainer = document.createElement('div');
-                suggestionsContainer.className = 'autocomplete-suggestions';
-                suggestionsContainer.style.display = 'none';
-                naturalidadeInput.parentNode.appendChild(suggestionsContainer);
-                
-                // Adicionar estilo para o container de sugestões
-                const style = document.createElement('style');
-                style.textContent = `
-                    .autocomplete-suggestions {
-                        position: absolute;
-                        border: 1px solid #ddd;
-                        background: white;
-                        max-height: 200px;
-                        overflow-y: auto;
-                        z-index: 1000;
-                        width: calc(100% - 20px);
-                        border-radius: 4px;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-                    }
-                    .suggestion-item {
-                        padding: 8px 10px;
-                        cursor: pointer;
-                        border-bottom: 1px solid #f0f0f0;
-                    }
-                    .suggestion-item:hover, .suggestion-item.selected {
-                        background-color: #f8f8f8;
-                    }
-                    .suggestion-item:last-child {
-                        border-bottom: none;
-                    }
-                    .highlight {
-                        font-weight: bold;
-                        color: #1e70bf;
-                    }
-                    .suggestion-info {
-                        font-size: 0.85em;
-                        color: #777;
-                        display: block;
-                    }
-                    .loader {
-                        border: 2px solid #f3f3f3;
-                        border-radius: 50%;
-                        border-top: 2px solid #3498db;
-                        width: 16px;
-                        height: 16px;
-                        animation: spin 1s linear infinite;
-                        display: inline-block;
-                        margin-left: 10px;
-                        vertical-align: middle;
-                    }
-                    @keyframes spin {
-                        0% { transform: rotate(0deg); }
-                        100% { transform: rotate(360deg); }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                // Cache para armazenar resultados e evitar chamadas repetidas
-                let municipiosCache = [];
-                let ufsCache = [];
-                
-                // Buscar UFs da API do IBGE
-                async function buscarUFs() {
-                    try {
-                        if (ufsCache.length > 0) return ufsCache;
-                        
-                        const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome');
-                        if (!response.ok) throw new Error('Erro ao buscar UFs');
-                        
-                        const data = await response.json();
-                        ufsCache = data;
-                        return data;
-                    } catch (error) {
-                        console.error('Erro ao buscar UFs:', error);
-                        return [];
-                    }
-                }
-                
-                // Buscar municípios da API do IBGE
-                async function buscarMunicipios(termo) {
-                    const loaderEl = document.createElement('span');
-                    loaderEl.className = 'loader';
-                    naturalidadeInput.parentNode.appendChild(loaderEl);
-                    
-                    try {
-                        // Verificar se já temos municípios no cache
-                        if (municipiosCache.length === 0) {
-                            const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome');
-                            if (!response.ok) throw new Error('Erro ao buscar municípios');
-                            
-                            const data = await response.json();
-                            municipiosCache = data;
-                        }
-                        
-                        // Buscar UFs se ainda não tivermos
-                        if (ufsCache.length === 0) {
-                            await buscarUFs();
-                        }
-                        
-                        // Filtrar municípios pelo termo de busca
-                        const termoLower = termo.toLowerCase();
-                        const resultados = municipiosCache.filter(municipio => 
-                            municipio.nome.toLowerCase().includes(termoLower)
-                        ).slice(0, 10); // Limitar a 10 resultados
-                        
-                        return resultados;
-                    } catch (error) {
-                        console.error('Erro ao buscar municípios:', error);
-                        return [];
-                    } finally {
-                        if (loaderEl) loaderEl.remove();
-                    }
-                }
-                
-                // Obter sigla da UF pelo ID
-                function obterSiglaUF(idUF) {
-                    const uf = ufsCache.find(uf => uf.id === idUF);
-                    return uf ? uf.sigla : '';
-                }
-                
-                // Timeout para debounce
-                let timeoutId = null;
-                
-                // Função para mostrar sugestões baseadas no input
-                naturalidadeInput.addEventListener('input', function() {
-                    const inputValue = this.value.trim();
-                    
-                    // Limpar timeout anterior
-                    if (timeoutId) clearTimeout(timeoutId);
-                    
-                    // Esconder sugestões se o input for muito curto
-                    if (inputValue.length < 3) {
-                        suggestionsContainer.style.display = 'none';
-                        return;
-                    }
-                    
-                    // Usar debounce para evitar chamadas excessivas à API
-                    timeoutId = setTimeout(async () => {
-                        const municipios = await buscarMunicipios(inputValue);
-                        
-                        suggestionsContainer.innerHTML = '';
-                        
-                        if (municipios.length > 0) {
-                            municipios.forEach(municipio => {
-                                const siglaUF = obterSiglaUF(municipio.microrregiao.mesorregiao.UF.id);
-                                const textoCompleto = `${municipio.nome} (${siglaUF})`;
-                                
-                                const item = document.createElement('div');
-                                item.className = 'suggestion-item';
-                                
-                                // Destacar a parte correspondente
-                                const index = municipio.nome.toLowerCase().indexOf(inputValue.toLowerCase());
-                                let nomeMunicipio = '';
-                                
-                                if (index !== -1) {
-                                    nomeMunicipio = municipio.nome.substring(0, index) + 
-                                          '<span class="highlight">' + 
-                                          municipio.nome.substring(index, index + inputValue.length) + 
-                                          '</span>' + 
-                                          municipio.nome.substring(index + inputValue.length);
-                                } else {
-                                    nomeMunicipio = municipio.nome;
-                                }
-                                
-                                item.innerHTML = `${nomeMunicipio} <span class="suggestion-info">${siglaUF} - ${municipio.microrregiao.mesorregiao.nome}</span>`;
-                                
-                                item.addEventListener('click', function() {
-                                    naturalidadeInput.value = textoCompleto;
-                                    suggestionsContainer.style.display = 'none';
-                                    naturalidadeInput.focus();
-                                });
-                                
-                                suggestionsContainer.appendChild(item);
-                            });
-                            
-                            suggestionsContainer.style.display = 'block';
-                        } else {
-                            suggestionsContainer.style.display = 'none';
-                        }
-                    }, 300); // 300ms de debounce
-                });
-                
-                // Navegação com teclado nas sugestões
-                let selectedIndex = -1;
-                
-                naturalidadeInput.addEventListener('keydown', function(e) {
-                    const items = suggestionsContainer.querySelectorAll('.suggestion-item');
-                    
-                    // Seta para baixo
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
-                        updateSelection(items);
-                    } 
-                    // Seta para cima
-                    else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        selectedIndex = Math.max(selectedIndex - 1, -1);
-                        updateSelection(items);
-                    } 
-                    // Enter para selecionar
-                    else if (e.key === 'Enter' && selectedIndex >= 0) {
-                        e.preventDefault();
-                        if (items[selectedIndex]) {
-                            // Extrair o texto sem os elementos HTML
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = items[selectedIndex].innerHTML;
-                            
-                            // Obter o texto principal (município e UF)
-                            const texto = tempDiv.textContent.trim();
-                            const match = texto.match(/^(.*?)\s+(\([A-Z]{2}\))/);
-                            
-                            if (match) {
-                                naturalidadeInput.value = `${match[1]} ${match[2]}`;
-                            } else {
-                                naturalidadeInput.value = texto.split('-')[0].trim();
-                            }
-                            
-                            suggestionsContainer.style.display = 'none';
-                            selectedIndex = -1;
-                        }
-                    } 
-                    // Escape para fechar
-                    else if (e.key === 'Escape') {
-                        suggestionsContainer.style.display = 'none';
-                        selectedIndex = -1;
-                    }
-                });
-                
-                // Atualizar seleção visual
-                function updateSelection(items) {
-                    Array.from(items).forEach((item, index) => {
-                        if (index === selectedIndex) {
-                            item.classList.add('selected');
-                            item.scrollIntoView({ block: 'nearest' });
-                        } else {
-                            item.classList.remove('selected');
-                        }
-                    });
-                }
-                
-                // Fechar sugestões ao clicar fora
-                document.addEventListener('click', function(e) {
-                    if (e.target !== naturalidadeInput && !suggestionsContainer.contains(e.target)) {
-                        suggestionsContainer.style.display = 'none';
-                        selectedIndex = -1;
-                    }
-                });
-                
-                // Pré-carregar os dados de UFs e municípios
-                setTimeout(() => {
-                    buscarUFs();
-                }, 1000);
-            }
-            
-            // Melhoria condicional para o campo orgaoEmissor baseado no tipoDocumento
-            // Verificar se a variável já foi declarada anteriormente para evitar redeclaração
-            if (typeof tipoDocumentoUpdateOrgaoEmissor === 'undefined') {
-                // Usar um nome diferente para evitar conflito com qualquer outra declaração de tipoDocumentoSelect
-                const tipoDocumentoUpdateOrgaoEmissor = document.getElementById('input_105');
-                
-                if (tipoDocumentoUpdateOrgaoEmissor) {
-                    // Função para atualizar o campo de órgão emissor
-                    function atualizarCampoOrgaoEmissor() {
-                        // Sempre obter a referência atual do campo
-                        const orgaoEmissorField = document.getElementById('input_99');
-                        if (!orgaoEmissorField) return;
-                        
-                        const tipoDoc = tipoDocumentoUpdateOrgaoEmissor.value;
-                        // Guardar o valor atual antes de substituir o campo
-                        const currentValue = orgaoEmissorField.value;
-                        
-                        // Guardar o elemento pai para readicionar o campo
-                        const parent = orgaoEmissorField.parentNode;
-                        
-                        // Remove o campo atual
-                        orgaoEmissorField.remove();
-                        
-                        let newField;
-                        
-                        if (tipoDoc === 'RG') {
-                            // Transformar em um select para RG
-                            newField = document.createElement('select');
-                            newField.id = 'input_99';
-                            newField.name = 'q99_orgaoEmissor';
-                            newField.className = 'form-control';
-                            newField.required = true;
-                            
-                            // Adicionar opções para órgãos emissores de RG
-                            const options = [
-                                {value: '', text: 'Selecione o órgão emissor'},
-                                {value: 'SSP-AC', text: 'SSP-AC'}, {value: 'SSP-AL', text: 'SSP-AL'}, 
-                                {value: 'SSP-AP', text: 'SSP-AP'}, {value: 'SSP-AM', text: 'SSP-AM'}, 
-                                {value: 'SSP-BA', text: 'SSP-BA'}, {value: 'SSP-CE', text: 'SSP-CE'},
-                                {value: 'SSP-DF', text: 'SSP-DF'}, {value: 'SSP-ES', text: 'SSP-ES'}, 
-                                {value: 'SSP-GO', text: 'SSP-GO'}, {value: 'SSP-MA', text: 'SSP-MA'}, 
-                                {value: 'SSP-MT', text: 'SSP-MT'}, {value: 'SSP-MS', text: 'SSP-MS'},
-                                {value: 'SSP-MG', text: 'SSP-MG'}, {value: 'SSP-PA', text: 'SSP-PA'}, 
-                                {value: 'SSP-PB', text: 'SSP-PB'}, {value: 'SSP-PR', text: 'SSP-PR'}, 
-                                {value: 'SSP-PE', text: 'SSP-PE'}, {value: 'SSP-PI', text: 'SSP-PI'},
-                                {value: 'SSP-RJ', text: 'SSP-RJ'}, {value: 'SSP-RN', text: 'SSP-RN'}, 
-                                {value: 'SSP-RS', text: 'SSP-RS'}, {value: 'SSP-RO', text: 'SSP-RO'}, 
-                                {value: 'SSP-RR', text: 'SSP-RR'}, {value: 'SSP-SC', text: 'SSP-SC'},
-                                {value: 'SSP-SP', text: 'SSP-SP'}, {value: 'SSP-SE', text: 'SSP-SE'}, 
-                                {value: 'SSP-TO', text: 'SSP-TO'},
-                                {value: 'PC-AC', text: 'PC-AC'}, {value: 'PC-AL', text: 'PC-AL'}, 
-                                {value: 'PC-AP', text: 'PC-AP'}, {value: 'PC-AM', text: 'PC-AM'}, 
-                                {value: 'PC-BA', text: 'PC-BA'}, {value: 'PC-CE', text: 'PC-CE'},
-                                {value: 'PC-DF', text: 'PC-DF'}, {value: 'PC-ES', text: 'PC-ES'}, 
-                                {value: 'PC-GO', text: 'PC-GO'}, {value: 'PC-MA', text: 'PC-MA'}, 
-                                {value: 'PC-MT', text: 'PC-MT'}, {value: 'PC-MS', text: 'PC-MS'},
-                                {value: 'PC-MG', text: 'PC-MG'}, {value: 'PC-PA', text: 'PC-PA'}, 
-                                {value: 'PC-PB', text: 'PC-PB'}, {value: 'PC-PR', text: 'PC-PR'}, 
-                                {value: 'PC-PE', text: 'PC-PE'}, {value: 'PC-PI', text: 'PC-PI'},
-                                {value: 'PC-RJ', text: 'PC-RJ'}, {value: 'PC-RN', text: 'PC-RN'}, 
-                                {value: 'PC-RS', text: 'PC-RS'}, {value: 'PC-RO', text: 'PC-RO'}, 
-                                {value: 'PC-RR', text: 'PC-RR'}, {value: 'PC-SC', text: 'PC-SC'},
-                                {value: 'PC-SP', text: 'PC-SP'}, {value: 'PC-SE', text: 'PC-SE'}, 
-                                {value: 'PC-TO', text: 'PC-TO'},
-                                {value: 'DPF', text: 'DPF - Polícia Federal'},
-                                {value: 'MAE', text: 'MAE - Ministério da Aeronáutica'},
-                                {value: 'MEX', text: 'MEX - Ministério do Exército'},
-                                {value: 'MMA', text: 'MMA - Ministério da Marinha'},
-                                {value: 'OUTRO', text: 'Outro'}
-                            ];
-                            
-                            options.forEach(opt => {
-                                const option = document.createElement('option');
-                                option.value = opt.value;
-                                option.textContent = opt.text;
-                                newField.appendChild(option);
-                            });
-                            
-                        } else if (tipoDoc === 'CNH') {
-                            // Transformar em um select para CNH
-                            newField = document.createElement('select');
-                            newField.id = 'input_99';
-                            newField.name = 'q99_orgaoEmissor';
-                            newField.className = 'form-control';
-                            newField.required = true;
-                            
-                            // Adicionar opções para DETRAN de cada estado
-                            const options = [
-                                {value: '', text: 'Selecione o DETRAN'},
-                                {value: 'DETRAN-AC', text: 'DETRAN-AC'}, {value: 'DETRAN-AL', text: 'DETRAN-AL'}, 
-                                {value: 'DETRAN-AP', text: 'DETRAN-AP'}, {value: 'DETRAN-AM', text: 'DETRAN-AM'}, 
-                                {value: 'DETRAN-BA', text: 'DETRAN-BA'}, {value: 'DETRAN-CE', text: 'DETRAN-CE'},
-                                {value: 'DETRAN-DF', text: 'DETRAN-DF'}, {value: 'DETRAN-ES', text: 'DETRAN-ES'}, 
-                                {value: 'DETRAN-GO', text: 'DETRAN-GO'}, {value: 'DETRAN-MA', text: 'DETRAN-MA'}, 
-                                {value: 'DETRAN-MT', text: 'DETRAN-MT'}, {value: 'DETRAN-MS', text: 'DETRAN-MS'},
-                                {value: 'DETRAN-MG', text: 'DETRAN-MG'}, {value: 'DETRAN-PA', text: 'DETRAN-PA'}, 
-                                {value: 'DETRAN-PB', text: 'DETRAN-PB'}, {value: 'DETRAN-PR', text: 'DETRAN-PR'}, 
-                                {value: 'DETRAN-PE', text: 'DETRAN-PE'}, {value: 'DETRAN-PI', text: 'DETRAN-PI'},
-                                {value: 'DETRAN-RJ', text: 'DETRAN-RJ'}, {value: 'DETRAN-RN', text: 'DETRAN-RN'}, 
-                                {value: 'DETRAN-RS', text: 'DETRAN-RS'}, {value: 'DETRAN-RO', text: 'DETRAN-RO'}, 
-                                {value: 'DETRAN-RR', text: 'DETRAN-RR'}, {value: 'DETRAN-SC', text: 'DETRAN-SC'},
-                                {value: 'DETRAN-SP', text: 'DETRAN-SP'}, {value: 'DETRAN-SE', text: 'DETRAN-SE'}, 
-                                {value: 'DETRAN-TO', text: 'DETRAN-TO'}
-                            ];
-                            
-                            options.forEach(opt => {
-                                const option = document.createElement('option');
-                                option.value = opt.value;
-                                option.textContent = opt.text;
-                                newField.appendChild(option);
-                            });
-                            
-                        } else if (tipoDoc === 'Passaporte') {
-                            // Campo de texto preenchido com Polícia Federal
-                            newField = document.createElement('input');
-                            newField.type = 'text';
-                            newField.id = 'input_99';
-                            newField.name = 'q99_orgaoEmissor';
-                            newField.className = 'form-control';
-                            newField.value = 'Polícia Federal';
-                            newField.readOnly = true;
-                            newField.required = true;
-                            
-                        } else {
-                            // Campo de texto padrão para qualquer outro caso
-                            newField = document.createElement('input');
-                            newField.type = 'text';
-                            newField.id = 'input_99';
-                            newField.name = 'q99_orgaoEmissor';
-                            newField.className = 'form-control';
-                            newField.placeholder = 'Digite o órgão emissor';
-                            newField.required = true;
-                        }
-                        
-                        // Inserir o novo campo no DOM
-                        parent.appendChild(newField);
-                        
-                        // Gerenciar evento de "outro" se for um select
-                        if (newField.nodeName === 'SELECT') {
-                            newField.addEventListener('change', function() {
-                                if (this.value === 'OUTRO') {
-                                    // Substituir o select por um campo de texto
-                                    const textField = document.createElement('input');
-                                    textField.type = 'text';
-                                    textField.id = 'input_99';
-                                    textField.name = 'q99_orgaoEmissor';
-                                    textField.className = 'form-control';
-                                    textField.placeholder = 'Digite o órgão emissor';
-                                    textField.required = true;
-                                    
-                                    this.parentNode.replaceChild(textField, this);
-                                    textField.focus();
-                                }
-                            });
-                        }
-                        
-                        // Tentar restaurar o valor anterior, se possível
-                        if (currentValue && newField.nodeName === 'SELECT') {
-                            const options = Array.from(newField.options);
-                            const matchingOption = options.find(opt => opt.value === currentValue);
-                            if (matchingOption) {
-                                newField.value = currentValue;
-                            }
-                        } else if (newField.type === 'text' && !newField.readOnly) {
-                            newField.value = currentValue;
-                        }
-                    }
-                    
-                    // Atualizar o campo quando o tipo de documento mudar
-                    tipoDocumentoUpdateOrgaoEmissor.addEventListener('change', atualizarCampoOrgaoEmissor);
-                    
-                    // Aplicar imediatamente se já houver um tipo de documento selecionado
-                    if (tipoDocumentoUpdateOrgaoEmissor.value) {
-                        atualizarCampoOrgaoEmissor();
-                    }
-                }
-            }
-        });
-    </script>
+    <!-- Novos scripts de validação -->
+    <script src="../assets/js/form-utils.js" defer></script>
+    <script src="../assets/js/mask-manager.js" defer></script>
+    <script src="../assets/js/validator-unified.js" defer></script>
+    <script src="../assets/js/cep-handler.js" defer></script>
+    <script src="../assets/js/address-handler.js" defer></script>
+    <script src="../assets/js/integration-manager.js" defer></script>
+    <script src="../assets/js/persevera-forms.js" defer></script>
+    <script src="../assets/js/form-tabs.js" defer></script>
+    <script src="../assets/js/form-init.js" defer></script>
 </body>
 </html>
