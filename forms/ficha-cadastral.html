@@ -123,6 +123,7 @@
                         <div class="form-group">
                             <label class="form-label required" for="input_95">CPF</label>
                             <input type="text" id="input_95" name="q95_cpf" class="form-control" data-validate="true" data-validate-cpf="true" data-error-cpf="CPF inválido. Verifique o número informado." placeholder="000.000.000-00" required>
+                            <div class="cpf-error-message">Apenas números, pontos e hífen são permitidos no CPF</div>
                         </div>
                         
                         <div class="form-group">
@@ -235,6 +236,7 @@
                         <div class="form-group">
                             <label class="form-label" for="input_228">CPF</label>
                             <input type="text" id="input_228" name="q228_cpfConjuge" class="form-control" data-validate="true" data-validate-cpf="true" data-error-cpf="CPF inválido. Verifique o número informado." placeholder="000.000.000-00">
+                            <div class="cpf-error-message">Apenas números, pontos e hífen são permitidos no CPF</div>
                         </div>
                         
                         <div class="form-group">
@@ -335,7 +337,7 @@
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_109">Logradouro</label>
-                            <input type="text" id="input_109" name="q109_logradouroResidencia" class="form-control" required>
+                            <input type="text" id="input_109" name="q109_logradouroResidencia" class="form-control" data-validate="true" data-validate-address="true" data-error-address="Logradouro inválido. Verifique os caracteres utilizados." required>
                             <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                     </div>
@@ -343,12 +345,12 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_112">Número</label>
-                            <input type="text" id="input_112" name="q112_numeroResidencia" class="form-control" required>
+                            <input type="text" id="input_112" name="q112_numeroResidencia" class="form-control" data-validate="true" data-validate-address-number="true" data-error-address-number="Número inválido. Use apenas números, letras e símbolos básicos." required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="input_113">Complemento</label>
-                            <input type="text" id="input_113" name="q113_complementoResidencia" class="form-control">
+                            <input type="text" id="input_113" name="q113_complementoResidencia" class="form-control" data-validate="true" data-validate-address="true" data-error-address="Complemento inválido. Verifique os caracteres utilizados.">
                             <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                     </div>
@@ -356,13 +358,13 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_111">Bairro</label>
-                            <input type="text" id="input_111" name="q111_bairroResidencia" class="form-control" required>
+                            <input type="text" id="input_111" name="q111_bairroResidencia" class="form-control" data-validate="true" data-validate-address="true" data-error-address="Bairro inválido. Verifique os caracteres utilizados." required>
                             <div class="name-error-message">Caracteres especiais não permitidos</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_110">Cidade</label>
-                            <input type="text" id="input_110" name="q110_cidadeResidencia" class="form-control" required>
+                            <input type="text" id="input_110" name="q110_cidadeResidencia" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" required>
                             <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                         </div>
                     </div>
@@ -427,7 +429,7 @@
                             
                             <div class="form-group">
                                 <label class="form-label required" for="input_216">Logradouro</label>
-                                <input type="text" id="input_216" name="q216_logradouroCorrespondencia" class="form-control" required>
+                                <input type="text" id="input_216" name="q216_logradouroCorrespondencia" class="form-control" data-validate="true" data-validate-address="true" data-error-address="Logradouro inválido. Verifique os caracteres utilizados." required>
                                 <div class="name-error-message">Caracteres especiais não permitidos</div>
                             </div>
                         </div>
@@ -435,12 +437,12 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label required" for="input_217">Número</label>
-                                <input type="text" id="input_217" name="q217_numeroCorrespondencia" class="form-control" required>
+                                <input type="text" id="input_217" name="q217_numeroCorrespondencia" class="form-control" data-validate="true" data-validate-address-number="true" data-error-address-number="Número inválido. Use apenas números, letras e símbolos básicos." required>
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label" for="input_219">Complemento</label>
-                                <input type="text" id="input_219" name="q219_complementoCorrespondencia" class="form-control">
+                                <input type="text" id="input_219" name="q219_complementoCorrespondencia" class="form-control" data-validate="true" data-validate-address="true" data-error-address="Complemento inválido. Verifique os caracteres utilizados.">
                                 <div class="name-error-message">Caracteres especiais não permitidos</div>
                             </div>
                         </div>
@@ -448,13 +450,13 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label required" for="input_220">Bairro</label>
-                                <input type="text" id="input_220" name="q220_bairroCorrespondencia" class="form-control" required>
+                                <input type="text" id="input_220" name="q220_bairroCorrespondencia" class="form-control" data-validate="true" data-validate-address="true" data-error-address="Bairro inválido. Verifique os caracteres utilizados." required>
                                 <div class="name-error-message">Caracteres especiais não permitidos</div>
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label required" for="input_221">Cidade</label>
-                                <input type="text" id="input_221" name="q221_cidadeCorrespondencia" class="form-control" required>
+                                <input type="text" id="input_221" name="q221_cidadeCorrespondencia" class="form-control" data-validate="true" data-validate-name="true" data-error-name="Apenas letras, espaços e caracteres simples são permitidos" required>
                                 <div class="name-error-message">Apenas letras, espaços e caracteres simples são permitidos</div>
                             </div>
                         </div>
@@ -698,20 +700,20 @@
     <script src="../assets/js/vendor/jquery-1.8.0.min.js"></script>
     <script src="../assets/js/vendor/json2.js"></script>
     <script src="../assets/js/vendor/maskedinput.min.js"></script>
-    <script src="../assets/js/vendor/smoothscroll.min.js" defer></script>
+    <script src="../assets/js/vendor/smoothscroll.min.js"></script>
     
     <!-- Apenas o JotForm é necessário para envio do formulário -->
     <script src="../assets/js/jotform.js"></script>
     
     <!-- Novos scripts de validação -->
-    <script src="../assets/js/form-utils.js" defer></script>
-    <script src="../assets/js/mask-manager.js" defer></script>
-    <script src="../assets/js/validator-unified.js" defer></script>
-    <script src="../assets/js/cep-handler.js" defer></script>
-    <script src="../assets/js/address-handler.js" defer></script>
-    <script src="../assets/js/integration-manager.js" defer></script>
-    <script src="../assets/js/persevera-forms.js" defer></script>
-    <script src="../assets/js/form-tabs.js" defer></script>
-    <script src="../assets/js/form-init.js" defer></script>
+    <script src="../assets/js/form-utils.js"></script>
+    <script src="../assets/js/mask-manager.js"></script>
+    <script src="../assets/js/validator-unified.js"></script>
+    <script src="../assets/js/cep-handler.js"></script>
+    <script src="../assets/js/address-handler.js"></script>
+    <script src="../assets/js/integration-manager.js"></script>
+    <script src="../assets/js/persevera-forms.js"></script>
+    <script src="../assets/js/form-tabs.js"></script>
+    <script src="../assets/js/form-init.js"></script>
 </body>
 </html>

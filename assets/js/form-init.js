@@ -142,10 +142,20 @@ const FormInit = {
             // Aplica validações manualmente em campos já preenchidos
             this.validatePrefilledFields(form);
             
+            // Adicionar evento para limpar erro visual ao começar a digitar em campos obrigatórios
+            const requiredFields = form.querySelectorAll('[required]');
+            requiredFields.forEach(field => {
+                field.addEventListener('input', function() {
+                    if (this.classList.contains('required-empty-field') && this.value.trim()) {
+                        this.classList.remove('is-invalid', 'required-empty-field');
+                    }
+                });
+            });
+            
             console.log('Validações reforçadas aplicadas com sucesso!');
         }, 500);
     },
-    
+
     /**
      * Valida campos que já estão preenchidos na inicialização
      * @param {HTMLFormElement} form - O formulário a validar 
@@ -199,37 +209,26 @@ const FormInit = {
             document.getElementById('input_235'), // Órgão Emissor do Cônjuge
             document.getElementById('input_236'), // Nome da Mãe do Cônjuge
             document.getElementById('input_237')  // Nome do Pai do Cônjuge
-        ];
+        ];    
         
         nameFields.forEach(field => {
             if (field) {
                 field.setAttribute('data-validate', 'true');
                 field.setAttribute('data-validate-name', 'true');
                 field.setAttribute('data-error-name', 'Apenas letras, espaços e caracteres simples como . \' - são permitidos');
-            }
-        });
-        
-        // Adiciona validações em tempo real para campos de nome
-        nameFields.forEach(field => {
-            if (field) {
-                // Validação ao perder foco
-                field.addEventListener('blur', function() {
-                    if (typeof FormValidator !== 'undefined') {
-                        FormValidator.validateField(this);
-                    }
-                });
                 
-                // Validação durante digitação com pequeno atraso
-                let typingTimer;
-                field.addEventListener('input', function() {
-                    const that = this;
-                    clearTimeout(typingTimer);
-                    if (typeof FormValidator !== 'undefined') {
-                        typingTimer = setTimeout(() => {
-                            FormValidator.validateField(that);
-                        }, 300);
-                    }
-                });
+                // Adiciona placeholder para campos de nome
+                if (field.id === 'input_94') { // Nome Completo
+                    field.setAttribute('placeholder', 'Digite seu nome completo');
+                }
+                
+                // Adiciona validação em tempo real
+                this.setupRealtimeValidation(field);
+                
+                // Adiciona a função de prevenção de caracteres proibidos
+                if (typeof window.FormUtils !== 'undefined' && FormUtils.preventInvalidNameChars) {
+                    FormUtils.preventInvalidNameChars(field);
+                }
             }
         });
     },

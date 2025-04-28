@@ -36,7 +36,9 @@
                 documentNumber: 'Número de documento inválido',
                 fileSize: 'Arquivo excede o tamanho máximo permitido',
                 fileType: 'Tipo de arquivo não permitido',
-                name: 'Nome inválido'
+                name: 'Nome inválido',
+                address: 'Endereço inválido',
+                addressNumber: 'Número de endereço inválido'
             }
         }
     };
@@ -363,7 +365,8 @@
         
         // Lista de caracteres permitidos: letras (incluindo acentuadas), espaços, apóstrofo, hífen e ponto
         // Esta regex garante que o texto contém APENAS esses caracteres
-        const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s.''-]+$/;
+        // Usando um conjunto mais restrito de caracteres para maior segurança
+        const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s.',-]+$/;
         
         // Verifica se o nome contém apenas os caracteres permitidos
         if (!regex.test(name)) {
@@ -382,7 +385,96 @@
         }
         
         // Verifica se há múltiplos caracteres especiais seguidos (por exemplo, '--' ou '..')
-        if (/[-]{2,}|[.]{2,}|[']{2,}/.test(name)) {
+        if (/[-]{2,}|[.]{2,}|[']{2,}|[,]{2,}/.test(name)) {
+            return false;
+        }
+        
+        // Verifica se inicia ou termina com caracteres especiais
+        if (/^[.',-]|[.',-]$/.test(name)) {
+            console.log('Nome com caracteres especiais no início ou final: ' + name);
+            return false;
+        }
+        
+        // Verifica se tem pelo menos 2 caracteres (nome válido)
+        if (name.trim().length < 2) {
+            console.log('Nome muito curto: ' + name);
+            return false;
+        }
+        
+        // Verifica se há caracteres especiais no meio de palavras (apenas permissíveis entre palavras)
+        // Isso garante que caracteres como ' e - só apareçam entre letras
+        if (/[^A-Za-zÀ-ÖØ-öø-ÿ][.',-]|[.',-][^A-Za-zÀ-ÖØ-öø-ÿ]/.test(name.replace(/\s/g, 'X'))) {
+            console.log('Nome com caracteres especiais em posição irregular: ' + name);
+            return false;
+        }
+        
+        return true;
+    };
+
+    /**
+     * Valida um endereço (logradouro, bairro, cidade, etc.)
+     * @param {string} address - Campo de endereço a ser validado
+     * @returns {boolean} - true se válido, false se inválido
+     */
+    FormValidator.Validators.address = function(address) {
+        if (!address.trim()) return true;
+        
+        // Lista de caracteres permitidos para endereços:
+        // Letras (incluindo acentuadas), números, espaços e caracteres comuns em endereços
+        // como vírgula, ponto, hífen, barra e parênteses
+        const regex = /^[A-Za-zÀ-ÖØ-öø-ÿ0-9\s.,\-/()ºª]+$/;
+        
+        // Verifica se o endereço contém apenas os caracteres permitidos
+        if (!regex.test(address)) {
+            console.log('Endereço com caracteres não permitidos: ' + address);
+            return false;
+        }
+        
+        // Verifica se há espaços no início ou final 
+        if (address !== address.trim()) {
+            return false;
+        }
+        
+        // Verifica se há múltiplos espaços seguidos
+        if (/\s\s+/.test(address)) {
+            return false;
+        }
+        
+        // Verifica se há múltiplos caracteres especiais seguidos
+        if (/[,]{2,}|[.]{2,}|[-]{2,}|[/]{2,}|[(]{2,}|[)]{2,}/.test(address)) {
+            console.log('Endereço com caracteres especiais repetidos: ' + address);
+            return false;
+        }
+        
+        return true;
+    };
+
+    /**
+     * Valida um número de endereço (número de casa/prédio)
+     * @param {string} number - Número a ser validado
+     * @returns {boolean} - true se válido, false se inválido
+     */
+    FormValidator.Validators.addressNumber = function(number) {
+        if (!number.trim()) return true;
+        
+        // Lista de caracteres permitidos para números de endereço:
+        // Dígitos, letras, barra, hífen e alguns símbolos comuns
+        const regex = /^[0-9A-Za-z\-/\s.ºª]+$/;
+        
+        // Verifica se o número contém apenas os caracteres permitidos
+        if (!regex.test(number)) {
+            console.log('Número de endereço com caracteres não permitidos: ' + number);
+            return false;
+        }
+        
+        // Verifica se há espaços no início ou final
+        if (number !== number.trim()) {
+            return false;
+        }
+        
+        // Verifica se há múltiplos caracteres especiais seguidos
+        if (/[-]{2,}|[/]{2,}|[.]{2,}/.test(number)) {
+            console.log('Número de endereço com caracteres especiais repetidos: ' + number);
             return false;
         }
         
@@ -405,14 +497,31 @@
         // Adiciona classe de erro
         field.classList.add('is-invalid');
         
-        // Cria elemento de feedback
-        const feedback = document.createElement('div');
-        feedback.className = 'invalid-feedback';
-        feedback.textContent = message;
+        // Verifica se é um campo obrigatório vazio
+        const isRequiredEmptyField = message === FormValidator.Config.defaultMessages.required;
         
-        // Insere feedback após o campo
-        if (field.parentNode) {
-            field.parentNode.appendChild(feedback);
+        if (isRequiredEmptyField) {
+            // Para campos obrigatórios vazios, apenas adiciona uma classe especial
+            field.classList.add('required-empty-field');
+            // Adicionar animação sutil
+            field.classList.add('animate-invalid');
+            // Remover a animação após terminar
+            setTimeout(() => {
+                field.classList.remove('animate-invalid');
+            }, 400);
+        } else {
+            // Remove a classe caso tenha sido adicionada anteriormente
+            field.classList.remove('required-empty-field');
+            
+            // Cria elemento de feedback com a mensagem de erro específica
+            const feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            feedback.textContent = message;
+            
+            // Insere feedback após o campo
+            if (field.parentNode) {
+                field.parentNode.appendChild(feedback);
+            }
         }
     };
 
@@ -481,6 +590,22 @@
                 if (!FormValidator.Validators.name(value)) {
                     isValid = false;
                     errorMessage = validations.name.message || FormValidator.Config.defaultMessages.name;
+                }
+            }
+            
+            // Validação de endereço
+            if (isValid && validations.address) {
+                if (!FormValidator.Validators.address(value)) {
+                    isValid = false;
+                    errorMessage = validations.address.message || FormValidator.Config.defaultMessages.address || 'Endereço contém caracteres não permitidos';
+                }
+            }
+            
+            // Validação de número de endereço
+            if (isValid && validations.addressNumber) {
+                if (!FormValidator.Validators.addressNumber(value)) {
+                    isValid = false;
+                    errorMessage = validations.addressNumber.message || FormValidator.Config.defaultMessages.addressNumber;
                 }
             }
             

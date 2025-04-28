@@ -128,6 +128,34 @@
     background-color: var(--error-bg);
 }
 
+/* Estilos para campos obrigatórios vazios ou inválidos */
+.form-control.is-invalid {
+    border-color: var(--error-color) !important;
+    border-width: 2px !important;
+    background-color: rgba(231, 76, 60, 0.05) !important;
+}
+
+/* Adicionar um sutíl efeito de animação quando o campo é marcado como inválido */
+@keyframes invalidShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.25) !important;
+}
+
+/* Ocultar mensagens de erro para campos obrigatórios vazios */
+.required-empty-field + .invalid-feedback {
+    display: none !important;
+}
+
+/* Animação para destaque de campos inválidos */
+.animate-invalid {
+    animation: invalidShake 0.4s ease-in-out;
+}
+
 .error-message {
     display: none;
     color: var(--error-color);
@@ -348,4 +376,22 @@ option {
 
 #cep-error-msg, #cep-status-msg {
     font-size: 0.75rem;
+}
+
+.cpf-error-message {
+    color: #d9534f;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.cpf-error-message.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
