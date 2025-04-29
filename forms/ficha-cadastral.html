@@ -15,43 +15,7 @@
     
     <!-- Email Validator via CDN -->
     <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/index.min.js"></script>
-    
-    <!-- Verificação do carregamento do Email Validator -->
-    <script>
-        // Verificar se a biblioteca foi carregada corretamente e definir um fallback se necessário
-        window.addEventListener('DOMContentLoaded', function() {
-            if (typeof EmailValidator === 'undefined' || typeof EmailValidator.validate !== 'function') {
-                console.warn('Email Validator não carregado corretamente. Usando implementação local.');
-                window.EmailValidator = {
-                    validate: function(email) {
-                        // Implementação de fallback usando regex para validação de email
-                        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                        return emailRegex.test(email);
-                    }
-                };
-            } else {
-                console.log('Email Validator carregado com sucesso.');
-            }
-            
-            // Teste da biblioteca para confirmar funcionamento
-            console.log('TESTE VALIDADOR DE EMAIL:');
-            const testEmails = [
-                'usuario@exemplo.com',      // Válido
-                'usuario@exemplo.com.br',   // Válido
-                'usuario.nome@exemplo.co',  // Válido
-                'usuario',                  // Inválido
-                'usuario@',                 // Inválido
-                'usuario@exemplo',          // Inválido
-                '@exemplo.com',             // Inválido
-                'usuario@.com'              // Inválido
-            ];
-            
-            testEmails.forEach(email => {
-                console.log(`${email}: ${EmailValidator.validate(email) ? 'VÁLIDO' : 'INVÁLIDO'}`);
-            });
-        });
-    </script>
-    
+        
     <!-- Carregando fontes Avenir via @font-face -->
     <style>
         @font-face {
@@ -795,6 +759,13 @@
             opacity: 0.8;
             cursor: not-allowed;
         }
+
+        /* Adicionar aqui a regra para abas desabilitadas */
+        .form-tab.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -1038,27 +1009,79 @@
                         <span>*</span> Campos obrigatórios
                     </div>
                     
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Endereço de Residência</h3>
+                    </div>
+                                        
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label required" for="input_118">Telefone</label>
-                            <div class="phone-input-container">
-                                <div id="country-select" class="country-select">
-                                    <img src="https://flagcdn.com/br.svg" alt="Brasil" id="selected-flag">
-                                    <span class="country-code" id="selected-code">+55</span>
-                                    <span class="dropdown-icon">▼</span>
-                                </div>
-                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
-                                <!-- Campo oculto para armazenar o código do país -->
-                                <input type="hidden" id="input_118_country_code" value="+55">
-                                <div id="country-dropdown" class="country-dropdown">
-                                    <!-- Lista de países será gerada via JavaScript -->
-                                </div>
-                            </div>
+                            <label class="form-label required" for="input_215">CEP</label>
+                            <input type="text" id="input_215" name="q215_cepResidencia" class="form-control" placeholder="00000-000" required>
                         </div>
-
+                        
                         <div class="form-group">
-                            <label class="form-label required" for="input_117">E-mail</label>
-                            <input type="email" id="input_117" name="q117_email" class="form-control" placeholder="exemplo@exemplo.com" required>
+                            <label class="form-label required" for="input_216">Logradouro</label>
+                            <input type="text" id="input_216" name="q216_logradouroResidencia" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_217">Número</label>
+                            <input type="text" id="input_217" name="q217_numeroResidencia" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_219">Complemento</label>
+                            <input type="text" id="input_219" name="q219_complementoResidencia" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_220">Bairro</label>
+                            <input type="text" id="input_220" name="q220_bairroResidencia" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_221">Cidade</label>
+                            <input type="text" id="input_221" name="q221_cidadeResidencia" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_222">Estado</label>
+                            <select class="form-control" id="input_222" name="q222_estadoResidencia" required>
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
                         </div>
                     </div>
 
@@ -1066,6 +1089,15 @@
                         <h3 class="form-section-title">Endereço de Correspondência</h3>
                     </div>
                     
+                    <div class="form-row">
+                        <div class="form-group" style="width: 100%;">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="same-address" class="checkbox-input">
+                                <span class="checkbox-label">O endereço de correspondência é o mesmo que o endereço de residência</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_108">CEP</label>
@@ -1137,89 +1169,28 @@
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="form-section-header">
-                        <h3 class="form-section-title">Endereço de Residência</h3>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group" style="width: 100%;">
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="same-address" class="checkbox-input">
-                                <span class="checkbox-label">O endereço de residência é o mesmo que o endereço de correspondência</span>
-                            </label>
-                        </div>
-                    </div>
-                    
+                                        
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label required" for="input_215">CEP</label>
-                            <input type="text" id="input_215" name="q215_cepResidencia" class="form-control" placeholder="00000-000" required>
+                            <label class="form-label required" for="input_118">Telefone</label>
+                            <div class="phone-input-container">
+                                <div id="country-select" class="country-select">
+                                    <img src="https://flagcdn.com/br.svg" alt="Brasil" id="selected-flag">
+                                    <span class="country-code" id="selected-code">+55</span>
+                                    <span class="dropdown-icon">▼</span>
+                                </div>
+                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
+                                <!-- Campo oculto para armazenar o código do país -->
+                                <input type="hidden" id="input_118_country_code" value="+55">
+                                <div id="country-dropdown" class="country-dropdown">
+                                    <!-- Lista de países será gerada via JavaScript -->
+                                </div>
+                            </div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <label class="form-label required" for="input_216">Logradouro</label>
-                            <input type="text" id="input_216" name="q216_logradouroResidencia" class="form-control" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required" for="input_217">Número</label>
-                            <input type="text" id="input_217" name="q217_numeroResidencia" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label" for="input_219">Complemento</label>
-                            <input type="text" id="input_219" name="q219_complementoResidencia" class="form-control">
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required" for="input_220">Bairro</label>
-                            <input type="text" id="input_220" name="q220_bairroResidencia" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label required" for="input_221">Cidade</label>
-                            <input type="text" id="input_221" name="q221_cidadeResidencia" class="form-control" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required" for="input_222">Estado</label>
-                            <select class="form-control" id="input_222" name="q222_estadoResidencia" required>
-                                <option value="">Selecione</option>
-                                <option value="AC">Acre</option>
-                                <option value="AL">Alagoas</option>
-                                <option value="AP">Amapá</option>
-                                <option value="AM">Amazonas</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="DF">Distrito Federal</option>
-                                <option value="ES">Espírito Santo</option>
-                                <option value="GO">Goiás</option>
-                                <option value="MA">Maranhão</option>
-                                <option value="MT">Mato Grosso</option>
-                                <option value="MS">Mato Grosso do Sul</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="PA">Pará</option>
-                                <option value="PB">Paraíba</option>
-                                <option value="PR">Paraná</option>
-                                <option value="PE">Pernambuco</option>
-                                <option value="PI">Piauí</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="RN">Rio Grande do Norte</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="RO">Rondônia</option>
-                                <option value="RR">Roraima</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="SE">Sergipe</option>
-                                <option value="TO">Tocantins</option>
-                            </select>
+                            <label class="form-label required" for="input_117">E-mail</label>
+                            <input type="email" id="input_117" name="q117_email" class="form-control" placeholder="exemplo@exemplo.com" required>
                         </div>
                     </div>
                     
@@ -1356,7 +1327,7 @@
                     
                     <div class="nav-buttons">
                         <button type="button" class="nav-button prev prev-tab" data-prev="tab-3">Anterior</button>
-                        <button type="submit" class="btn-submit">Enviar</button>
+                        <button type="submit" class="btn-submit" id="submit-button">Enviar</button>
                     </div>
                     
                     <input type="hidden" class="simple_spc" id="simple_spc" name="simple_spc" value="250986205951665">
@@ -1391,8 +1362,10 @@
     <script>
         // Formatação de campos
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('[INIT] Inicialização do formulário');
             // Detectar se o dispositivo é mobile
             const isMobile = window.innerWidth < 768;
+            console.log('[INIT] Dispositivo mobile:', isMobile);
             
             // Atualização final do telefone completo antes do envio do formulário
             const form = document.getElementById('cadastro-form');
@@ -1400,6 +1373,7 @@
                 form.addEventListener('submit', function(e) {
                     // Prevenir o envio padrão do formulário para garantir que nosso código execute antes
                     e.preventDefault();
+                    console.log('[Submit Event] Evento submit do formulário acionado');
                     
                     // Obter o campo de telefone e o código do país
                     const phoneInput = document.getElementById('input_118');
@@ -1413,12 +1387,38 @@
                         // Atualizar o valor do campo de telefone para incluir o código do país
                         phoneInput.value = countryCode + numericValue;
                         
-                        console.log('Telefone que será enviado:', phoneInput.value);
+                        console.log('[Submit Event] Telefone que será enviado:', phoneInput.value);
                     }
                     
                     // Continuar com o envio do formulário após um pequeno delay
+                    console.log('[Submit Event] Preparando para enviar o formulário após delay...');
                     setTimeout(() => {
-                        form.submit();
+                        try {
+                            console.log('[Submit Event] Enviando formulário agora...');
+                            // Usar um método alternativo de envio
+                            const jotformSubmitUrl = form.getAttribute('action');
+                            if (jotformSubmitUrl) {
+                                console.log('[Submit Event] URL do JotForm encontrada:', jotformSubmitUrl);
+                                // Enviar o formulário normalmente
+                                form.submit();
+                            } else {
+                                console.error('[Submit Event] URL do JotForm não encontrada!');
+                            }
+                        } catch (error) {
+                            console.error('[Submit Event] Erro ao enviar formulário:', error);
+                            
+                            // Tente uma abordagem alternativa de envio
+                            console.log('[Submit Event] Tentando abordagem alternativa...');
+                            const oldAction = form.action;
+                            form.removeAttribute('onsubmit');
+                            const inputs = form.querySelectorAll('input, select, textarea');
+                            inputs.forEach(input => {
+                                if (input.name && !input.value && input.type !== 'submit') {
+                                    input.disabled = true;
+                                }
+                            });
+                            form.submit();
+                        }
                     }, 100);
                 });
             }
@@ -1504,20 +1504,51 @@
             const nextButtons = document.querySelectorAll('.next-tab');
             const prevButtons = document.querySelectorAll('.prev-tab');
             
+            // Gerenciamento de abas disponíveis
+            function updateAvailableTabs() {
+                console.log('[TABS] Atualizando estado das abas disponíveis');
+                // Encontrar o índice da aba atual
+                const currentTabId = document.querySelector('.tab-content.active').id;
+                const currentTabIndex = Array.from(tabs).findIndex(tab => tab.getAttribute('data-tab') === currentTabId);
+                console.log('[TABS] Aba atual:', currentTabId, 'Índice:', currentTabIndex);
+                
+                // Habilitar todas as abas até a atual
+                tabs.forEach((tab, index) => {
+                    const tabId = tab.getAttribute('data-tab');
+                    if (index <= currentTabIndex) {
+                        tab.classList.remove('disabled');
+                        console.log('[TABS] Habilitando aba:', tabId);
+                    } else if (index === currentTabIndex + 1) {
+                        // A próxima aba também está disponível, mas só clicável se a atual for válida
+                        tab.classList.remove('disabled');
+                        console.log('[TABS] Próxima aba disponível:', tabId);
+                    } else {
+                        // Abas posteriores ficam desabilitadas
+                        tab.classList.add('disabled');
+                        console.log('[TABS] Desabilitando aba:', tabId);
+                    }
+                });
+            }
+            
             // Função para trocar de aba
             function switchTab(tabId) {
+                console.log('[NAVIGATION] Trocando para a aba:', tabId);
                 // Oculta todas as abas e remove a classe active
                 tabContents.forEach(content => {
                     content.classList.remove('active');
                 });
                 
-                tabs.forEach(tab => {
+                tabElements.forEach(tab => {
                     tab.classList.remove('active');
                 });
                 
                 // Ativa a aba selecionada
                 document.getElementById(tabId).classList.add('active');
                 document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+                console.log('[NAVIGATION] Aba ativada:', tabId);
+                
+                // Atualizar as abas disponíveis
+                updateAvailableTabs();
                 
                 // Scroll para o topo do formulário
                 document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
@@ -1527,7 +1558,24 @@
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
-                    switchTab(tabId);
+                    const currentTabId = document.querySelector('.tab-content.active').id;
+                    
+                    // Se estiver tentando ir para uma aba diferente da atual
+                    if (tabId !== currentTabId) {
+                        // Se for para uma aba posterior, valida a aba atual
+                        const currentTabIndex = Array.from(tabs).findIndex(t => t.getAttribute('data-tab') === currentTabId);
+                        const targetTabIndex = Array.from(tabs).findIndex(t => t.getAttribute('data-tab') === tabId);
+                        
+                        if (targetTabIndex > currentTabIndex) {
+                            // Validação necessária ao avançar
+                            if (validateTabFields(currentTabId)) {
+                                switchTab(tabId);
+                            }
+                        } else {
+                            // Permite voltar para abas anteriores sem validação
+                            switchTab(tabId);
+                        }
+                    }
                 });
             });
             
@@ -1535,11 +1583,14 @@
             nextButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const nextTabId = this.getAttribute('data-next');
+                    console.log('[NAVIGATION] Botão próximo clicado, próxima aba:', nextTabId);
                     
                     // Valida os campos da aba atual antes de avançar
                     const currentTabId = document.querySelector('.tab-content.active').id;
                     if (validateTabFields(currentTabId)) {
                         switchTab(nextTabId);
+                    } else {
+                        console.log('[NAVIGATION] Navegação bloqueada devido a campos inválidos');
                     }
                 });
             });
@@ -1548,15 +1599,18 @@
             prevButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const prevTabId = this.getAttribute('data-prev');
+                    console.log('[NAVIGATION] Botão anterior clicado, aba anterior:', prevTabId);
                     switchTab(prevTabId);
                 });
             });
             
             // Função para validar campos de uma aba específica
             function validateTabFields(tabId) {
+                console.log('[VALIDATION] Validando campos da aba:', tabId);
                 const currentTab = document.getElementById(tabId);
                 // Select required inputs, selects, textareas directly
                 const requiredFields = currentTab.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), select[required], textarea[required]');
+                console.log('[VALIDATION] Quantidade de campos obrigatórios encontrados:', requiredFields.length);
                 // Handle required radio groups
                 const requiredRadioGroups = {};
                 currentTab.querySelectorAll('input[type="radio"][required]').forEach(radio => {
@@ -1611,8 +1665,12 @@
                     } else {
                         // Remove specific required error message if it exists
                          if (errorMsg) errorMsg.remove();
-                         // We don't reset style here; input/change listeners handle that
-                         // to avoid conflicts with other validation styles
+                         
+                         // Verificar formatos especiais para campos preenchidos
+                         if (!validateFieldFormat(field)) {
+                             isValid = false;
+                             if (!firstInvalidField) firstInvalidField = field;
+                         }
                     }
                 });
 
@@ -1683,8 +1741,19 @@
                      }
                  });
 
+                // Validar caracteres especiais nos campos de texto da aba
+                const textFields = currentTab.querySelectorAll('input[type="text"], textarea');
+                textFields.forEach(field => {
+                    // Não validar aqui se o campo estiver vazio (já verificado acima se for obrigatório)
+                    if (field.value.trim() && !validateSpecialChars(field)) {
+                        isValid = false;
+                        if (!firstInvalidField) firstInvalidField = field;
+                    }
+                });
+
                 // If not valid, show alert and focus
                 if (!isValid) {
+                    console.log('[VALIDATION] Validação falhou com campos inválidos');
                     if (window.innerWidth < 768 && firstInvalidField) {
                         setTimeout(() => {
                             firstInvalidField.scrollIntoView({ 
@@ -1697,9 +1766,116 @@
                         firstInvalidField.focus();
                     }
                     
-                    alert('Por favor, preencha todos os campos obrigatórios antes de continuar.');
+                    alert('Por favor, corrija os campos destacados antes de continuar.');
+                } else {
+                    console.log('[VALIDATION] Validação concluída com sucesso para a aba:', tabId);
                 }
                 
+                return isValid;
+            }
+            
+            // Função para validar formato de campos específicos
+            function validateFieldFormat(field) {
+                // Se o campo não tiver valor, não valida formato
+                if (!field.value.trim()) return true;
+                
+                let isValid = true;
+                let errorMessage = '';
+                const errorMsgId = field.id + '-format-error';
+                let errorMsg = document.getElementById(errorMsgId);
+                
+                // Remover mensagem de erro anterior, se existir
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+                
+                // Validação específica por tipo de campo
+                switch(field.id) {
+                    case 'input_95': // CPF
+                    case 'input_228': // CPF Cônjuge
+                        // Verifica formato e validade de CPF
+                        isValid = validateCPF(field);
+                        errorMessage = 'CPF inválido. Verifique o formato e os dígitos.';
+                        break;
+                        
+                    case 'input_117': // Email
+                        isValid = validateEmail(field);
+                        errorMessage = 'E-mail inválido. Verifique o formato.';
+                        break;
+                        
+                    case 'input_104': // Data de Nascimento
+                    case 'input_231': // Data de Nascimento Cônjuge
+                        isValid = validateAge(field);
+                        errorMessage = 'Data de nascimento inválida.';
+                        break;
+                        
+                    case 'input_106': // Data de Expedição
+                    case 'input_234': // Data de Expedição Cônjuge
+                        isValid = validateDate(field);
+                        errorMessage = 'Data de expedição inválida.';
+                        break;
+                        
+                    case 'input_108': // CEP Correspondência
+                    case 'input_215': // CEP Residência
+                        isValid = validateCEP(field);
+                        errorMessage = 'CEP inválido. Use o formato 00000-000.';
+                        break;
+                        
+                    case 'input_118': // Telefone
+                        isValid = validatePhone(field);
+                        errorMessage = 'Telefone inválido. Verifique o formato.';
+                        break;
+                }
+                
+                // Se inválido, mostrar mensagem de erro
+                if (!isValid && !errorMsg) {
+                    errorMsg = document.createElement('div');
+                    errorMsg.id = errorMsgId;
+                    errorMsg.className = 'error-message';
+                    errorMsg.textContent = errorMessage;
+                    
+                    // Insere a mensagem de erro após o campo ou seu container
+                    if (field.id === 'input_118') {
+                        field.closest('.phone-input-container').parentNode.insertBefore(errorMsg, field.closest('.phone-input-container').nextSibling);
+                    } else {
+                        field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                    }
+                    
+                    // Destaca o campo com erro
+                    field.style.borderColor = 'var(--error-color)';
+                    field.style.backgroundColor = 'var(--error-bg)';
+                }
+                
+                return isValid;
+            }
+
+            // Função para validar CEP
+            function validateCEP(field) {
+                const cep = field.value.replace(/\D/g, '');
+                const regexCEP = /^[0-9]{8}$/;
+                return regexCEP.test(cep);
+            }
+
+            // Função para validar e-mail (complementa validateEmail existente)
+            function validateEmail(field) {
+                let isValid = false;
+                // Verificar se a biblioteca EmailValidator está carregada
+                if (typeof EmailValidator !== 'undefined' && typeof EmailValidator.validate === 'function') {
+                    // Usar a biblioteca se estiver disponível
+                    isValid = EmailValidator.validate(field.value);
+                    console.log('[VALIDATION EMAIL] Usando biblioteca EmailValidator');
+                } else {
+                    // Usar fallback de regex se a biblioteca não estiver carregada
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    isValid = emailRegex.test(field.value);
+                    console.warn('[VALIDATION EMAIL] EmailValidator não carregado, usando fallback regex.');
+                }
+
+                if (!isValid) {
+                    showError(field, 'Por favor, insira um e-mail válido.', field.id + '-email-error');
+                    console.log('[VALIDATION EMAIL] Email inválido');
+                }
+
                 return isValid;
             }
             
@@ -1743,8 +1919,8 @@
                     regex = /^[0-9-]+$/;
                     // Validação de busca/formato é feita no listener de CEP
                 } else if (input.id === 'input_112' || input.id === 'input_217') { // Número (endereço)
-                    regex = /^[0-9a-zA-Z-/ºª\s]+$/; // Permite números, letras, -, /, º, ª e espaços
-                     errorMessage = 'Número inválido.';
+                    regex = /^[0-9]+$/; // Permite apenas números
+                     errorMessage = 'Número inválido. Use apenas números.';
                 } else if (input.id === 'input_97' || input.id === 'input_230') { // Naturalidade
                     regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s,-]+$/; // Letras (acentuadas), espaços, vírgula, hífen
                     errorMessage = 'Naturalidade inválida. Use letras, espaços, vírgula ou hífen.';
@@ -1755,11 +1931,13 @@
                     } else {
                         return true; // Não valida select aqui
                     }
-                } else if (input.id === 'input_109' || input.id === 'input_216' || // Logradouro
-                           input.id === 'input_111' || input.id === 'input_220' || // Bairro
+                } else if (input.id === 'input_109' || input.id === 'input_216') { // Logradouro
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s]+$/; // Apenas letras (com acentos) e espaços
+                    errorMessage = 'Logradouro inválido. Use apenas letras e espaços.';
+                } else if (input.id === 'input_111' || input.id === 'input_220' || // Bairro
                            input.id === 'input_110' || input.id === 'input_221' || // Cidade
                            input.id === 'input_113' || input.id === 'input_219') {  // Complemento
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()ºª_-]+$/; // Permite mais alguns caracteres comuns em endereços
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()ºª_-]+$/;
                     errorMessage = 'Endereço inválido. Verifique os caracteres especiais.';
                 } else if (input.id === 'input_117') { // Email
                     // Validação específica em validateEmail
@@ -1822,7 +2000,23 @@
                         }
                         // Após filtrar, ainda podemos validar para mostrar mensagem se necessário (embora deva estar sempre válido)
                          validateSpecialChars(this); 
-                    } else {
+                    } else if (this.id === 'input_109' || this.id === 'input_216') { // Logradouro
+                        // Filtragem ativa para Logradouro: remove números e caracteres especiais
+                        const originalValue = this.value;
+                        const sanitizedValue = originalValue.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s]/g, '');
+                        if (originalValue !== sanitizedValue) {
+                            this.value = sanitizedValue;
+                        }
+                        validateSpecialChars(this);
+                    } else if (this.id === 'input_112' || this.id === 'input_217') { // Número (endereço)
+                        // Filtragem ativa para Número: remove não-numéricos
+                        const originalValue = this.value;
+                        const sanitizedValue = originalValue.replace(/\\D/g, ''); // Remove tudo que não for dígito
+                        if (originalValue !== sanitizedValue) {
+                            this.value = sanitizedValue;
+                        }
+                          validateSpecialChars(this); 
+                     } else {
                          // Para outros campos, apenas valida (não filtra ativamente)
                          validateSpecialChars(this);
                     }
@@ -2160,81 +2354,70 @@
                 
                 // Função para validar telefone com base no país selecionado
                 function validatePhone(input) {
+                    console.log('[VALIDATION PHONE] Validando telefone:', input.value);
                     const errorMsgId = 'phone-error-msg';
                     let existingError = document.getElementById(errorMsgId);
-                    let existingSuccess = document.getElementById('phone-success-msg');
                     
-                    // Remove mensagens existentes
-                    if (existingError) existingError.remove();
-                    if (existingSuccess) existingSuccess.remove();
+                    // Remover mensagem de erro existente
+                    if (existingError) {
+                        existingError.remove();
+                    }
                     
-                    // Remove estilos de validação
-                    input.classList.remove('phone-valid');
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    
-                    // Se vazio, não faz nada
-                    if (!input.value.trim()) return;
-                    
-                    const numericValue = input.value.replace(/\D/g, '');
-                    
-                    // Validação específica para cada país
-                    if (selectedCountry === 'BR') {
-                        // Número brasileiro
-                        if (numericValue.length < 10) {
-                            showError(input, 'Telefone incompleto', errorMsgId);
-                            return false;
-                        }
-                        
-                        // Verifica se o DDD é válido
-                        const ddd = numericValue.substring(0, 2);
-                        const validDDDs = ['11', '12', '13', '14', '15', '16', '17', '18', '19', '21', '22', '24', '27', '28', '31', '32', '33', '34', '35', '37', '38', '41', '42', '43', '44', '45', '46', '47', '48', '49', '51', '53', '54', '55', '61', '62', '63', '64', '65', '66', '67', '68', '69', '71', '73', '74', '75', '77', '79', '81', '82', '83', '84', '85', '86', '87', '88', '89', '91', '92', '93', '94', '95', '96', '97', '98', '99'];
-                        
-                        if (!validDDDs.includes(ddd)) {
-                            showError(input, 'DDD inválido', errorMsgId);
-                            return false;
-                        }
-                        
-                        // Se for celular (11 dígitos), verifica se o primeiro dígito é 9
-                        if (numericValue.length === 11 && numericValue.charAt(2) !== '9') {
-                            showError(input, 'Celular deve começar com 9 após o DDD', errorMsgId);
-                            return false;
-                        }
-                        
-                        // Telefone válido
-                        input.classList.add('phone-valid');
-                        input.style.borderColor = 'var(--secondary-color)';
-                        
-                        // Dá feedback sobre o tipo de telefone
-                        const phoneType = numericValue.length === 11 ? 'Celular' : 'Telefone fixo';
-                        const successMsg = document.createElement('div');
-                        successMsg.id = 'phone-success-msg';
-                        successMsg.className = 'form-hint';
-                        successMsg.textContent = `${phoneType} válido`;
-                        successMsg.style.color = 'var(--secondary-color)';
-                        input.parentNode.parentNode.appendChild(successMsg);
-                        
-                        return true;
-                    } else {
-                        // Validação genérica para número internacional
-                        if (numericValue.length < 6) {
-                            showError(input, 'Número internacional muito curto', errorMsgId);
-                            return false;
-                        }
-                        
-                        // Número internacional válido
-                        input.classList.add('phone-valid');
-                        input.style.borderColor = 'var(--secondary-color)';
-                        
-                        const successMsg = document.createElement('div');
-                        successMsg.id = 'phone-success-msg';
-                        successMsg.className = 'form-hint';
-                        successMsg.textContent = 'Número internacional válido';
-                        successMsg.style.color = 'var(--secondary-color)';
-                        input.parentNode.parentNode.appendChild(successMsg);
-                        
+                    // Se vazio, retorna para o estilo padrão
+                    if (!input.value.trim()) {
+                        input.style.borderColor = '';
+                        input.style.backgroundColor = '';
+                        console.log('[VALIDATION PHONE] Telefone vazio');
                         return true;
                     }
+                    
+                    // Obter o código do país selecionado
+                    const countryCodeEl = document.getElementById('selected-code');
+                    if (!countryCodeEl) {
+                        console.log('[VALIDATION PHONE] Código do país não encontrado');
+                        return false;
+                    }
+                    
+                    const countryCode = countryCodeEl.textContent;
+                    console.log('[VALIDATION PHONE] Código do país:', countryCode);
+                    
+                    // Extrair apenas os dígitos do telefone
+                    const phoneDigits = input.value.replace(/\D/g, '');
+                    
+                    // Validar o formato com base no país
+                    if (countryCode === '+55') { // Brasil
+                        // Verificar se é celular (com 9) ou fixo
+                        if (phoneDigits.length < 10) {
+                            showError(input, 'Telefone brasileiro deve ter pelo menos 10 dígitos.', errorMsgId);
+                            console.log('[VALIDATION PHONE] Telefone com poucos dígitos');
+                            return false;
+                        }
+                        
+                        if (phoneDigits.length > 11) {
+                            showError(input, 'Telefone brasileiro não deve ter mais de 11 dígitos.', errorMsgId);
+                            console.log('[VALIDATION PHONE] Telefone com muitos dígitos');
+                            return false;
+                        }
+                    } else {
+                        // Para outros países, verificar se tem pelo menos 7 dígitos
+                        if (phoneDigits.length < 7) {
+                            showError(input, 'Número de telefone internacional muito curto.', errorMsgId);
+                            console.log('[VALIDATION PHONE] Telefone internacional muito curto');
+                            return false;
+                        }
+                        
+                        // E não mais que 15 dígitos (padrão E.164)
+                        if (phoneDigits.length > 15) {
+                            showError(input, 'Número de telefone internacional muito longo.', errorMsgId);
+                            console.log('[VALIDATION PHONE] Telefone internacional muito longo');
+                            return false;
+                        }
+                    }
+                    
+                    // Telefone válido
+                    console.log('[VALIDATION PHONE] Telefone válido');
+                    input.classList.add('phone-valid');
+                    return true;
                 }
                 
                 // Inicializar o componente
@@ -2274,28 +2457,44 @@
             
             // Função para validar e-mail
             function validateEmail(input) {
+                console.log('[VALIDATION EMAIL] Validando email:', input.value);
                 const errorMsgId = 'email-error-msg';
                 let existingError = document.getElementById(errorMsgId);
                 
-                // Remove mensagem de erro existente
+                // Remove existing error message
                 if (existingError) {
                     existingError.remove();
                 }
                 
-                // Se vazio, retorna para o estilo padrão
+                // If empty, reset to default style and return
                 if (!input.value.trim()) {
                     input.style.borderColor = '';
                     input.style.backgroundColor = '';
+                    console.log('[VALIDATION EMAIL] Email vazio');
                     return;
                 }
                 
-                // Usando a biblioteca email-validator
-                if (!EmailValidator.validate(input.value)) {
+                let isValid = false;
+                // Verificar se a biblioteca EmailValidator está carregada
+                if (typeof EmailValidator !== 'undefined' && typeof EmailValidator.validate === 'function') {
+                    // Usar a biblioteca se estiver disponível
+                    isValid = EmailValidator.validate(input.value);
+                    console.log('[VALIDATION EMAIL] Usando biblioteca EmailValidator');
+                } else {
+                    // Usar fallback de regex se a biblioteca não estiver carregada
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    isValid = emailRegex.test(input.value);
+                    console.warn('[VALIDATION EMAIL] EmailValidator não carregado, usando fallback regex.');
+                }
+
+                if (!isValid) {
                     showError(input, 'Por favor, insira um e-mail válido.', errorMsgId);
+                    console.log('[VALIDATION EMAIL] Email inválido');
                     return false;
                 }
                 
                 // E-mail é válido
+                console.log('[VALIDATION EMAIL] Email válido');
                 input.style.borderColor = 'var(--secondary-color)';
                 input.style.backgroundColor = '';
                 return true;
@@ -2303,23 +2502,28 @@
             
             // Função para validar idade mínima (18 anos)
             function validateAge(input) {
+                console.log('[VALIDATION AGE] Validando data de nascimento:', input.value);
                 const birthDateStr = input.value;
-                const errorMsgId = 'age-error-' + input.id; // Unique error ID per input
+                const errorMsgId = 'age-error-' + input.id;
                 let existingError = document.getElementById(errorMsgId);
 
                 // Remove mensagem de erro existente
                 if (existingError) {
                     existingError.remove();
                 }
-                input.style.borderColor = ''; // Reset border color
-                input.style.backgroundColor = ''; // Reset background color
+                input.style.borderColor = '';
+                input.style.backgroundColor = '';
 
-                if (!birthDateStr.trim()) return true; // Don't validate if empty
+                if (!birthDateStr.trim()) {
+                    console.log('[VALIDATION AGE] Data de nascimento vazia');
+                    return true; // Don't validate if empty
+                }
 
                 const parts = birthDateStr.split('/');
                 if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
                      showError(input, 'Formato inválido. Use DD/MM/AAAA.', errorMsgId);
-                     return false; // Invalid format
+                     console.log('[VALIDATION AGE] Formato inválido');
+                     return false;
                 }
 
                 const day = parseInt(parts[0], 10);
@@ -2329,6 +2533,7 @@
                 // Check for reasonable year range and calendar validity
                 if (year < 1900 || year > new Date().getFullYear() + 1 || isNaN(day) || isNaN(month) || isNaN(year)) {
                      showError(input, 'Data inválida (ano ou formato).', errorMsgId);
+                     console.log('[VALIDATION AGE] Data inválida');
                      return false;
                 }
 
@@ -2339,12 +2544,14 @@
                 // Check if the generated date matches the input (e.g., 31/02 is invalid)
                 if (birthDate.getFullYear() !== year || birthDate.getMonth() !== month || birthDate.getDate() !== day) {
                      showError(input, 'Data inválida (dia/mês).', errorMsgId);
+                     console.log('[VALIDATION AGE] Data inválida');
                      return false;
                  }
 
                  // Check if date is in the future
                  if (birthDate > today) {
                      showError(input, 'Data não pode ser no futuro.', errorMsgId);
+                     console.log('[VALIDATION AGE] Data não pode ser no futuro');
                      return false;
                  }
 
@@ -2357,32 +2564,36 @@
 
                 if (age < 18) {
                      showError(input, 'Você deve ter pelo menos 18 anos.', errorMsgId);
+                     console.log('[VALIDATION AGE] Idade mínima não atingida');
                      return false;
                 }
 
                 // Date is valid and age is sufficient
+                console.log('[VALIDATION AGE] Data válida e idade ok');
                 input.style.borderColor = 'var(--secondary-color)';
                 return true;
             }
 
              // Função para validar datas genéricas (como expedição)
              function validateDate(input) {
+                 console.log('[VALIDATION DATE] Validando data:', input.value);
                  const dateStr = input.value;
-                 const errorMsgId = 'date-error-' + input.id; // Unique error ID
+                 const errorMsgId = 'date-error-' + input.id;
                  let existingError = document.getElementById(errorMsgId);
 
                  // Remove mensagem de erro existente
                  if (existingError) {
                      existingError.remove();
                  }
-                 input.style.borderColor = ''; // Reset border color
-                 input.style.backgroundColor = ''; // Reset background color
+                 input.style.borderColor = '';
+                 input.style.backgroundColor = '';
 
                  if (!dateStr.trim()) return true; // Don't validate if empty
 
                  const parts = dateStr.split('/');
                  if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
                      showError(input, 'Formato inválido. Use DD/MM/AAAA.', errorMsgId);
+                     console.log('[VALIDATION DATE] Formato inválido');
                      return false; // Invalid format
                  }
 
@@ -2393,6 +2604,7 @@
                  // Check for reasonable year range and calendar validity
                  if (year < 1950 || year > new Date().getFullYear() + 1 || isNaN(day) || isNaN(month) || isNaN(year)) { // Min year 1950 for expedition
                       showError(input, 'Data inválida (ano ou formato).', errorMsgId);
+                      console.log('[VALIDATION DATE] Data inválida');
                       return false;
                  }
 
@@ -2403,22 +2615,26 @@
                  // Check if the generated date matches the input (e.g., 31/02 is invalid)
                  if (dateValue.getFullYear() !== year || dateValue.getMonth() !== month || dateValue.getDate() !== day) {
                       showError(input, 'Data inválida (dia/mês).', errorMsgId);
+                      console.log('[VALIDATION DATE] Data inválida');
                       return false;
                   }
 
                   // Check if date is in the future
                   if (dateValue > today) {
                       showError(input, 'Data não pode ser no futuro.', errorMsgId);
+                      console.log('[VALIDATION DATE] Data não pode ser no futuro');
                       return false;
                   }
 
                  // Date is valid
+                 console.log('[VALIDATION DATE] Data válida');
                  input.style.borderColor = 'var(--secondary-color)';
                  return true;
              }
 
             // CPF validation function
             function validateCPF(input) {
+                console.log('[VALIDATION CPF] Validando CPF:', input.value);
                 const errorMsgId = 'cpf-error-msg';
                 let existingError = document.getElementById(errorMsgId);
                 
@@ -2431,6 +2647,7 @@
                 if (!input.value.trim()) {
                     input.style.borderColor = '';
                     input.style.backgroundColor = '';
+                    console.log('[VALIDATION CPF] CPF vazio');
                     return;
                 }
                 
@@ -2440,12 +2657,14 @@
                 // Check if CPF has 11 digits
                 if (cpf.length !== 11) {
                     showError(input, 'CPF deve conter 11 dígitos.', errorMsgId);
+                    console.log('[VALIDATION CPF] CPF inválido: número incorreto de dígitos');
                     return false;
                 }
                 
                 // Check if all digits are the same
                 if (/^(\d)\1{10}$/.test(cpf)) {
                     showError(input, 'CPF inválido: todos os dígitos são iguais.', errorMsgId);
+                    console.log('[VALIDATION CPF] CPF inválido: dígitos repetidos');
                     return false;
                 }
                 
@@ -2468,10 +2687,12 @@
                 // Check if calculated digits match the provided ones
                 if (parseInt(cpf.charAt(9)) !== digit1 || parseInt(cpf.charAt(10)) !== digit2) {
                     showError(input, 'CPF inválido.', errorMsgId);
+                    console.log('[VALIDATION CPF] CPF inválido: dígitos verificadores incorretos');
                     return false;
                 }
                 
                 // CPF is valid
+                console.log('[VALIDATION CPF] CPF válido');
                 input.style.borderColor = 'var(--secondary-color)';
                 input.style.backgroundColor = '';
                 return true;
@@ -3078,23 +3299,23 @@
                 // O campo já tem a configuração correta
             }
             
-            // Opção "Mesmo Endereço" para copiar dados de Correspondência para Residência
+            // Opção "Mesmo Endereço" para copiar dados de Residência para Correspondência
             const sameAddressCheckbox = document.getElementById('same-address');
             if (sameAddressCheckbox) {
                 sameAddressCheckbox.addEventListener('change', function() {
                     // Mapeia os campos correspondentes entre os endereços
                     const fieldMap = [
-                        { from: 'input_108', to: 'input_215' }, // CEP
-                        { from: 'input_109', to: 'input_216' }, // Logradouro
-                        { from: 'input_112', to: 'input_217' }, // Número
-                        { from: 'input_113', to: 'input_219' }, // Complemento
-                        { from: 'input_111', to: 'input_220' }, // Bairro
-                        { from: 'input_110', to: 'input_221' }, // Cidade
-                        { from: 'input_114', to: 'input_222' }  // Estado
+                        { from: 'input_215', to: 'input_108' }, // CEP
+                        { from: 'input_216', to: 'input_109' }, // Logradouro
+                        { from: 'input_217', to: 'input_112' }, // Número
+                        { from: 'input_219', to: 'input_113' }, // Complemento
+                        { from: 'input_220', to: 'input_111' }, // Bairro
+                        { from: 'input_221', to: 'input_110' }, // Cidade
+                        { from: 'input_222', to: 'input_114' }  // Estado
                     ];
                     
                     if (this.checked) {
-                        // Copiar dados do endereço de correspondência para residência
+                        // Copiar dados do endereço de residência para correspondência
                         fieldMap.forEach(pair => {
                             const sourceField = document.getElementById(pair.from);
                             const targetField = document.getElementById(pair.to);
@@ -3120,7 +3341,7 @@
                         const infoMsg = document.createElement('div');
                         infoMsg.id = 'same-address-info';
                         infoMsg.className = 'form-hint';
-                        infoMsg.textContent = 'Os campos foram preenchidos automaticamente com o endereço de correspondência.';
+                        infoMsg.textContent = 'Os campos foram preenchidos automaticamente com o endereço de residência.';
                         infoMsg.style.color = 'var(--secondary-color)';
                         infoMsg.style.marginBottom = '15px';
                         sameAddressCheckbox.parentNode.parentNode.appendChild(infoMsg);
@@ -3947,6 +4168,79 @@
              });
 
         });
+
+        // Adicionar no final da função principal, após eventListeners de prevButtons, uma validação de envio para o botão final
+        // Botão de Enviar (validação final)
+        const submitButton = document.getElementById('submit-button');
+        if (submitButton) {
+            submitButton.addEventListener('click', function() {
+                console.log('Botão de envio clicado');
+                const currentTabId = document.querySelector('.tab-content.active').id;
+                console.log('Aba atual:', currentTabId);
+                console.log('Validando campos...');
+                if (validateTabFields(currentTabId)) {
+                    console.log('Campos validados com sucesso, disparando evento submit');
+                    // Dispara o evento submit em vez de chamar diretamente o método submit()
+                    // Isso garantirá que os manipuladores de eventos de submit sejam executados
+                    const formEl = document.getElementById('cadastro-form');
+                    console.log('Formulário encontrado:', formEl ? 'Sim' : 'Não');
+                    
+                    try {
+                        const submitEvent = new Event('submit', {
+                            'bubbles': true,
+                            'cancelable': true
+                        });
+                        console.log('Evento submit criado, disparando...');
+                        formEl.dispatchEvent(submitEvent);
+                        console.log('Evento submit disparado com sucesso');
+                        
+                        // Como backup, tentar submeter diretamente após um pequeno atraso
+                        setTimeout(() => {
+                            console.log('Tentativa de backup: enviando formulário diretamente');
+                            formEl.submit();
+                        }, 300);
+                    } catch (error) {
+                        console.error('Erro ao disparar evento submit:', error);
+                        
+                        // Se ocorrer um erro, tentar submeter diretamente
+                        console.log('Tentando submeter diretamente após erro');
+                        formEl.submit();
+                    }
+                } else {
+                    console.log('Validação falhou, formulário não será enviado');
+                }
+            });
+        }
+
+        // Atualização inicial das abas disponíveis
+        const tabElements = document.querySelectorAll('.form-tab');
+        // Gerenciamento de abas disponíveis
+        function updateAvailableTabs() {
+            console.log('[TABS] Atualizando estado das abas disponíveis');
+            // Encontrar o índice da aba atual
+            const currentTabId = document.querySelector('.tab-content.active').id;
+            const currentTabIndex = Array.from(tabElements).findIndex(tab => tab.getAttribute('data-tab') === currentTabId);
+            console.log('[TABS] Aba atual:', currentTabId, 'Índice:', currentTabIndex);
+            
+            // Habilitar todas as abas até a atual
+            tabElements.forEach((tab, index) => {
+                const tabId = tab.getAttribute('data-tab');
+                if (index <= currentTabIndex) {
+                    tab.classList.remove('disabled');
+                    console.log('[TABS] Habilitando aba:', tabId);
+                } else if (index === currentTabIndex + 1) {
+                    // A próxima aba também está disponível, mas só clicável se a atual for válida
+                    tab.classList.remove('disabled');
+                    console.log('[TABS] Próxima aba disponível:', tabId);
+                } else {
+                    // Abas posteriores ficam desabilitadas
+                    tab.classList.add('disabled');
+                    console.log('[TABS] Desabilitando aba:', tabId);
+                }
+            });
+        }
+        updateAvailableTabs();
+        console.log('[INIT] Inicialização completa do formulário');
     </script>
 </body>
 </html>
