@@ -3775,128 +3775,143 @@
                 }
 
                 const selectedType = typeSelect.value;
-                
-                // Remover ouvintes de eventos anteriores para evitar duplicação
-                const newNumberInput = numberInput.cloneNode(true);
-                numberInput.parentNode.replaceChild(newNumberInput, numberInput);
-                const currentNumberInput = document.getElementById(numberInputId); // Obter a nova referência
 
-                // Resetar atributos comuns
+                // --- Clone to remove old listeners ---
+                const oldNumberInput = numberInput;
+                const newNumberInput = oldNumberInput.cloneNode(true);
+                oldNumberInput.parentNode.replaceChild(newNumberInput, oldNumberInput);
+                const currentNumberInput = document.getElementById(numberInputId); // Get the new reference
+
+                // --- Shared Input Listener Logic ---
+                 const sharedInputHandler = function() {
+                     // 1. Remove 'required' error if present and field has value
+                     const requiredErrorMsgId = this.id + '-required-error';
+                     const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                     if (this.value.trim() && requiredErrorMsg) {
+                         requiredErrorMsg.remove();
+                         // Conditionally reset styles only if no *other* errors are detected
+                         if (!hasOtherErrors(this)) {
+                              this.style.borderColor = '';
+                              this.style.backgroundColor = '';
+                              this.classList.remove('error'); // Remove general error class if used
+                         }
+                     } else if (this.value.trim() && !requiredErrorMsg) {
+                         // If no required message, still reset styles if no other errors
+                         if (!hasOtherErrors(this)) {
+                             this.style.borderColor = '';
+                             this.style.backgroundColor = '';
+                             this.classList.remove('error');
+                         }
+                     }
+
+                     // 2. Apply type-specific filtering (will be added below in switch)
+                 };
+
+                // --- Reset common attributes and clear previous errors/styles ---
                 currentNumberInput.placeholder = 'Nº do Documento';
                 currentNumberInput.removeAttribute('pattern');
                 currentNumberInput.removeAttribute('maxlength');
-                currentNumberInput.inputMode = 'text';
-                currentNumberInput.value = ''; // Limpar valor ao mudar tipo
+                currentNumberInput.inputMode = 'text'; // Default
 
+                 // Clear any existing validation messages and styles associated with this input
+                 clearValidationStyles(currentNumberInput, currentNumberInput.id); // Use the helper to clear specific format/validation errors
+
+                // --- Apply Specific Rules ---
                 switch (selectedType) {
                     case 'RG':
                         currentNumberInput.placeholder = 'Apenas números e X';
-                        currentNumberInput.inputMode = 'text'; 
-                        currentNumberInput.maxLength = 20; 
+                        currentNumberInput.inputMode = 'text'; // Allow X
+                        currentNumberInput.maxLength = 20;
                         currentNumberInput.addEventListener('input', function() {
-                            // Remove caracteres não permitidos para RG (incluindo . e -)
-                            this.value = this.value.replace(/[^0-9Xx]/g, '');
-                            // --- ADDED: Remove required error on input ---
-                            const requiredErrorMsgId = this.id + '-required-error';
-                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
-                            if (this.value.trim() && requiredErrorMsg) {
-                                requiredErrorMsg.remove();
-                                // Optionally reset basic styles if no other errors
-                                if (!hasOtherErrors(this)) {
-                                    this.style.borderColor = '';
-                                    this.style.backgroundColor = '';
-                                }
-                            }
-                            // --- END ADDED ---
-                        });
+                             sharedInputHandler.call(this); // Call shared logic first
+                             // Specific filtering for RG
+                             this.value = this.value.replace(/[^0-9Xx]/g, '');
+                             // Optional: Add real-time special char check if needed for RG specifically
+                             // validateSpecialChars(this);
+                         });
                         break;
                     case 'CNH':
                         currentNumberInput.placeholder = '11 dígitos numéricos';
                         currentNumberInput.inputMode = 'numeric';
                         currentNumberInput.maxLength = 11;
                         currentNumberInput.addEventListener('input', function() {
-                            // Permite apenas dígitos e limita a 11
-                            // Use the literal regex /\\D/g to remove non-digits
-                            this.value = this.value.replace(/\\D/g, '').slice(0, 11);
-                            // --- ADDED: Remove required error on input ---
-                            const requiredErrorMsgId = this.id + '-required-error';
-                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
-                            if (this.value.trim() && requiredErrorMsg) {
-                                requiredErrorMsg.remove();
-                                // Optionally reset basic styles if no other errors
-                                if (!hasOtherErrors(this)) {
+                             sharedInputHandler.call(this); // Call shared logic first
+                             // Specific filtering for CNH
+                             this.value = this.value.replace(/\\D/g, '').slice(0, 11); // Ensure literal \D
+                         });
+                        // Add blur listener for CNH validation (keep existing logic but ensure clearValidationStyles is called first)
+                        currentNumberInput.addEventListener('blur', function() {
+                             const cnhValue = this.value;
+                             const baseMsgId = this.id + '-cnh'; // Base for IDs de mensagem
+
+                             clearValidationStyles(this, baseMsgId); // Clear specific CNH messages first
+
+                             if (cnhValue.length === 0) {
+                                 // If field is required and empty, the main validation will catch it.
+                                 // If not required, empty is fine. Reset styles if no other errors exist.
+                                 if (!hasOtherErrors(this)) {
                                     this.style.borderColor = '';
                                     this.style.backgroundColor = '';
-                                }
-                            }
-                            // --- END ADDED ---
-                        });
-                        // Adiciona validação no blur
-                        currentNumberInput.addEventListener('blur', function() {
-                            const cnhValue = this.value;
-                            const orgaoEmissorId = (numberInputId === 'input_98') ? 'input_99' : 'input_235';
-                            const baseMsgId = numberInputId + '-cnh'; // Base para IDs de mensagem
+                                    this.classList.remove('error');
+                                 }
+                                 return;
+                             }
 
-                            clearValidationStyles(this, baseMsgId);
-                            
-                            if (cnhValue.length === 0) {
-                                return; // Não valida campo vazio no blur
-                            } 
-                            
-                            if (cnhValue.length < 11) {
-                                showError(this, 'CNH deve ter 11 dígitos.', baseMsgId + '-error-msg');
-                                return;
-                            }
+                             if (cnhValue.length < 11) {
+                                 showError(this, 'CNH deve ter 11 dígitos.', baseMsgId + '-error-msg');
+                                 return;
+                             }
 
-                            if (validateCNH(cnhValue, orgaoEmissorId)) {
-                                showSuccess(this, 'CNH válida.', baseMsgId + '-success-msg');
-                            } else {
-                                showError(this, 'CNH inválida.', baseMsgId + '-error-msg');
-                            }
-                        });
+                             // Assuming validateCNH exists and works correctly:
+                             // const orgaoEmissorId = (this.id === 'input_98') ? 'input_99' : 'input_235';
+                             // if (validateCNH(cnhValue, orgaoEmissorId)) {
+                             //    showSuccess(this, 'CNH válida.', baseMsgId + '-success-msg');
+                             // } else {
+                             //    showError(this, 'CNH inválida.', baseMsgId + '-error-msg');
+                             // }
+                             // Placeholder validation success indication
+                             this.style.borderColor = 'var(--secondary-color)';
+
+                         });
                         break;
                     case 'Passaporte':
-                        currentNumberInput.placeholder = 'LLNNNNNN (ex: AA123456)'; // Updated placeholder
-                        currentNumberInput.inputMode = 'text';
-                         // Validate Brazilian format: 2 letters followed by 6 digits
-                        currentNumberInput.pattern = '^[a-zA-Z]{2}\\d{6}$'; // Updated pattern
-                        currentNumberInput.maxLength = 8; // Updated max length
+                        currentNumberInput.placeholder = 'LLNNNNNN (ex: AA123456)';
+                        currentNumberInput.inputMode = 'text'; // Allow letters
+                        currentNumberInput.pattern = '^[a-zA-Z]{2}\\d{6}$';
+                        currentNumberInput.maxLength = 8;
                         currentNumberInput.addEventListener('input', function() {
-                            // Allow only letters and numbers, limit length
-                            let value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase(); 
-                            if (value.length > 8) value = value.slice(0, 8);
-                            this.value = value;
-                            // --- ADDED: Remove required error on input ---
-                            const requiredErrorMsgId = this.id + '-required-error';
-                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
-                            if (this.value.trim() && requiredErrorMsg) {
-                                requiredErrorMsg.remove();
-                                // Optionally reset basic styles if no other errors
-                                if (!hasOtherErrors(this)) {
-                                    this.style.borderColor = '';
-                                    this.style.backgroundColor = '';
-                                }
-                            }
-                            // --- END ADDED ---
-                        });
-                        break;
-                    default:
-                        // Sem regras específicas para outros tipos ou quando nada está selecionado
-                        // Add listener to remove required error for default case too
-                        currentNumberInput.addEventListener('input', function() {
-                             // --- ADDED: Remove required error on input for default ---
-                             const requiredErrorMsgId = this.id + '-required-error';
-                             const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
-                             if (this.value.trim() && requiredErrorMsg) {
-                                 requiredErrorMsg.remove();
-                                 // Optionally reset basic styles if no other errors
+                             sharedInputHandler.call(this); // Call shared logic first
+                             // Specific filtering for Passport
+                             let value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                             if (value.length > 8) value = value.slice(0, 8);
+                             this.value = value;
+                         });
+                         // Add blur listener for Passport format validation
+                         currentNumberInput.addEventListener('blur', function() {
+                             const baseMsgId = this.id + '-passport';
+                             clearValidationStyles(this, baseMsgId); // Clear specific messages
+
+                             if (this.value.length === 0) {
                                  if (!hasOtherErrors(this)) {
                                      this.style.borderColor = '';
                                      this.style.backgroundColor = '';
+                                     this.classList.remove('error');
                                  }
+                                 return;
                              }
-                             // --- END ADDED ---
+
+                             if (!this.checkValidity()) { // Use built-in pattern check
+                                 showError(this, 'Formato de passaporte inválido (Ex: AA123456).', baseMsgId + '-error-msg');
+                             } else {
+                                 // Optional: Add success indication
+                                 // showSuccess(this, 'Formato válido.', baseMsgId + '-success-msg');
+                                 this.style.borderColor = 'var(--secondary-color)';
+                             }
                          });
+                        break;
+                    default:
+                         // For "Selecione" or other types where no specific rules apply, add the shared handler
+                         currentNumberInput.addEventListener('input', sharedInputHandler);
                         break;
                 }
             }
