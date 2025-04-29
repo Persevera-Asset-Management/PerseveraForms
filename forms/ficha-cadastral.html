@@ -6,7 +6,6 @@
     <title>Ficha Cadastral - Persevera</title>
     
     <!-- Adobe Fonts (Typekit) para Avenir - Apenas como exemplo, precisa ser substituído por um kit real -->
-    <link rel="stylesheet" href="https://use.typekit.net/abc1234.css">
     
     <!-- Google Fonts alternativa - Fontes similares à Avenir -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,14 +13,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Email Validator via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/dist/email-validator.min.js"></script>
         
     <!-- Carregando fontes Avenir via @font-face -->
     <style>
         @font-face {
             font-family: 'Avenir';
-            src: url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff2') format('woff2'),
-                 url('https://assets.persevera.com.br/fonts/Avenir-Medium.woff') format('woff');
+            src: url('../assets/fonts/AvenirLTStd-Medium.otf') format('otf');
             font-weight: 500;
             font-style: normal;
             font-display: swap;
@@ -29,8 +27,7 @@
         
         @font-face {
             font-family: 'Avenir Light';
-            src: url('https://assets.persevera.com.br/fonts/Avenir-Light.woff2') format('woff2'),
-                 url('https://assets.persevera.com.br/fonts/Avenir-Light.woff') format('woff');
+            src: url('../assets/fonts/AvenirLTStd-Light.otf') format('otf');
             font-weight: 300;
             font-style: normal;
             font-display: swap;
@@ -1009,6 +1006,30 @@
                         <span>*</span> Campos obrigatórios
                     </div>
                     
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_118">Telefone</label>
+                            <div class="phone-input-container">
+                                <div id="country-select" class="country-select">
+                                    <img src="https://flagcdn.com/br.svg" alt="Brasil" id="selected-flag">
+                                    <span class="country-code" id="selected-code">+55</span>
+                                    <span class="dropdown-icon">▼</span>
+                                </div>
+                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
+                                <!-- Campo oculto para armazenar o código do país -->
+                                <input type="hidden" id="input_118_country_code" value="+55">
+                                <div id="country-dropdown" class="country-dropdown">
+                                    <!-- Lista de países será gerada via JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="input_117">E-mail</label>
+                            <input type="email" id="input_117" name="q117_email" class="form-control" placeholder="exemplo@exemplo.com" required>
+                        </div>
+                    </div>
+                    
                     <div class="form-section-header">
                         <h3 class="form-section-title">Endereço de Residência</h3>
                     </div>
@@ -1167,30 +1188,6 @@
                                 <option value="SE">Sergipe</option>
                                 <option value="TO">Tocantins</option>
                             </select>
-                        </div>
-                    </div>
-                                        
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required" for="input_118">Telefone</label>
-                            <div class="phone-input-container">
-                                <div id="country-select" class="country-select">
-                                    <img src="https://flagcdn.com/br.svg" alt="Brasil" id="selected-flag">
-                                    <span class="country-code" id="selected-code">+55</span>
-                                    <span class="dropdown-icon">▼</span>
-                                </div>
-                                <input type="tel" id="input_118" name="q118_telefone" class="form-control" placeholder="(00) 00000-0000" required>
-                                <!-- Campo oculto para armazenar o código do país -->
-                                <input type="hidden" id="input_118_country_code" value="+55">
-                                <div id="country-dropdown" class="country-dropdown">
-                                    <!-- Lista de países será gerada via JavaScript -->
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label required" for="input_117">E-mail</label>
-                            <input type="email" id="input_117" name="q117_email" class="form-control" placeholder="exemplo@exemplo.com" required>
                         </div>
                     </div>
                     
@@ -2092,6 +2089,42 @@
                 }
             }
             
+            // Formatação de CPF Cônjuge
+            const cpfConjugeInput = document.getElementById('input_228');
+            if (cpfConjugeInput) {
+                // Format CPF as user types
+                cpfConjugeInput.addEventListener('input', function() {
+                    let value = this.value.replace(/\D/g, '');
+                    if (value.length > 11) {
+                        value = value.substring(0, 11);
+                    }
+                    
+                    if (value.length > 9) {
+                        this.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                    } else if (value.length > 6) {
+                        this.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                    } else if (value.length > 3) {
+                        this.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                    } else {
+                        this.value = value;
+                    }
+
+                    // Real-time validation as user types (ensure validateCPF handles spouse field correctly if needed)
+                    // The primary validation is handled within aplicarValidacoesConjuge, but format validation helps
+                    validateCPF(this); 
+                });
+
+                // Validate on blur (already handled within aplicarValidacoesConjuge)
+                // cpfConjugeInput.addEventListener('blur', function() {
+                //     validateCPF(this);
+                // });
+
+                // Initial validation if field has a value (already handled within aplicarValidacoesConjuge)
+                // if (cpfConjugeInput.value) {
+                //     validateCPF(cpfConjugeInput);
+                // }
+            }
+
             // Formatação de Datas
             const dateFields = document.querySelectorAll('#input_104, #input_106, #input_231, #input_234');
             dateFields.forEach(function(field) {
@@ -2185,6 +2218,12 @@
                     cepField.addEventListener('blur', function() {
                         const cep = this.value.replace(/\D/g, '');
                         if (cep.length === 8) {
+                            // --- Check if search is already pending/in progress from input event ---
+                            if (cepSearchState[this.id]) {
+                                console.log('[CEP Blur] Search triggered by input is pending/running, skipping blur search for:', this.id);
+                                return;
+                            }
+                            // ---
                             buscarCep(cep, cepField.id);
                         }
                     });
@@ -2789,7 +2828,32 @@
             // Função para buscar CEP na API ViaCEP
             function buscarCep(cep, cepFieldId) {
                 const cepInput = document.getElementById(cepFieldId);
-                
+                if (!cepInput) {
+                    console.error('CEP input field not found:', cepFieldId);
+                    return;
+                }
+
+                // --- START: Check if search is already in progress ---
+                if (cepSearchState[cepFieldId]) {
+                    console.log('[buscarCep] Search already in progress for:', cepFieldId);
+                    return;
+                }
+                cepSearchState[cepFieldId] = true; // Set flag
+                console.log('[buscarCep] Starting search for:', cepFieldId, 'CEP:', cep);
+                // --- END: Check if search is already in progress ---
+
+                // --- START: Robust message clearing ---
+                const parentNode = cepInput.parentNode;
+                if (parentNode) {
+                    const errorMsg = document.getElementById(`${cepFieldId}-error-msg`);
+                    if (errorMsg) errorMsg.remove();
+                    const successMsg = document.getElementById(`${cepFieldId}-success-msg`);
+                    if (successMsg) successMsg.remove();
+                    const statusMsg = document.getElementById(`${cepFieldId}-status-msg`);
+                    if (statusMsg) statusMsg.remove();
+                }
+                // --- END: Robust message clearing ---
+
                 // Determinar os IDs dos campos a serem preenchidos com base no ID do campo CEP
                 let logradouroId, bairroId, cidadeId, estadoId;
                 
@@ -2853,6 +2917,10 @@
                         
                         // Verifica se a API retornou erro
                         if (data.erro) {
+                            // --- Ensure previous success message is removed again ---
+                            const successElCheck = document.getElementById(`${cepFieldId}-success-msg`);
+                            if (successElCheck) successElCheck.remove();
+                            // ---
                             showError(cepInput, 'CEP não encontrado', `${cepFieldId}-error-msg`);
                             return;
                         }
@@ -2875,14 +2943,16 @@
                         cepInput.classList.add('cep-valido');
                         cepInput.style.borderColor = 'var(--secondary-color)';
                         
-                        // Adiciona mensagem de sucesso
-                        const successMsg = document.createElement('div');
-                        successMsg.id = `${cepFieldId}-success-msg`;
-                        successMsg.className = 'form-hint';
-                        successMsg.textContent = 'CEP válido! Endereço encontrado.';
-                        successMsg.style.color = 'var(--secondary-color)';
-                        cepInput.parentNode.appendChild(successMsg);
-                        
+                        // Adiciona mensagem de sucesso (only if no error/status exists)
+                        if (!document.getElementById(`${cepFieldId}-error-msg`) && !document.getElementById(`${cepFieldId}-status-msg`)) {
+                            const successMsg = document.createElement('div');
+                            successMsg.id = `${cepFieldId}-success-msg`;
+                            successMsg.className = 'form-hint';
+                            successMsg.textContent = 'CEP válido! Endereço encontrado.';
+                            successMsg.style.color = 'var(--secondary-color)';
+                            cepInput.parentNode.appendChild(successMsg);
+                        }
+
                         // Foca no campo de número após preencher o endereço
                         if (cepFieldId === 'input_108') {
                             document.getElementById('input_112').focus();
@@ -2901,6 +2971,13 @@
                         // Mostra mensagem de erro
                         showError(cepInput, 'Erro ao buscar o CEP', `${cepFieldId}-error-msg`);
                         console.error('Erro:', error);
+                    })
+                    .finally(() => {
+                        // --- Clear the flag and loading indicator regardless of success/failure ---
+                        cepSearchState[cepFieldId] = false;
+                        cepInput.classList.remove('loading');
+                        console.log('[buscarCep] Search finished for:', cepFieldId);
+                        // ---
                     });
             }
             
@@ -3832,46 +3909,13 @@
                         break;
                     case 'CNH':
                         currentNumberInput.placeholder = '11 dígitos numéricos';
-                        currentNumberInput.inputMode = 'numeric';
+                        currentNumberInput.inputMode = 'text';
+                        currentNumberInput.minLength = 11;
                         currentNumberInput.maxLength = 11;
                         currentNumberInput.addEventListener('input', function() {
-                             sharedInputHandler.call(this); // Call shared logic first
-                             // Specific filtering for CNH
-                             this.value = this.value.replace(/\\D/g, '').slice(0, 11); // Ensure literal \D
-                         });
-                        // Add blur listener for CNH validation (keep existing logic but ensure clearValidationStyles is called first)
-                        currentNumberInput.addEventListener('blur', function() {
-                             const cnhValue = this.value;
-                             const baseMsgId = this.id + '-cnh'; // Base for IDs de mensagem
-
-                             clearValidationStyles(this, baseMsgId); // Clear specific CNH messages first
-
-                             if (cnhValue.length === 0) {
-                                 // If field is required and empty, the main validation will catch it.
-                                 // If not required, empty is fine. Reset styles if no other errors exist.
-                                 if (!hasOtherErrors(this)) {
-                                    this.style.borderColor = '';
-                                    this.style.backgroundColor = '';
-                                    this.classList.remove('error');
-                                 }
-                                 return;
-                             }
-
-                             if (cnhValue.length < 11) {
-                                 showError(this, 'CNH deve ter 11 dígitos.', baseMsgId + '-error-msg');
-                                 return;
-                             }
-
-                             // Assuming validateCNH exists and works correctly:
-                             // const orgaoEmissorId = (this.id === 'input_98') ? 'input_99' : 'input_235';
-                             // if (validateCNH(cnhValue, orgaoEmissorId)) {
-                             //    showSuccess(this, 'CNH válida.', baseMsgId + '-success-msg');
-                             // } else {
-                             //    showError(this, 'CNH inválida.', baseMsgId + '-error-msg');
-                             // }
-                             // Placeholder validation success indication
-                             this.style.borderColor = 'var(--secondary-color)';
-
+                             // sharedInputHandler.call(this); // Temporarily comment out shared logic to isolate filtering
+                             // Specific filtering for CNH - ONLY allow digits
+                             this.value = this.value.replace(/[^0-9]/g, '');
                          });
                         break;
                     case 'Passaporte':
@@ -4226,6 +4270,11 @@
         // Adicionar no final da função principal, após eventListeners de prevButtons, uma validação de envio para o botão final
         // Botão de Enviar (validação final)
         const submitButton = document.getElementById('submit-button');
+
+        // --- START: State for CEP Search ---
+        let cepSearchState = {};
+        // --- END: State for CEP Search ---
+
         if (submitButton) {
             submitButton.addEventListener('click', function() {
                 console.log('Botão de envio clicado');
