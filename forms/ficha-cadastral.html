@@ -782,6 +782,19 @@
             border-color: var(--secondary-color);
             background-color: rgba(15, 117, 188, 0.05);
         }
+        
+        /* Estilo para campos preenchidos automaticamente */
+        .form-control.auto-filled {
+            border-color: var(--secondary-color);
+            background-color: rgba(15, 117, 188, 0.05);
+            cursor: not-allowed;
+        }
+        
+        /* Adiciona efeito sutil para indicar campos desabilitados mas com valor */
+        .form-control:disabled {
+            opacity: 0.8;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -1025,46 +1038,50 @@
                         <span>*</span> Campos obrigatórios
                     </div>
                     
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Endereço de Correspondência</h3>
+                    </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_108">CEP</label>
-                            <input type="text" id="input_108" name="q108_cep" class="form-control" placeholder="00000-000" required>
+                            <input type="text" id="input_108" name="q108_cepCorrespondencia" class="form-control" placeholder="00000-000" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_109">Logradouro</label>
-                            <input type="text" id="input_109" name="q109_logradouro" class="form-control" required>
+                            <input type="text" id="input_109" name="q109_logradouroCorrespondencia" class="form-control" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_112">Número</label>
-                            <input type="text" id="input_112" name="q112_numero" class="form-control" required>
+                            <input type="text" id="input_112" name="q112_numeroCorrespondencia" class="form-control" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="input_113">Complemento</label>
-                            <input type="text" id="input_113" name="q113_complemento" class="form-control">
+                            <input type="text" id="input_113" name="q113_complementoCorrespondencia" class="form-control">
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_111">Bairro</label>
-                            <input type="text" id="input_111" name="q111_bairro" class="form-control" required>
+                            <input type="text" id="input_111" name="q111_bairroCorrespondencia" class="form-control" required>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label required" for="input_110">Cidade</label>
-                            <input type="text" id="input_110" name="q110_cidade" class="form-control" required>
+                            <input type="text" id="input_110" name="q110_cidadeCorrespondencia" class="form-control" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_114">Estado</label>
-                            <select class="form-control" id="input_114" name="q114_estado" required>
+                            <select class="form-control" id="input_114" name="q114_estadoCorrespondencia" required>
                                 <option value="">Selecione</option>
                                 <option value="AC">Acre</option>
                                 <option value="AL">Alagoas</option>
@@ -1095,6 +1112,94 @@
                                 <option value="TO">Tocantins</option>
                             </select>
                         </div>
+                    </div>
+                    
+                    <div class="form-section-header">
+                        <h3 class="form-section-title">Endereço de Residência</h3>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group" style="width: 100%;">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="same-address" class="checkbox-input">
+                                <span class="checkbox-label">O endereço de residência é o mesmo que o endereço de correspondência</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_215">CEP</label>
+                            <input type="text" id="input_215" name="q215_cepResidencia" class="form-control" placeholder="00000-000" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_216">Logradouro</label>
+                            <input type="text" id="input_216" name="q216_logradouroResidencia" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_217">Número</label>
+                            <input type="text" id="input_217" name="q217_numeroResidencia" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="input_219">Complemento</label>
+                            <input type="text" id="input_219" name="q219_complementoResidencia" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_220">Bairro</label>
+                            <input type="text" id="input_220" name="q220_bairroResidencia" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label required" for="input_221">Cidade</label>
+                            <input type="text" id="input_221" name="q221_cidadeResidencia" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required" for="input_222">Estado</label>
+                            <select class="form-control" id="input_222" name="q222_estadoResidencia" required>
+                                <option value="">Selecione</option>
+                                <option value="AC">Acre</option>
+                                <option value="AL">Alagoas</option>
+                                <option value="AP">Amapá</option>
+                                <option value="AM">Amazonas</option>
+                                <option value="BA">Bahia</option>
+                                <option value="CE">Ceará</option>
+                                <option value="DF">Distrito Federal</option>
+                                <option value="ES">Espírito Santo</option>
+                                <option value="GO">Goiás</option>
+                                <option value="MA">Maranhão</option>
+                                <option value="MT">Mato Grosso</option>
+                                <option value="MS">Mato Grosso do Sul</option>
+                                <option value="MG">Minas Gerais</option>
+                                <option value="PA">Pará</option>
+                                <option value="PB">Paraíba</option>
+                                <option value="PR">Paraná</option>
+                                <option value="PE">Pernambuco</option>
+                                <option value="PI">Piauí</option>
+                                <option value="RJ">Rio de Janeiro</option>
+                                <option value="RN">Rio Grande do Norte</option>
+                                <option value="RS">Rio Grande do Sul</option>
+                                <option value="RO">Rondônia</option>
+                                <option value="RR">Roraima</option>
+                                <option value="SC">Santa Catarina</option>
+                                <option value="SP">São Paulo</option>
+                                <option value="SE">Sergipe</option>
+                                <option value="TO">Tocantins</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="input_118">Telefone</label>
                             <div class="phone-input-container">
@@ -1329,11 +1434,17 @@
                 document.getElementById('input_108').setAttribute('inputmode', 'tel');
                 document.getElementById('input_118').setAttribute('inputmode', 'tel');
                 document.getElementById('input_117').setAttribute('inputmode', 'email');
+                document.getElementById('input_215').setAttribute('inputmode', 'tel');
+                document.getElementById('input_231').setAttribute('inputmode', 'numeric');
+                document.getElementById('input_234').setAttribute('inputmode', 'numeric');
                 
                 // Adiciona autocapitalize para campos de nome
                 document.getElementById('input_94').setAttribute('autocapitalize', 'words');
                 document.getElementById('input_100').setAttribute('autocapitalize', 'words');
                 document.getElementById('input_101').setAttribute('autocapitalize', 'words');
+                document.getElementById('input_225').setAttribute('autocapitalize', 'words');
+                document.getElementById('input_236').setAttribute('autocapitalize', 'words');
+                document.getElementById('input_237').setAttribute('autocapitalize', 'words');
                 
                 // Adiciona autocomplete para campos apropriados
                 document.getElementById('input_94').setAttribute('autocomplete', 'name');
@@ -1342,6 +1453,9 @@
                 document.getElementById('input_108').setAttribute('autocomplete', 'postal-code');
                 document.getElementById('input_109').setAttribute('autocomplete', 'address-line1');
                 document.getElementById('input_110').setAttribute('autocomplete', 'address-level2');
+                document.getElementById('input_215').setAttribute('autocomplete', 'postal-code');
+                document.getElementById('input_216').setAttribute('autocomplete', 'address-line1');
+                document.getElementById('input_221').setAttribute('autocomplete', 'address-level2');
                 
                 // Aumenta a área clicável das abas
                 const tabs = document.querySelectorAll('.form-tab');
@@ -1640,57 +1754,59 @@
             });
             
             // Formatação de CEP
-            const cepField = document.getElementById('input_108');
-            if (cepField) {
-                let lastValue = '';
-                
-                cepField.addEventListener('input', function(e) {
-                    let value = this.value.replace(/\D/g, '');
-                    if (value.length > 8) value = value.slice(0, 8);
+            const cepFields = document.querySelectorAll('#input_108, #input_215');
+            cepFields.forEach(function(cepField) {
+                if (cepField) {
+                    let lastValue = '';
                     
-                    if (value.length > 5) {
-                        value = value.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
-                    }
+                    cepField.addEventListener('input', function(e) {
+                        let value = this.value.replace(/\D/g, '');
+                        if (value.length > 8) value = value.slice(0, 8);
+                        
+                        if (value.length > 5) {
+                            value = value.replace(/^(\d{5})(\d{0,3})$/, '$1-$2');
+                        }
+                        
+                        this.value = value;
+                        
+                        // Verifica se chegamos a 8 dígitos numéricos pela primeira vez neste evento
+                        const numericValue = value.replace(/\D/g, '');
+                        if (numericValue.length === 8 && numericValue !== lastValue) {
+                            // Guarda o valor para evitar buscas duplicadas
+                            lastValue = numericValue;
+                            
+                            // Pequeno timeout para garantir que a formatação do valor foi aplicada antes da busca
+                            setTimeout(() => {
+                                buscarCep(numericValue, cepField.id);
+                            }, 50);
+                        } else if (numericValue.length > 0 && numericValue.length < 8) {
+                            // Se o CEP estiver incompleto, mostrar feedback visual
+                            this.classList.remove('cep-valido');
+                            this.style.borderColor = '';
+                            this.style.backgroundColor = '';
+                            
+                            // Remover mensagem de erro se existir
+                            const errorEl = document.getElementById(`${cepField.id}-error-msg`);
+                            if (errorEl) errorEl.remove();
+                            
+                            // Remover mensagem de sucesso se existir
+                            const successEl = document.getElementById(`${cepField.id}-success-msg`);
+                            if (successEl) successEl.remove();
+                            
+                            // Resetar o lastValue quando o valor é apagado
+                            lastValue = numericValue;
+                        }
+                    });
                     
-                    this.value = value;
-                    
-                    // Verifica se chegamos a 8 dígitos numéricos pela primeira vez neste evento
-                    const numericValue = value.replace(/\D/g, '');
-                    if (numericValue.length === 8 && numericValue !== lastValue) {
-                        // Guarda o valor para evitar buscas duplicadas
-                        lastValue = numericValue;
-                        
-                        // Pequeno timeout para garantir que a formatação do valor foi aplicada antes da busca
-                        setTimeout(() => {
-                            buscarCep(numericValue);
-                        }, 50);
-                    } else if (numericValue.length > 0 && numericValue.length < 8) {
-                        // Se o CEP estiver incompleto, mostrar feedback visual
-                        this.classList.remove('cep-valido');
-                        this.style.borderColor = '';
-                        this.style.backgroundColor = '';
-                        
-                        // Remover mensagem de erro se existir
-                        const errorEl = document.getElementById('cep-error-msg');
-                        if (errorEl) errorEl.remove();
-                        
-                        // Remover mensagem de sucesso se existir
-                        const successEl = document.getElementById('cep-success-msg');
-                        if (successEl) successEl.remove();
-                        
-                        // Resetar o lastValue quando o valor é apagado
-                        lastValue = numericValue;
-                    }
-                });
-                
-                // Busca também quando o campo perde o foco
-                cepField.addEventListener('blur', function() {
-                    const cep = this.value.replace(/\D/g, '');
-                    if (cep.length === 8) {
-                        buscarCep(cep);
-                    }
-                });
-            }
+                    // Busca também quando o campo perde o foco
+                    cepField.addEventListener('blur', function() {
+                        const cep = this.value.replace(/\D/g, '');
+                        if (cep.length === 8) {
+                            buscarCep(cep, cepField.id);
+                        }
+                    });
+                }
+            });
             
             // Formatação de Telefone
             const phoneField = document.getElementById('input_118');
@@ -2132,8 +2248,29 @@
             }
             
             // Função para buscar CEP na API ViaCEP
-            function buscarCep(cep) {
-                const cepInput = document.getElementById('input_108');
+            function buscarCep(cep, cepFieldId) {
+                const cepInput = document.getElementById(cepFieldId);
+                
+                // Determinar os IDs dos campos a serem preenchidos com base no ID do campo CEP
+                let logradouroId, bairroId, cidadeId, estadoId;
+                
+                if (cepFieldId === 'input_108') {
+                    // Endereço de Correspondência
+                    logradouroId = 'input_109';
+                    bairroId = 'input_111';
+                    cidadeId = 'input_110';
+                    estadoId = 'input_114';
+                } else if (cepFieldId === 'input_215') {
+                    // Endereço de Residência
+                    logradouroId = 'input_216';
+                    bairroId = 'input_220';
+                    cidadeId = 'input_221';
+                    estadoId = 'input_222';
+                } else {
+                    // ID não reconhecido
+                    console.error('Campo CEP não reconhecido:', cepFieldId);
+                    return;
+                }
                 
                 // Remove classes anteriores
                 cepInput.classList.remove('cep-valido');
@@ -2143,11 +2280,11 @@
                 cepInput.style.backgroundColor = '';
                 
                 // Remove mensagem de erro anterior se existir
-                const errorEl = document.getElementById('cep-error-msg');
+                const errorEl = document.getElementById(`${cepFieldId}-error-msg`);
                 if (errorEl) errorEl.remove();
                 
                 // Remove mensagem de sucesso anterior se existir
-                const successEl = document.getElementById('cep-success-msg');
+                const successEl = document.getElementById(`${cepFieldId}-success-msg`);
                 if (successEl) successEl.remove();
                 
                 // Mostra indicador de carregamento
@@ -2155,7 +2292,7 @@
                 
                 // Adiciona mensagem de busca
                 const statusMsg = document.createElement('div');
-                statusMsg.id = 'cep-status-msg';
+                statusMsg.id = `${cepFieldId}-status-msg`;
                 statusMsg.className = 'form-hint';
                 statusMsg.textContent = 'Buscando endereço...';
                 cepInput.parentNode.appendChild(statusMsg);
@@ -2172,22 +2309,22 @@
                         cepInput.classList.remove('loading');
                         
                         // Remove mensagem de status
-                        const statusEl = document.getElementById('cep-status-msg');
+                        const statusEl = document.getElementById(`${cepFieldId}-status-msg`);
                         if (statusEl) statusEl.remove();
                         
                         // Verifica se a API retornou erro
                         if (data.erro) {
-                            showError(cepInput, 'CEP não encontrado', 'cep-error-msg');
+                            showError(cepInput, 'CEP não encontrado', `${cepFieldId}-error-msg`);
                             return;
                         }
                         
                         // Preenche os campos com os dados retornados
-                        document.getElementById('input_109').value = data.logradouro || '';
-                        document.getElementById('input_111').value = data.bairro || '';
-                        document.getElementById('input_110').value = data.localidade || '';
+                        document.getElementById(logradouroId).value = data.logradouro || '';
+                        document.getElementById(bairroId).value = data.bairro || '';
+                        document.getElementById(cidadeId).value = data.localidade || '';
                         
                         // Seleciona o estado no dropdown
-                        const estadoSelect = document.getElementById('input_114');
+                        const estadoSelect = document.getElementById(estadoId);
                         for (let i = 0; i < estadoSelect.options.length; i++) {
                             if (estadoSelect.options[i].value === data.uf) {
                                 estadoSelect.selectedIndex = i;
@@ -2201,25 +2338,29 @@
                         
                         // Adiciona mensagem de sucesso
                         const successMsg = document.createElement('div');
-                        successMsg.id = 'cep-success-msg';
+                        successMsg.id = `${cepFieldId}-success-msg`;
                         successMsg.className = 'form-hint';
                         successMsg.textContent = 'CEP válido! Endereço encontrado.';
                         successMsg.style.color = 'var(--secondary-color)';
                         cepInput.parentNode.appendChild(successMsg);
                         
                         // Foca no campo de número após preencher o endereço
-                        document.getElementById('input_112').focus();
+                        if (cepFieldId === 'input_108') {
+                            document.getElementById('input_112').focus();
+                        } else if (cepFieldId === 'input_215') {
+                            document.getElementById('input_217').focus();
+                        }
                     })
                     .catch(error => {
                         // Remove indicador de carregamento
                         cepInput.classList.remove('loading');
                         
                         // Remove mensagem de status
-                        const statusEl = document.getElementById('cep-status-msg');
+                        const statusEl = document.getElementById(`${cepFieldId}-status-msg`);
                         if (statusEl) statusEl.remove();
                         
                         // Mostra mensagem de erro
-                        showError(cepInput, 'Erro ao buscar o CEP', 'cep-error-msg');
+                        showError(cepInput, 'Erro ao buscar o CEP', `${cepFieldId}-error-msg`);
                         console.error('Erro:', error);
                     });
             }
@@ -2670,6 +2811,70 @@
             
             if (visiblePhone) {
                 // O campo já tem a configuração correta
+            }
+            
+            // Opção "Mesmo Endereço" para copiar dados de Correspondência para Residência
+            const sameAddressCheckbox = document.getElementById('same-address');
+            if (sameAddressCheckbox) {
+                sameAddressCheckbox.addEventListener('change', function() {
+                    // Mapeia os campos correspondentes entre os endereços
+                    const fieldMap = [
+                        { from: 'input_108', to: 'input_215' }, // CEP
+                        { from: 'input_109', to: 'input_216' }, // Logradouro
+                        { from: 'input_112', to: 'input_217' }, // Número
+                        { from: 'input_113', to: 'input_219' }, // Complemento
+                        { from: 'input_111', to: 'input_220' }, // Bairro
+                        { from: 'input_110', to: 'input_221' }, // Cidade
+                        { from: 'input_114', to: 'input_222' }  // Estado
+                    ];
+                    
+                    if (this.checked) {
+                        // Copiar dados do endereço de correspondência para residência
+                        fieldMap.forEach(pair => {
+                            const sourceField = document.getElementById(pair.from);
+                            const targetField = document.getElementById(pair.to);
+                            
+                            if (sourceField && targetField) {
+                                // Para selects, copia o selectedIndex
+                                if (sourceField.tagName === 'SELECT') {
+                                    targetField.selectedIndex = sourceField.selectedIndex;
+                                } else {
+                                    // Para inputs, copia o value
+                                    targetField.value = sourceField.value;
+                                }
+                                
+                                // Adicionar classe visual para indicar campos preenchidos automaticamente
+                                targetField.classList.add('auto-filled');
+                                
+                                // Desabilitar campos do endereço de residência
+                                targetField.disabled = true;
+                            }
+                        });
+                        
+                        // Adicionar mensagem informativa
+                        const infoMsg = document.createElement('div');
+                        infoMsg.id = 'same-address-info';
+                        infoMsg.className = 'form-hint';
+                        infoMsg.textContent = 'Os campos foram preenchidos automaticamente com o endereço de correspondência.';
+                        infoMsg.style.color = 'var(--secondary-color)';
+                        infoMsg.style.marginBottom = '15px';
+                        sameAddressCheckbox.parentNode.parentNode.appendChild(infoMsg);
+                    } else {
+                        // Habilitar campos e remover classe visual
+                        fieldMap.forEach(pair => {
+                            const targetField = document.getElementById(pair.to);
+                            if (targetField) {
+                                targetField.disabled = false;
+                                targetField.classList.remove('auto-filled');
+                                targetField.value = ''; // Limpar campos
+                            }
+                        });
+                        
+                        // Remover mensagem informativa
+                        const infoMsg = document.getElementById('same-address-info');
+                        if (infoMsg) infoMsg.remove();
+                    }
+                });
             }
         });
     </script>
