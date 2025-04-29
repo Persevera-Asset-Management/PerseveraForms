@@ -1624,49 +1624,87 @@
                     existingError.remove();
                 }
                 
+                // Resetar classe de erro
+                input.classList.remove('special-char-error');
+
                 // Se o campo estiver vazio, retorna sem validar
                 if (!input.value.trim()) {
-                    input.classList.remove('special-char-error');
                     return true;
                 }
                 
-                // Regex para validar caracteres especiais (permite letras, números, espaços e alguns caracteres comuns como . , - /)
-                // Ajuste o regex conforme necessário para os seus requisitos específicos
                 let regex;
+                let errorMessage = 'Caracteres especiais não permitidos'; // Default error message
+                const nameFieldIds = ['input_94', 'input_100', 'input_101', 'input_225', 'input_236', 'input_237'];
                 
                 // Regex específico para cada tipo de campo
-                if (input.id === 'input_95') { // CPF
+                if (nameFieldIds.includes(input.id)) {
+                    // Regex mais restrito para nomes: letras (com acentos), espaços, apóstrofos, hífens
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s'-]+$/;
+                    errorMessage = 'Nome inválido. Use apenas letras, espaços, apóstrofos ou hífens.';
+                } else if (input.id === 'input_95' || input.id === 'input_228') { // CPF e CPF Cônjuge
                     regex = /^[0-9.-]+$/;
-                } else if (input.id === 'input_98') { // Número Documento
+                    // A validação de formato/validade do CPF é feita em validateCPF
+                } else if (input.id === 'input_98' || input.id === 'input_233') { // Número Documento e Cônjuge
                     regex = /^[0-9a-zA-Z-]+$/;
-                } else if (input.id === 'input_104' || input.id === 'input_106') { // Datas
-                    regex = /^[0-9/]+$/;
-                } else if (input.id === 'input_108') { // CEP
+                    // Regras mais específicas (RG, CNH, Passaporte) são tratadas em applyDocumentNumberRules
+                     errorMessage = 'Número do documento inválido.'; // Mensagem genérica, regras específicas tratam formato
+                } else if (input.id === 'input_104' || input.id === 'input_106' || input.id === 'input_231' || input.id === 'input_234') { // Datas
+                    regex = /^[0-9/]+$/; // Apenas números e barra
+                     // A validação de formato/validade é feita em validateAge/validateDate
+                } else if (input.id === 'input_108' || input.id === 'input_215') { // CEPs
                     regex = /^[0-9-]+$/;
-                } else if (input.id === 'input_112') { // Número (endereço)
-                    regex = /^[0-9a-zA-Z-/]+$/;
+                    // Validação de busca/formato é feita no listener de CEP
+                } else if (input.id === 'input_112' || input.id === 'input_217') { // Número (endereço)
+                    regex = /^[0-9a-zA-Z-/ºª\s]+$/; // Permite números, letras, -, /, º, ª e espaços
+                     errorMessage = 'Número inválido.';
+                } else if (input.id === 'input_97' || input.id === 'input_230') { // Naturalidade
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s,-]+$/; // Letras (acentuadas), espaços, vírgula, hífen
+                    errorMessage = 'Naturalidade inválida. Use letras, espaços, vírgula ou hífen.';
+                } else if (input.id === 'input_99' || input.id === 'input_235') { // Órgão Emissor (se for input de texto)
+                    if (input.tagName === 'INPUT') {
+                        regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s-]+$/; // Letras (acentuadas), números, espaços, hífen
+                        errorMessage = 'Órgão Emissor inválido. Use letras, números, espaços ou hífen.';
+                    } else {
+                        return true; // Não valida select aqui
+                    }
+                } else if (input.id === 'input_109' || input.id === 'input_216' || // Logradouro
+                           input.id === 'input_111' || input.id === 'input_220' || // Bairro
+                           input.id === 'input_110' || input.id === 'input_221' || // Cidade
+                           input.id === 'input_113' || input.id === 'input_219') {  // Complemento
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()ºª_-]+$/; // Permite mais alguns caracteres comuns em endereços
+                    errorMessage = 'Endereço inválido. Verifique os caracteres especiais.';
                 } else if (input.id === 'input_117') { // Email
-                    // Email já possui validação específica
+                    // Validação específica em validateEmail
                     return true;
-                } else {
-                    // Para os demais campos de texto (nomes, endereços, etc.)
-                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()_-]+$/;
+                } else if (input.id === 'input_123') { // Campo de detalhes PPE
+                    // Permite um conjunto mais amplo de caracteres para descrição
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,;!?()/:_-]+$/; // Adicionado ':'
+                    errorMessage = 'Descrição inválida. Verifique os caracteres especiais.';
+                } else if (input.id === 'input_96' || input.id === 'input_229') { // Nacionalidade
+                    regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s()/-]+$/; // Letras (acentuadas), espaços, (), /, -
+                    errorMessage = 'Nacionalidade inválida. Use letras, espaços, (), / ou -.';
                 }
-                
-                if (!regex.test(input.value)) {
+                // Adicione outros 'else if' para campos específicos conforme necessário
+                // else {
+                //     // Fallback genérico (se necessário, mas idealmente todos os campos de texto são tratados)
+                //     regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ0-9\s.,/()_-]+$/;
+                // }
+
+                // Aplicar a validação se uma regex foi definida para o campo
+                if (regex && !regex.test(input.value)) {
                     // Campo contém caracteres não permitidos
                     input.classList.add('special-char-error');
                     
-                    // Adiciona mensagem de erro
+                    // Adiciona mensagem de erro (usando a mensagem específica definida)
                     const errorMsg = document.createElement('div');
                     errorMsg.id = errorMsgId;
                     errorMsg.className = 'error-message';
-                    errorMsg.textContent = 'Caracteres especiais não permitidos';
+                    errorMsg.textContent = errorMessage; // Use a mensagem de erro específica
                     input.parentNode.insertBefore(errorMsg, input.nextSibling);
                     
                     return false;
                 } else {
-                    // Campo válido
+                    // Campo válido (ou sem regex definida para ele)
                     input.classList.remove('special-char-error');
                     return true;
                 }
@@ -1675,14 +1713,35 @@
             // Aplica validação de caracteres especiais a todos os campos de texto
             const textInputs = document.querySelectorAll('input[type="text"], textarea');
             textInputs.forEach(input => {
-                // Ignora campos que não devem ser validados para caracteres especiais
-                if (input.id === 'input_118') return; // Campo de telefone tem validação própria
+                // Ignora campos que não devem ser validados/filtrados aqui
+                if (input.id === 'input_118') return; // Campo de telefone tem validação/formatação própria
+                if (input.id === 'input_95' || input.id === 'input_228') return; // CPF tem formatação própria
+                if (input.id === 'input_108' || input.id === 'input_215') return; // CEP tem formatação própria
+                if (input.id === 'input_104' || input.id === 'input_106' || input.id === 'input_231' || input.id === 'input_234') return; // Datas têm formatação própria
+
+                const nameFieldIds = ['input_94', 'input_100', 'input_101', 'input_225', 'input_236', 'input_237'];
                 
                 input.addEventListener('input', function() {
-                    validateSpecialChars(this);
+                    if (nameFieldIds.includes(this.id)) {
+                        // Filtragem ativa para campos de nome: remove caracteres inválidos
+                        const originalValue = this.value;
+                        // Regex para encontrar caracteres que NÃO são letras (com acentos), espaços, apóstrofos ou hífens
+                        const sanitizedValue = originalValue.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s'-]/g, '');
+                        
+                        if (originalValue !== sanitizedValue) {
+                            this.value = sanitizedValue;
+                            // Pode opcionalmente disparar um feedback visual breve aqui, se desejado
+                        }
+                        // Após filtrar, ainda podemos validar para mostrar mensagem se necessário (embora deva estar sempre válido)
+                         validateSpecialChars(this); 
+                    } else {
+                         // Para outros campos, apenas valida (não filtra ativamente)
+                         validateSpecialChars(this);
+                    }
                 });
                 
                 input.addEventListener('blur', function() {
+                    // Validação no blur continua a mesma para todos os campos
                     validateSpecialChars(this);
                 });
                 
@@ -1749,6 +1808,24 @@
                         document.getElementById('day_' + fieldId.split('_')[1]).value = parts[0];
                         document.getElementById('month_' + fieldId.split('_')[1]).value = parts[1];
                         document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
+                    }
+                });
+
+                // Adicionar validação no blur para todos os campos de data
+                field.addEventListener('blur', function() {
+                    if (!this.value.trim()) { // Clear errors if empty
+                         const errorMsgId = this.id.includes('Nascimento') ? 'age-error-' + this.id : 'date-error-' + this.id;
+                         let existingError = document.getElementById(errorMsgId);
+                         if (existingError) existingError.remove();
+                         this.style.borderColor = '';
+                         this.style.backgroundColor = '';
+                         return;
+                    }
+                    // Chamar a validação apropriada
+                    if (this.id === 'input_104' || this.id === 'input_231') {
+                        validateAge(this);
+                    } else if (this.id === 'input_106' || this.id === 'input_234') {
+                        validateDate(this);
                     }
                 });
             });
@@ -2137,27 +2214,121 @@
             }
             
             // Função para validar idade mínima (18 anos)
-            function validateAge(birthDateStr) {
+            function validateAge(input) {
+                const birthDateStr = input.value;
+                const errorMsgId = 'age-error-' + input.id; // Unique error ID per input
+                let existingError = document.getElementById(errorMsgId);
+
+                // Remove mensagem de erro existente
+                if (existingError) {
+                    existingError.remove();
+                }
+                input.style.borderColor = ''; // Reset border color
+                input.style.backgroundColor = ''; // Reset background color
+
+                if (!birthDateStr.trim()) return true; // Don't validate if empty
+
                 const parts = birthDateStr.split('/');
-                if (parts.length !== 3) return false;
-                
+                if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
+                     showError(input, 'Formato inválido. Use DD/MM/AAAA.', errorMsgId);
+                     return false; // Invalid format
+                }
+
                 const day = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1;
+                const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
                 const year = parseInt(parts[2], 10);
-                
+
+                // Check for reasonable year range and calendar validity
+                if (year < 1900 || year > new Date().getFullYear() + 1 || isNaN(day) || isNaN(month) || isNaN(year)) {
+                     showError(input, 'Data inválida (ano ou formato).', errorMsgId);
+                     return false;
+                }
+
                 const birthDate = new Date(year, month, day);
                 const today = new Date();
-                
+                 today.setHours(0, 0, 0, 0); // Compare dates only
+
+                // Check if the generated date matches the input (e.g., 31/02 is invalid)
+                if (birthDate.getFullYear() !== year || birthDate.getMonth() !== month || birthDate.getDate() !== day) {
+                     showError(input, 'Data inválida (dia/mês).', errorMsgId);
+                     return false;
+                 }
+
+                 // Check if date is in the future
+                 if (birthDate > today) {
+                     showError(input, 'Data não pode ser no futuro.', errorMsgId);
+                     return false;
+                 }
+
                 let age = today.getFullYear() - birthDate.getFullYear();
                 const monthDiff = today.getMonth() - birthDate.getMonth();
-                
+
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                     age--;
                 }
-                
-                return age >= 18;
+
+                if (age < 18) {
+                     showError(input, 'Você deve ter pelo menos 18 anos.', errorMsgId);
+                     return false;
+                }
+
+                // Date is valid and age is sufficient
+                input.style.borderColor = 'var(--secondary-color)';
+                return true;
             }
-            
+
+             // Função para validar datas genéricas (como expedição)
+             function validateDate(input) {
+                 const dateStr = input.value;
+                 const errorMsgId = 'date-error-' + input.id; // Unique error ID
+                 let existingError = document.getElementById(errorMsgId);
+
+                 // Remove mensagem de erro existente
+                 if (existingError) {
+                     existingError.remove();
+                 }
+                 input.style.borderColor = ''; // Reset border color
+                 input.style.backgroundColor = ''; // Reset background color
+
+                 if (!dateStr.trim()) return true; // Don't validate if empty
+
+                 const parts = dateStr.split('/');
+                 if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
+                     showError(input, 'Formato inválido. Use DD/MM/AAAA.', errorMsgId);
+                     return false; // Invalid format
+                 }
+
+                 const day = parseInt(parts[0], 10);
+                 const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
+                 const year = parseInt(parts[2], 10);
+
+                 // Check for reasonable year range and calendar validity
+                 if (year < 1950 || year > new Date().getFullYear() + 1 || isNaN(day) || isNaN(month) || isNaN(year)) { // Min year 1950 for expedition
+                      showError(input, 'Data inválida (ano ou formato).', errorMsgId);
+                      return false;
+                 }
+
+                 const dateValue = new Date(year, month, day);
+                 const today = new Date();
+                 today.setHours(0, 0, 0, 0); // Compare dates only
+
+                 // Check if the generated date matches the input (e.g., 31/02 is invalid)
+                 if (dateValue.getFullYear() !== year || dateValue.getMonth() !== month || dateValue.getDate() !== day) {
+                      showError(input, 'Data inválida (dia/mês).', errorMsgId);
+                      return false;
+                  }
+
+                  // Check if date is in the future
+                  if (dateValue > today) {
+                      showError(input, 'Data não pode ser no futuro.', errorMsgId);
+                      return false;
+                  }
+
+                 // Date is valid
+                 input.style.borderColor = 'var(--secondary-color)';
+                 return true;
+             }
+
             // CPF validation function
             function validateCPF(input) {
                 const errorMsgId = 'cpf-error-msg';
@@ -2369,33 +2540,41 @@
             document.getElementById('cadastro-form').addEventListener('submit', function(e) {
                 // Impedir o envio padrão inicialmente
                 e.preventDefault();
-                
-                const dataNascimento = document.getElementById('input_104').value;
-                const cpf = document.getElementById('input_95').value;
-                
-                // Validação de idade
-                if (!validateAge(dataNascimento)) {
-                    alert('Você deve ter pelo menos 18 anos para se cadastrar.');
-                    return false;
+
+                let isFormValid = true; // Flag to track overall validity
+                let firstInvalidField = null; // To focus on the first error
+
+                // --- Validações Individuais ---
+
+                // Validação de idade (usuário)
+                const dataNascimentoInput = document.getElementById('input_104');
+                if (!validateAge(dataNascimentoInput)) {
+                    isFormValid = false;
+                    if (!firstInvalidField) firstInvalidField = dataNascimentoInput;
                 }
-                
-                // Validação de CPF
-                if (!validateCPF(document.getElementById('input_95'))) {
-                    alert('CPF inválido. Por favor, verifique o número informado.');
-                    return false;
+
+                // Validação de CPF (usuário)
+                const cpfInput = document.getElementById('input_95');
+                if (!validateCPF(cpfInput)) {
+                    isFormValid = false;
+                    if (!firstInvalidField) firstInvalidField = cpfInput;
                 }
-                
-                // Validação de e-mail
-                if (!validateEmail(document.getElementById('input_117'))) {
-                    alert('E-mail inválido. Por favor, verifique o endereço informado.');
-                    return false;
+
+                // Validação de e-mail (usuário)
+                const emailInput = document.getElementById('input_117');
+                if (!validateEmail(emailInput)) {
+                    isFormValid = false;
+                    if (!firstInvalidField) firstInvalidField = emailInput;
                 }
-                
+
+                 // Validação de Data de Expedição (usuário)
+                 const dataExpedicaoInput = document.getElementById('input_106');
+                 if (dataExpedicaoInput.required && !validateDate(dataExpedicaoInput)) {
+                     isFormValid = false;
+                     if (!firstInvalidField) firstInvalidField = dataExpedicaoInput;
+                 }
+
                 // Validação de caracteres especiais em todos os campos de texto
-                let hasSpecialCharsError = false;
-                let firstInvalidField = null;
-                
-                // Percorre todos os inputs de texto e verifica caracteres especiais
                 const textInputs = document.querySelectorAll('input[type="text"], textarea');
                 textInputs.forEach(input => {
                     // Ignora campos que têm validação própria
@@ -2403,15 +2582,13 @@
                     
                     // Valida o campo
                     if (!validateSpecialChars(input)) {
-                        hasSpecialCharsError = true;
-                        if (!firstInvalidField) {
-                            firstInvalidField = input;
-                        }
+                        isFormValid = false;
+                        if (!firstInvalidField) firstInvalidField = input;
                     }
                 });
-                
+
                 // Se encontrou erros de caracteres especiais
-                if (hasSpecialCharsError) {
+                if (!isFormValid) {
                     // Em dispositivos móveis, rola suavemente até o primeiro campo inválido
                     if (window.innerWidth < 768 && firstInvalidField) {
                         setTimeout(() => {
@@ -2428,7 +2605,7 @@
                     alert('Por favor, remova os caracteres especiais dos campos destacados.');
                     return false;
                 }
-                
+
                 // Garantir que os campos ocultos de data estejam preenchidos
                 const dateFields = document.querySelectorAll('#input_104, #input_106, #input_231, #input_234');
                 dateFields.forEach(function(field) {
@@ -2440,7 +2617,7 @@
                         document.getElementById('year_' + fieldId.split('_')[1]).value = parts[2];
                     }
                 });
-                
+
                 // Para garantir que todos os campos sejam enviados
                 this.submit();
             });
@@ -2876,6 +3053,706 @@
                     }
                 });
             }
+            
+            // Controle dos campos de Dados do Cônjuge baseado no Estado Civil
+            const estadoCivilSelect = document.getElementById('input_103');
+            if (estadoCivilSelect) {
+                // Função para controlar a exibição e obrigatoriedade dos campos do cônjuge
+                function atualizarCamposConjuge() {
+                    const estadoCivil = estadoCivilSelect.value;
+                    const mostrarCamposConjuge = (estadoCivil === 'Casado(a)' || estadoCivil === 'União Estável');
+                    
+                    // IDs dos campos do cônjuge
+                    const camposConjugeIds = [
+                        'input_225', 'input_226', 'input_227', 'input_228', 'input_229', 
+                        'input_230', 'input_231', 'input_232', 'input_233', 'input_234',
+                        'input_235', 'input_236', 'input_237'
+                    ];
+                    
+                    // Obter o container da seção de dados do cônjuge
+                    const secaoConjuge = document.querySelector('.form-section-title').parentNode;
+                    const containerConjuge = secaoConjuge.parentNode.querySelectorAll('.form-row');
+                    
+                    // Localizar a seção de dados do cônjuge
+                    let conjugeSection = null;
+                    let conjugeRows = [];
+                    let encontrouSecao = false;
+                    
+                    // Iterar por todos os form-row para identificar os que pertencem à seção do cônjuge
+                    document.querySelectorAll('#tab-1 .form-section-title').forEach(title => {
+                        if (title.textContent === 'Dados do Cônjuge' || title.textContent === 'Dados do Cônjuge (Obrigatório)') {
+                            conjugeSection = title.parentNode;
+                            encontrouSecao = true;
+                        }
+                    });
+                    
+                    if (encontrouSecao) {
+                        // Encontrar todos os form-rows após a seção de dados do cônjuge
+                        let currentElement = conjugeSection;
+                        
+                        while (currentElement.nextElementSibling && 
+                              !currentElement.nextElementSibling.classList.contains('form-section-header') &&
+                              !currentElement.nextElementSibling.classList.contains('nav-buttons')) {
+                            currentElement = currentElement.nextElementSibling;
+                            if (currentElement.classList.contains('form-row')) {
+                                conjugeRows.push(currentElement);
+                            }
+                        }
+                        
+                        // Também incluir a seção de título
+                        conjugeRows.unshift(conjugeSection);
+                        
+                        // Mostrar ou esconder a seção do cônjuge
+                        conjugeRows.forEach(row => {
+                            if (mostrarCamposConjuge) {
+                                row.style.display = '';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        });
+                        
+                        // Replicar o estado civil do usuário para o cônjuge
+                        if (mostrarCamposConjuge) {
+                            const conjugeEstadoCivilSelect = document.getElementById('input_227');
+                            if (conjugeEstadoCivilSelect) {
+                                // Encontrar a mesma opção no select do cônjuge
+                                for (let i = 0; i < conjugeEstadoCivilSelect.options.length; i++) {
+                                    if (conjugeEstadoCivilSelect.options[i].value === estadoCivil) {
+                                        conjugeEstadoCivilSelect.selectedIndex = i;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Tornar os campos obrigatórios ou não
+                        camposConjugeIds.forEach(id => {
+                            const campo = document.getElementById(id);
+                            if (campo) {
+                                // Nome do Pai (input_237) não deve ser obrigatório
+                                campo.required = mostrarCamposConjuge && id !== 'input_237';
+                                
+                                // Atualizar o label para incluir ou remover o indicador de obrigatório
+                                const label = campo.previousElementSibling;
+                                if (label && label.classList.contains('form-label')) {
+                                    if (mostrarCamposConjuge && id !== 'input_237') {
+                                        label.classList.add('required');
+                                    } else {
+                                        label.classList.remove('required');
+                                    }
+                                }
+                                
+                                // Limpar o valor quando os campos estão ocultos
+                                if (!mostrarCamposConjuge) {
+                                    campo.value = '';
+                                    if (campo.tagName === 'SELECT') {
+                                        campo.selectedIndex = 0;
+                                    }
+                                }
+                            }
+                        });
+                        
+                        // Atualizar texto do título da seção com indicação
+                        const tituloSecao = conjugeSection.querySelector('.form-section-title');
+                        if (tituloSecao) {
+                            if (mostrarCamposConjuge) {
+                                tituloSecao.textContent = 'Dados do Cônjuge (Obrigatório)';
+                                
+                                // Inicializar a funcionalidade de tipo de documento e órgão emissor do cônjuge se estiver visível
+                                if (typeof atualizarCampoOrgaoEmissorConjuge === 'function') {
+                                    setTimeout(atualizarCampoOrgaoEmissorConjuge, 20);
+                                }
+                            } else {
+                                tituloSecao.textContent = 'Dados do Cônjuge';
+                            }
+                        }
+                        
+                        // Inicializar a funcionalidade de tipo de documento e órgão emissor do cônjuge
+                        if (mostrarCamposConjuge && typeof atualizarCampoOrgaoEmissorConjuge === 'function') {
+                            setTimeout(atualizarCampoOrgaoEmissorConjuge, 20);
+                        }
+                    }
+                }
+                
+                // Adicionar evento para quando o estado civil for alterado
+                estadoCivilSelect.addEventListener('change', function() {
+                    // Executar com um pequeno atraso para garantir a atualização do DOM
+                    setTimeout(atualizarCamposConjuge, 10);
+                });
+                
+                // Executar no carregamento para configurar o estado inicial
+                setTimeout(atualizarCamposConjuge, 100);
+            }
+            
+            // Aplicar validações aos campos do cônjuge quando visíveis
+            function aplicarValidacoesConjuge() {
+                const estadoCivil = document.getElementById('input_103').value;
+                const mostrarCamposConjuge = (estadoCivil === 'Casado(a)' || estadoCivil === 'União Estável');
+                
+                if (mostrarCamposConjuge) {
+                    // Validação do CPF do cônjuge
+                    const cpfConjugeInput = document.getElementById('input_228');
+                    if (cpfConjugeInput) {
+                        // Formatar CPF enquanto digita
+                        cpfConjugeInput.addEventListener('input', function() {
+                            let value = this.value.replace(/\D/g, '');
+                            if (value.length > 11) {
+                                value = value.substring(0, 11);
+                            }
+                            
+                            if (value.length > 9) {
+                                this.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                            } else if (value.length > 6) {
+                                this.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                            } else if (value.length > 3) {
+                                this.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                            } else {
+                                this.value = value;
+                            }
+                            
+                            // Validação em tempo real
+                            validateCPF(this);
+                        });
+                        
+                        // Validar ao perder o foco
+                        cpfConjugeInput.addEventListener('blur', function() {
+                            validateCPF(this);
+                        });
+                        
+                        // Validação inicial se já tiver valor
+                        if (cpfConjugeInput.value) {
+                            validateCPF(cpfConjugeInput);
+                        }
+                    }
+                    
+                    // Validação da data de nascimento do cônjuge
+                    const dataNascimentoConjugeInput = document.getElementById('input_231');
+                    if (dataNascimentoConjugeInput) {
+                        // O listener de blur já foi adicionado no loop dateFields.forEach acima.
+                        // Mantemos a lógica para garantir que a validação ocorra se o campo for tornado visível/obrigatório.
+                        if (!dataNascimentoConjugeInput.hasAttribute('data-blur-listener-set')) {
+                            dataNascimentoConjugeInput.setAttribute('data-blur-listener-set', 'true');
+                            // A validação no blur já está sendo feita pelo loop dateFields
+                        }
+                    }
+
+                    // Adicionar validação para data de expedição do cônjuge no blur
+                     const dataExpedicaoConjugeInput = document.getElementById('input_234');
+                     if (dataExpedicaoConjugeInput) {
+                         // O listener de blur já foi adicionado no loop dateFields.forEach acima.
+                          if (!dataExpedicaoConjugeInput.hasAttribute('data-blur-listener-set')) {
+                             dataExpedicaoConjugeInput.setAttribute('data-blur-listener-set', 'true');
+                             // A validação no blur já está sendo feita pelo loop dateFields
+                          }
+                     }
+
+                    // Aplicar validação de caracteres especiais aos campos de texto do cônjuge
+                    const camposConjugeIds = [
+                        'input_225', 'input_226', 'input_227', 'input_229', 'input_230', 
+                        'input_232', 'input_233', 'input_235', 'input_236', 'input_237'
+                    ];
+                    
+                    camposConjugeIds.forEach(id => {
+                        const campo = document.getElementById(id);
+                        if (campo && (campo.type === 'text' || campo.tagName === 'TEXTAREA') && campo.id !== 'input_228') {
+                            // Não aplicar a validação de caracteres especiais ao CPF que tem sua própria validação
+                            campo.addEventListener('input', function() {
+                                validateSpecialChars(this);
+                            });
+                            
+                            campo.addEventListener('blur', function() {
+                                validateSpecialChars(this);
+                            });
+                            
+                            // Validação inicial
+                            if (campo.value) {
+                                validateSpecialChars(campo);
+                            }
+                        }
+                    });
+                    
+                    // Validação e sugestão para Naturalidade do cônjuge
+                    const naturalidadeConjugeInput = document.getElementById('input_230');
+                    if (naturalidadeConjugeInput) {
+                        // Criar container para sugestões do cônjuge se ainda não existir
+                        if (!document.querySelector('.conjuge-suggestions')) {
+                            const conjugeSuggestionsContainer = document.createElement('div');
+                            conjugeSuggestionsContainer.className = 'suggestions-container conjuge-suggestions';
+                            conjugeSuggestionsContainer.style.display = 'none';
+                            conjugeSuggestionsContainer.style.position = 'absolute';
+                            conjugeSuggestionsContainer.style.zIndex = '1000';
+                            conjugeSuggestionsContainer.style.backgroundColor = '#fff';
+                            conjugeSuggestionsContainer.style.width = 'calc(100% - 2px)';
+                            conjugeSuggestionsContainer.style.maxHeight = '200px';
+                            conjugeSuggestionsContainer.style.overflowY = 'auto';
+                            conjugeSuggestionsContainer.style.border = '1px solid var(--input-border)';
+                            conjugeSuggestionsContainer.style.borderTop = 'none';
+                            conjugeSuggestionsContainer.style.borderRadius = '0 0 6px 6px';
+                            conjugeSuggestionsContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                            
+                            // Adicionar container após o input
+                            naturalidadeConjugeInput.parentNode.style.position = 'relative';
+                            naturalidadeConjugeInput.parentNode.appendChild(conjugeSuggestionsContainer);
+                            
+                            // Usar o mesmo cache de cidades para evitar consultas repetidas
+                            let conjugeDebounceTimer;
+                            
+                            // Adicionar evento de input
+                            naturalidadeConjugeInput.addEventListener('input', function() {
+                                const query = this.value.trim();
+                                
+                                // Limpar o timer anterior
+                                clearTimeout(conjugeDebounceTimer);
+                                
+                                // Ocultar sugestões se o input estiver vazio
+                                if (query.length < 3) {
+                                    conjugeSuggestionsContainer.style.display = 'none';
+                                    return;
+                                }
+                                
+                                // Definir novo timer para evitar consultas excessivas
+                                conjugeDebounceTimer = setTimeout(function() {
+                                    if (window.citiesCache && window.citiesCache[query]) {
+                                        // Usar o cache se a consulta já foi feita antes
+                                        displayConjugeSuggestions(window.citiesCache[query]);
+                                    } else {
+                                        // Adicionar classe de carregamento
+                                        naturalidadeConjugeInput.classList.add('loading');
+                                        
+                                        // Consumir a API do IBGE
+                                        fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome`)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                // Filtrar municípios que contenham o texto digitado
+                                                const filteredCities = data.filter(city => {
+                                                    const cityName = city.nome.toLowerCase();
+                                                    const stateAbbr = city.microrregiao.mesorregiao.UF.sigla;
+                                                    const searchStr = `${cityName} - ${stateAbbr}`.toLowerCase();
+                                                    return searchStr.includes(query.toLowerCase());
+                                                }).slice(0, 10); // Limitar a 10 resultados
+                                                
+                                                // Armazenar no cache global
+                                                if (!window.citiesCache) window.citiesCache = {};
+                                                window.citiesCache[query] = filteredCities;
+                                                
+                                                // Exibir sugestões
+                                                displayConjugeSuggestions(filteredCities);
+                                                
+                                                // Remover classe de carregamento
+                                                naturalidadeConjugeInput.classList.remove('loading');
+                                            })
+                                            .catch(error => {
+                                                console.error('Erro ao buscar cidades para cônjuge:', error);
+                                                naturalidadeConjugeInput.classList.remove('loading');
+                                            });
+                                    }
+                                }, 300);
+                            });
+                            
+                            // Função para exibir sugestões
+                            function displayConjugeSuggestions(cities) {
+                                // Limpar o container de sugestões
+                                conjugeSuggestionsContainer.innerHTML = '';
+                                
+                                if (cities.length === 0) {
+                                    conjugeSuggestionsContainer.style.display = 'none';
+                                    return;
+                                }
+                                
+                                // Criar um item para cada cidade
+                                cities.forEach(city => {
+                                    const item = document.createElement('div');
+                                    item.className = 'suggestion-item';
+                                    item.textContent = `${city.nome} - ${city.microrregiao.mesorregiao.UF.sigla}`;
+                                    item.style.padding = '10px 12px';
+                                    item.style.cursor = 'pointer';
+                                    item.style.borderBottom = '1px solid var(--divider-color)';
+                                    
+                                    // Adicionar efeito hover
+                                    item.addEventListener('mouseover', function() {
+                                        this.style.backgroundColor = 'var(--background-color)';
+                                    });
+                                    
+                                    item.addEventListener('mouseout', function() {
+                                        this.style.backgroundColor = 'transparent';
+                                    });
+                                    
+                                    // Adicionar evento de clique para selecionar cidade
+                                    item.addEventListener('click', function() {
+                                        naturalidadeConjugeInput.value = this.textContent;
+                                        conjugeSuggestionsContainer.style.display = 'none';
+                                    });
+                                    
+                                    conjugeSuggestionsContainer.appendChild(item);
+                                });
+                                
+                                // Exibir container de sugestões
+                                conjugeSuggestionsContainer.style.display = 'block';
+                            }
+                            
+                            // Fechar sugestões ao clicar fora do campo
+                            document.addEventListener('click', function(e) {
+                                if (e.target !== naturalidadeConjugeInput && e.target !== conjugeSuggestionsContainer) {
+                                    conjugeSuggestionsContainer.style.display = 'none';
+                                }
+                            });
+                            
+                            // Navegação por teclado nas sugestões
+                            naturalidadeConjugeInput.addEventListener('keydown', function(e) {
+                                const items = conjugeSuggestionsContainer.querySelectorAll('.suggestion-item');
+                                if (!items.length) return;
+                                
+                                const activeItem = conjugeSuggestionsContainer.querySelector('.suggestion-item.active');
+                                
+                                // Tecla para baixo
+                                if (e.key === 'ArrowDown') {
+                                    e.preventDefault();
+                                    if (!activeItem) {
+                                        items[0].classList.add('active');
+                                        items[0].style.backgroundColor = 'var(--background-color)';
+                                    } else {
+                                        const index = Array.from(items).indexOf(activeItem);
+                                        if (index < items.length - 1) {
+                                            activeItem.classList.remove('active');
+                                            activeItem.style.backgroundColor = 'transparent';
+                                            items[index + 1].classList.add('active');
+                                            items[index + 1].style.backgroundColor = 'var(--background-color)';
+                                            
+                                            // Scroll se necessário
+                                            if (items[index + 1].offsetTop >= conjugeSuggestionsContainer.scrollTop + conjugeSuggestionsContainer.offsetHeight) {
+                                                conjugeSuggestionsContainer.scrollTop = items[index + 1].offsetTop - conjugeSuggestionsContainer.offsetHeight + items[index + 1].offsetHeight;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                // Tecla para cima
+                                else if (e.key === 'ArrowUp') {
+                                    e.preventDefault();
+                                    if (activeItem) {
+                                        const index = Array.from(items).indexOf(activeItem);
+                                        if (index > 0) {
+                                            activeItem.classList.remove('active');
+                                            activeItem.style.backgroundColor = 'transparent';
+                                            items[index - 1].classList.add('active');
+                                            items[index - 1].style.backgroundColor = 'var(--background-color)';
+                                            
+                                            // Scroll se necessário
+                                            if (items[index - 1].offsetTop < conjugeSuggestionsContainer.scrollTop) {
+                                                conjugeSuggestionsContainer.scrollTop = items[index - 1].offsetTop;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                // Tecla Enter
+                                else if (e.key === 'Enter' && activeItem) {
+                                    e.preventDefault();
+                                    naturalidadeConjugeInput.value = activeItem.textContent;
+                                    conjugeSuggestionsContainer.style.display = 'none';
+                                }
+                                
+                                // Tecla Escape
+                                else if (e.key === 'Escape') {
+                                    conjugeSuggestionsContainer.style.display = 'none';
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // Executar a validação quando o formulário carrega
+            setTimeout(aplicarValidacoesConjuge, 200);
+            
+            // Executar a validação quando o estado civil muda
+            document.getElementById('input_103').addEventListener('change', function() {
+                // Pequeno delay para garantir que a seção do cônjuge já foi atualizada
+                setTimeout(aplicarValidacoesConjuge, 50);
+            });
+
+            // Função para aplicar regras ao campo de número de documento baseado no tipo
+            function applyDocumentNumberRules(typeSelectId, numberInputId) {
+                const typeSelect = document.getElementById(typeSelectId);
+                const numberInput = document.getElementById(numberInputId);
+
+                if (!typeSelect || !numberInput) {
+                    console.warn(`Element not found for validation rule update: ${typeSelectId} or ${numberInputId}`);
+                    return; // Sai se os elementos não existirem (ex: cônjuge oculto)
+                }
+
+                const selectedType = typeSelect.value;
+                
+                // Remover ouvintes de eventos anteriores para evitar duplicação
+                const newNumberInput = numberInput.cloneNode(true);
+                numberInput.parentNode.replaceChild(newNumberInput, numberInput);
+                const currentNumberInput = document.getElementById(numberInputId); // Obter a nova referência
+
+                // Resetar atributos comuns
+                currentNumberInput.placeholder = 'Nº do Documento';
+                currentNumberInput.removeAttribute('pattern');
+                currentNumberInput.removeAttribute('maxlength');
+                currentNumberInput.inputMode = 'text';
+                currentNumberInput.value = ''; // Limpar valor ao mudar tipo
+
+                switch (selectedType) {
+                    case 'RG':
+                        currentNumberInput.placeholder = 'Apenas números e X';
+                        currentNumberInput.inputMode = 'text'; 
+                        currentNumberInput.maxLength = 20; 
+                        currentNumberInput.addEventListener('input', function() {
+                            // Remove caracteres não permitidos para RG (incluindo . e -)
+                            this.value = this.value.replace(/[^0-9Xx]/g, '');
+                        });
+                        break;
+                    case 'CNH':
+                        currentNumberInput.placeholder = '11 dígitos numéricos';
+                        currentNumberInput.inputMode = 'numeric';
+                        currentNumberInput.maxLength = 11;
+                        currentNumberInput.addEventListener('input', function() {
+                            // Permite apenas dígitos e limita a 11
+                            this.value = this.value.replace(/\\D/g, '').slice(0, 11);
+                        });
+                        // Adiciona validação no blur
+                        currentNumberInput.addEventListener('blur', function() {
+                            const cnhValue = this.value;
+                            const orgaoEmissorId = (numberInputId === 'input_98') ? 'input_99' : 'input_235';
+                            const baseMsgId = numberInputId + '-cnh'; // Base para IDs de mensagem
+
+                            clearValidationStyles(this, baseMsgId);
+                            
+                            if (cnhValue.length === 0) {
+                                return; // Não valida campo vazio no blur
+                            } 
+                            
+                            if (cnhValue.length < 11) {
+                                showError(this, 'CNH deve ter 11 dígitos.', baseMsgId + '-error-msg');
+                                return;
+                            }
+
+                            if (validateCNH(cnhValue, orgaoEmissorId)) {
+                                showSuccess(this, 'CNH válida.', baseMsgId + '-success-msg');
+                            } else {
+                                showError(this, 'CNH inválida.', baseMsgId + '-error-msg');
+                            }
+                        });
+                        break;
+                    case 'Passaporte':
+                        currentNumberInput.placeholder = 'LLNNNNNN (ex: AA123456)'; // Updated placeholder
+                        currentNumberInput.inputMode = 'text';
+                         // Validate Brazilian format: 2 letters followed by 6 digits
+                        currentNumberInput.pattern = '^[a-zA-Z]{2}\\d{6}$'; // Updated pattern
+                        currentNumberInput.maxLength = 8; // Updated max length
+                        currentNumberInput.addEventListener('input', function() {
+                            // Allow only letters and numbers, limit length
+                            let value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase(); 
+                            if (value.length > 8) value = value.slice(0, 8);
+                            this.value = value;
+                        });
+                        break;
+                    default:
+                        // Sem regras específicas para outros tipos ou quando nada está selecionado
+                        break;
+                }
+            }
+
+            // Anexar ouvintes de evento aos seletores de tipo de documento
+            const userDocTypeSelect = document.getElementById('input_105');
+            const spouseDocTypeSelect = document.getElementById('input_232');
+
+            if (userDocTypeSelect) {
+                userDocTypeSelect.addEventListener('change', () => {
+                    applyDocumentNumberRules('input_105', 'input_98');
+                    // Também atualiza órgão emissor (lógica existente)
+                    if (typeof atualizarCampoOrgaoEmissor === 'function') {
+                       atualizarCampoOrgaoEmissor();
+                    }
+                });
+                 // Aplicar regras iniciais no carregamento para o usuário
+                 applyDocumentNumberRules('input_105', 'input_98');
+            }
+
+            if (spouseDocTypeSelect) {
+                spouseDocTypeSelect.addEventListener('change', () => {
+                    applyDocumentNumberRules('input_232', 'input_233');
+                    // Chamar função similar para órgão emissor do cônjuge se existir
+                     if (typeof atualizarCampoOrgaoEmissorConjuge === 'function') {
+                       atualizarCampoOrgaoEmissorConjuge();
+                    }
+                });
+                // Aplicar regras iniciais no carregamento para o cônjuge (se visível)
+                // A lógica de visibilidade já deve garantir que isso funcione corretamente
+                 applyDocumentNumberRules('input_232', 'input_233');
+            }
+
+            // Função para atualizar o campo de órgão emissor do cônjuge
+            function atualizarCampoOrgaoEmissorConjuge() {
+                // Selecionar o tipo de documento do cônjuge
+                const tipoDocumentoConjugeSelect = document.getElementById('input_232');
+                // Tentar obter o campo de órgão emissor do cônjuge
+                const orgaoEmissorConjugeField = document.getElementById('input_235');
+
+                // Se o select ou o campo não existirem (por exemplo, seção oculta), não fazer nada
+                if (!tipoDocumentoConjugeSelect || !orgaoEmissorConjugeField) {
+                     console.warn('Campos do cônjuge não encontrados para atualizar órgão emissor.');
+                     return;
+                }
+
+                const tipoDocConjuge = tipoDocumentoConjugeSelect.value;
+                // Guardar o valor atual antes de substituir o campo
+                const currentValue = orgaoEmissorConjugeField.value;
+
+                // Guardar o elemento pai para readicionar o campo
+                const parent = orgaoEmissorConjugeField.parentNode;
+
+                // Remove o campo atual
+                orgaoEmissorConjugeField.remove();
+
+                let newField;
+
+                if (tipoDocConjuge === 'RG') {
+                    // Transformar em um select para RG do cônjuge
+                    newField = document.createElement('select');
+                    newField.id = 'input_235';
+                    newField.name = 'q235_orgaoEmissorConjuge';
+                    newField.className = 'form-control';
+                    newField.required = true; // Assumindo que é obrigatório se a seção está visível
+
+                    // Adicionar opções para órgãos emissores de RG (mesmas opções)
+                    const options = [
+                        {value: '', text: 'Selecione o órgão emissor'},
+                        {value: 'SSP-AC', text: 'SSP-AC'}, {value: 'SSP-AL', text: 'SSP-AL'},
+                        {value: 'SSP-AP', text: 'SSP-AP'}, {value: 'SSP-AM', text: 'SSP-AM'},
+                        {value: 'SSP-BA', text: 'SSP-BA'}, {value: 'SSP-CE', text: 'SSP-CE'},
+                        {value: 'SSP-DF', text: 'SSP-DF'}, {value: 'SSP-ES', text: 'SSP-ES'},
+                        {value: 'SSP-GO', text: 'SSP-GO'}, {value: 'SSP-MA', text: 'SSP-MA'},
+                        {value: 'SSP-MT', text: 'SSP-MT'}, {value: 'SSP-MS', text: 'SSP-MS'},
+                        {value: 'SSP-MG', text: 'SSP-MG'}, {value: 'SSP-PA', text: 'SSP-PA'},
+                        {value: 'SSP-PB', text: 'SSP-PB'}, {value: 'SSP-PR', text: 'SSP-PR'},
+                        {value: 'SSP-PE', text: 'SSP-PE'}, {value: 'SSP-PI', text: 'SSP-PI'},
+                        {value: 'SSP-RJ', text: 'SSP-RJ'}, {value: 'SSP-RN', text: 'SSP-RN'},
+                        {value: 'SSP-RS', text: 'SSP-RS'}, {value: 'SSP-RO', text: 'SSP-RO'},
+                        {value: 'SSP-RR', text: 'SSP-RR'}, {value: 'SSP-SC', text: 'SSP-SC'},
+                        {value: 'SSP-SP', text: 'SSP-SP'}, {value: 'SSP-SE', text: 'SSP-SE'},
+                        {value: 'SSP-TO', text: 'SSP-TO'},
+                        {value: 'PC-AC', text: 'PC-AC'}, {value: 'PC-AL', text: 'PC-AL'},
+                        {value: 'PC-AP', text: 'PC-AP'}, {value: 'PC-AM', text: 'PC-AM'},
+                        {value: 'PC-BA', text: 'PC-BA'}, {value: 'PC-CE', text: 'PC-CE'},
+                        {value: 'PC-DF', text: 'PC-DF'}, {value: 'PC-ES', text: 'PC-ES'},
+                        {value: 'PC-GO', text: 'PC-GO'}, {value: 'PC-MA', text: 'PC-MA'},
+                        {value: 'PC-MT', text: 'PC-MT'}, {value: 'PC-MS', text: 'PC-MS'},
+                        {value: 'PC-MG', text: 'PC-MG'}, {value: 'PC-PA', text: 'PC-PA'},
+                        {value: 'PC-PB', text: 'PC-PB'}, {value: 'PC-PR', text: 'PC-PR'},
+                        {value: 'PC-PE', text: 'PC-PE'}, {value: 'PC-PI', text: 'PC-PI'},
+                        {value: 'PC-RJ', text: 'PC-RJ'}, {value: 'PC-RN', text: 'PC-RN'},
+                        {value: 'PC-RS', text: 'PC-RS'}, {value: 'PC-RO', text: 'PC-RO'},
+                        {value: 'PC-RR', text: 'PC-RR'}, {value: 'PC-SC', text: 'PC-SC'},
+                        {value: 'PC-SP', text: 'PC-SP'}, {value: 'PC-SE', text: 'PC-SE'},
+                        {value: 'PC-TO', text: 'PC-TO'},
+                        {value: 'DPF', text: 'DPF - Polícia Federal'},
+                        {value: 'MAE', text: 'MAE - Ministério da Aeronáutica'},
+                        {value: 'MEX', text: 'MEX - Ministério do Exército'},
+                        {value: 'MMA', text: 'MMA - Ministério da Marinha'},
+                        {value: 'OUTRO', text: 'Outro'}
+                    ];
+
+                    options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        newField.appendChild(option);
+                    });
+
+                } else if (tipoDocConjuge === 'CNH') {
+                    // Transformar em um select para CNH do cônjuge
+                    newField = document.createElement('select');
+                    newField.id = 'input_235';
+                    newField.name = 'q235_orgaoEmissorConjuge';
+                    newField.className = 'form-control';
+                    newField.required = true; // Assumindo que é obrigatório
+
+                    // Adicionar opções para DETRAN de cada estado (mesmas opções)
+                    const options = [
+                        {value: '', text: 'Selecione o DETRAN'},
+                        {value: 'DETRAN-AC', text: 'DETRAN-AC'}, {value: 'DETRAN-AL', text: 'DETRAN-AL'},
+                        {value: 'DETRAN-AP', text: 'DETRAN-AP'}, {value: 'DETRAN-AM', text: 'DETRAN-AM'},
+                        {value: 'DETRAN-BA', text: 'DETRAN-BA'}, {value: 'DETRAN-CE', text: 'DETRAN-CE'},
+                        {value: 'DETRAN-DF', text: 'DETRAN-DF'}, {value: 'DETRAN-ES', text: 'DETRAN-ES'},
+                        {value: 'DETRAN-GO', text: 'DETRAN-GO'}, {value: 'DETRAN-MA', text: 'DETRAN-MA'},
+                        {value: 'DETRAN-MT', text: 'DETRAN-MT'}, {value: 'DETRAN-MS', text: 'DETRAN-MS'},
+                        {value: 'DETRAN-MG', text: 'DETRAN-MG'}, {value: 'DETRAN-PA', text: 'DETRAN-PA'},
+                        {value: 'DETRAN-PB', text: 'DETRAN-PB'}, {value: 'DETRAN-PR', text: 'DETRAN-PR'},
+                        {value: 'DETRAN-PE', text: 'DETRAN-PE'}, {value: 'DETRAN-PI', text: 'DETRAN-PI'},
+                        {value: 'DETRAN-RJ', text: 'DETRAN-RJ'}, {value: 'DETRAN-RN', text: 'DETRAN-RN'},
+                        {value: 'DETRAN-RS', text: 'DETRAN-RS'}, {value: 'DETRAN-RO', text: 'DETRAN-RO'},
+                        {value: 'DETRAN-RR', text: 'DETRAN-RR'}, {value: 'DETRAN-SC', text: 'DETRAN-SC'},
+                        {value: 'DETRAN-SP', text: 'DETRAN-SP'}, {value: 'DETRAN-SE', text: 'DETRAN-SE'},
+                        {value: 'DETRAN-TO', text: 'DETRAN-TO'}
+                    ];
+
+                    options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt.value;
+                        option.textContent = opt.text;
+                        newField.appendChild(option);
+                    });
+
+                } else if (tipoDocConjuge === 'Passaporte') {
+                    // Campo de texto preenchido com Polícia Federal para cônjuge
+                    newField = document.createElement('input');
+                    newField.type = 'text';
+                    newField.id = 'input_235';
+                    newField.name = 'q235_orgaoEmissorConjuge';
+                    newField.className = 'form-control';
+                    newField.value = 'Polícia Federal';
+                    newField.readOnly = true;
+                    newField.required = true; // Assumindo que é obrigatório
+
+                } else {
+                    // Campo de texto padrão para cônjuge
+                    newField = document.createElement('input');
+                    newField.type = 'text';
+                    newField.id = 'input_235';
+                    newField.name = 'q235_orgaoEmissorConjuge';
+                    newField.className = 'form-control';
+                    newField.placeholder = 'Digite o órgão emissor';
+                    newField.required = true; // Assumindo que é obrigatório
+                }
+
+                // Inserir o novo campo no DOM
+                parent.appendChild(newField);
+
+                // Gerenciar evento de "outro" se for um select (para RG do cônjuge)
+                if (newField.nodeName === 'SELECT' && tipoDocConjuge === 'RG') {
+                    newField.addEventListener('change', function() {
+                        if (this.value === 'OUTRO') {
+                            // Substituir o select por um campo de texto
+                            const textField = document.createElement('input');
+                            textField.type = 'text';
+                            textField.id = 'input_235';
+                            textField.name = 'q235_orgaoEmissorConjuge';
+                            textField.className = 'form-control';
+                            textField.placeholder = 'Digite o órgão emissor';
+                            textField.required = true;
+
+                            this.parentNode.replaceChild(textField, this);
+                            textField.focus();
+                        }
+                    });
+                }
+
+                // Tentar restaurar o valor anterior, se possível
+                if (currentValue && newField.nodeName === 'SELECT') {
+                    const options = Array.from(newField.options);
+                    const matchingOption = options.find(opt => opt.value === currentValue);
+                    if (matchingOption) {
+                        newField.value = currentValue;
+                    }
+                } else if (newField.type === 'text' && !newField.readOnly) {
+                    newField.value = currentValue;
+                }
+             }
+
         });
     </script>
 </body>
