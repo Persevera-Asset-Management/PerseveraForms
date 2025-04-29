@@ -1655,21 +1655,45 @@
                             errorMsg.id = errorMsgId; // Assign the ID
                             errorMsg.className = 'error-message';
                             errorMsg.textContent = 'Este campo é obrigatório';
-                            // Insert after field or its container if needed (e.g., phone)
-                            if (field.id === 'input_118') {
-                                field.closest('.phone-input-container').parentNode.insertBefore(errorMsg, field.closest('.phone-input-container').nextSibling);
+
+                            // Find the parent form-group and append the message there
+                            const parentGroup = field.closest('.form-group');
+                            if (parentGroup) {
+                                parentGroup.appendChild(errorMsg);
                             } else {
-                            field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                                // Fallback (shouldn't usually happen with this structure)
+                                field.insertAdjacentElement('afterend', errorMsg);
                             }
                         }
                     } else {
                         // Remove specific required error message if it exists
                          if (errorMsg) errorMsg.remove();
                          
-                         // Verificar formatos especiais para campos preenchidos
+                         // Field is filled, check format/special chars
+                         // Keep existing style if format/char validation adds error style
+                         let hasFormatError = false;
                          if (!validateFieldFormat(field)) {
                              isValid = false;
+                             hasFormatError = true;
                              if (!firstInvalidField) firstInvalidField = field;
+                         }
+                         // Also check special chars for text inputs/textareas
+                         let hasSpecialCharError = false;
+                         if ((field.tagName === 'INPUT' && field.type === 'text') || field.tagName === 'TEXTAREA') {
+                             if (!validateSpecialChars(field)) { // Assumes this function adds messages/styles
+                                 isValid = false;
+                                 hasSpecialCharError = true;
+                                 if (!firstInvalidField) firstInvalidField = field;
+                             }
+                         }
+
+                         // Only reset base styles if no format/special char error was found by the above checks
+                         if (!hasFormatError && !hasSpecialCharError) {
+                            // Reset styles only if no *other* error indicators are present (like valid CEP/Phone classes)
+                            if (!field.classList.contains('cep-valido') && !field.classList.contains('phone-valid') && !field.classList.contains('special-char-error')) {
+                                 field.style.borderColor = '';
+                                 field.style.backgroundColor = '';
+                            }
                          }
                     }
                 });
@@ -2502,27 +2526,20 @@
             
             // Função para validar idade mínima (18 anos)
             function validateAge(input) {
-                console.log('[VALIDATION AGE] Validando data de nascimento:', input.value);
+                const baseErrorId = input.id;
+                console.log(`[VALIDATION AGE] Validando ${baseErrorId}:`, input.value);
+                clearValidationStyles(input, baseErrorId); // Clear previous specific errors/styles
+
                 const birthDateStr = input.value;
-                const errorMsgId = 'age-error-' + input.id;
-                let existingError = document.getElementById(errorMsgId);
-
-                // Remove mensagem de erro existente
-                if (existingError) {
-                    existingError.remove();
-                }
-                input.style.borderColor = '';
-                input.style.backgroundColor = '';
-
                 if (!birthDateStr.trim()) {
-                    console.log('[VALIDATION AGE] Data de nascimento vazia');
-                    return true; // Don't validate if empty
+                    console.log(`[VALIDATION AGE] ${baseErrorId} vazio`);
+                    return true; // Don't validate if empty, let required handle it
                 }
 
                 const parts = birthDateStr.split('/');
                 if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
-                     showError(input, 'Formato inválido. Use DD/MM/AAAA.', errorMsgId);
-                     console.log('[VALIDATION AGE] Formato inválido');
+                     showError(input, 'Formato inválido. Use DD/MM/AAAA.', baseErrorId + '-error-msg');
+                     console.log(`[VALIDATION AGE] ${baseErrorId} formato inválido`);
                      return false;
                 }
 
@@ -2530,10 +2547,9 @@
                 const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
                 const year = parseInt(parts[2], 10);
 
-                // Check for reasonable year range and calendar validity
                 if (year < 1900 || year > new Date().getFullYear() + 1 || isNaN(day) || isNaN(month) || isNaN(year)) {
-                     showError(input, 'Data inválida (ano ou formato).', errorMsgId);
-                     console.log('[VALIDATION AGE] Data inválida');
+                     showError(input, 'Data inválida (ano ou formato).', baseErrorId + '-error-msg');
+                     console.log(`[VALIDATION AGE] ${baseErrorId} data inválida`);
                      return false;
                 }
 
@@ -2541,17 +2557,15 @@
                 const today = new Date();
                  today.setHours(0, 0, 0, 0); // Compare dates only
 
-                // Check if the generated date matches the input (e.g., 31/02 is invalid)
                 if (birthDate.getFullYear() !== year || birthDate.getMonth() !== month || birthDate.getDate() !== day) {
-                     showError(input, 'Data inválida (dia/mês).', errorMsgId);
-                     console.log('[VALIDATION AGE] Data inválida');
+                     showError(input, 'Data inválida (dia/mês).', baseErrorId + '-error-msg');
+                     console.log(`[VALIDATION AGE] ${baseErrorId} data inválida (dia/mês)`);
                      return false;
                  }
 
-                 // Check if date is in the future
                  if (birthDate > today) {
-                     showError(input, 'Data não pode ser no futuro.', errorMsgId);
-                     console.log('[VALIDATION AGE] Data não pode ser no futuro');
+                     showError(input, 'Data não pode ser no futuro.', baseErrorId + '-error-msg');
+                     console.log(`[VALIDATION AGE] ${baseErrorId} data no futuro`);
                      return false;
                  }
 
@@ -2563,37 +2577,32 @@
                 }
 
                 if (age < 18) {
-                     showError(input, 'Você deve ter pelo menos 18 anos.', errorMsgId);
-                     console.log('[VALIDATION AGE] Idade mínima não atingida');
+                     showError(input, 'Você deve ter pelo menos 18 anos.', baseErrorId + '-error-msg');
+                     console.log(`[VALIDATION AGE] ${baseErrorId} idade mínima não atingida`);
                      return false;
                 }
 
-                // Date is valid and age is sufficient
-                console.log('[VALIDATION AGE] Data válida e idade ok');
+                console.log(`[VALIDATION AGE] ${baseErrorId} válida e idade ok`);
                 input.style.borderColor = 'var(--secondary-color)';
                 return true;
             }
 
              // Função para validar datas genéricas (como expedição)
              function validateDate(input) {
-                 console.log('[VALIDATION DATE] Validando data:', input.value);
+                 const baseErrorId = input.id;
+                 console.log(`[VALIDATION DATE] Validando ${baseErrorId}:`, input.value);
+                 clearValidationStyles(input, baseErrorId); // Clear previous specific errors/styles
+
                  const dateStr = input.value;
-                 const errorMsgId = 'date-error-' + input.id;
-                 let existingError = document.getElementById(errorMsgId);
-
-                 // Remove mensagem de erro existente
-                 if (existingError) {
-                     existingError.remove();
+                 if (!dateStr.trim()) {
+                     console.log(`[VALIDATION DATE] ${baseErrorId} vazia`);
+                     return true; // Don't validate if empty
                  }
-                 input.style.borderColor = '';
-                 input.style.backgroundColor = '';
-
-                 if (!dateStr.trim()) return true; // Don't validate if empty
 
                  const parts = dateStr.split('/');
                  if (parts.length !== 3 || parts[0].length !== 2 || parts[1].length !== 2 || parts[2].length !== 4) {
-                     showError(input, 'Formato inválido. Use DD/MM/AAAA.', errorMsgId);
-                     console.log('[VALIDATION DATE] Formato inválido');
+                     showError(input, 'Formato inválido. Use DD/MM/AAAA.', baseErrorId + '-error-msg');
+                     console.log(`[VALIDATION DATE] ${baseErrorId} formato inválido`);
                      return false; // Invalid format
                  }
 
@@ -2601,10 +2610,9 @@
                  const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
                  const year = parseInt(parts[2], 10);
 
-                 // Check for reasonable year range and calendar validity
                  if (year < 1950 || year > new Date().getFullYear() + 1 || isNaN(day) || isNaN(month) || isNaN(year)) { // Min year 1950 for expedition
-                      showError(input, 'Data inválida (ano ou formato).', errorMsgId);
-                      console.log('[VALIDATION DATE] Data inválida');
+                      showError(input, 'Data inválida (ano ou formato).', baseErrorId + '-error-msg');
+                      console.log(`[VALIDATION DATE] ${baseErrorId} data inválida (ano/formato)`);
                       return false;
                  }
 
@@ -2612,118 +2620,169 @@
                  const today = new Date();
                  today.setHours(0, 0, 0, 0); // Compare dates only
 
-                 // Check if the generated date matches the input (e.g., 31/02 is invalid)
                  if (dateValue.getFullYear() !== year || dateValue.getMonth() !== month || dateValue.getDate() !== day) {
-                      showError(input, 'Data inválida (dia/mês).', errorMsgId);
-                      console.log('[VALIDATION DATE] Data inválida');
+                      showError(input, 'Data inválida (dia/mês).', baseErrorId + '-error-msg');
+                      console.log(`[VALIDATION DATE] ${baseErrorId} data inválida (dia/mês)`);
                       return false;
                   }
 
-                  // Check if date is in the future
                   if (dateValue > today) {
-                      showError(input, 'Data não pode ser no futuro.', errorMsgId);
-                      console.log('[VALIDATION DATE] Data não pode ser no futuro');
+                      showError(input, 'Data não pode ser no futuro.', baseErrorId + '-error-msg');
+                      console.log(`[VALIDATION DATE] ${baseErrorId} data no futuro`);
                       return false;
                   }
 
-                 // Date is valid
-                 console.log('[VALIDATION DATE] Data válida');
+                 console.log(`[VALIDATION DATE] ${baseErrorId} válida`);
                  input.style.borderColor = 'var(--secondary-color)';
                  return true;
              }
 
             // CPF validation function
             function validateCPF(input) {
-                console.log('[VALIDATION CPF] Validando CPF:', input.value);
-                const errorMsgId = 'cpf-error-msg';
-                let existingError = document.getElementById(errorMsgId);
-                
-                // Remove existing error message
-                if (existingError) {
-                    existingError.remove();
-                }
-                
-                // If empty, reset to default style and return
+                const baseErrorId = input.id; // Use field ID directly for base
+                console.log(`[VALIDATION CPF] Validando ${baseErrorId}:`, input.value);
+                clearValidationStyles(input, baseErrorId); // Clear previous specific errors/styles
+
+                // If empty, it's not a format error, let 'required' validation handle it
                 if (!input.value.trim()) {
-                    input.style.borderColor = '';
-                    input.style.backgroundColor = '';
-                    console.log('[VALIDATION CPF] CPF vazio');
-                    return;
+                    console.log(`[VALIDATION CPF] ${baseErrorId} vazio`);
+                    return true; // Return true as format is not invalid, just potentially empty
                 }
-                
-                // Extract only numbers
+
                 const cpf = input.value.replace(/\D/g, '');
-                
-                // Check if CPF has 11 digits
+
                 if (cpf.length !== 11) {
-                    showError(input, 'CPF deve conter 11 dígitos.', errorMsgId);
-                    console.log('[VALIDATION CPF] CPF inválido: número incorreto de dígitos');
+                    showError(input, 'CPF deve conter 11 dígitos.', baseErrorId + '-error-msg');
+                    console.log(`[VALIDATION CPF] ${baseErrorId} inválido: número incorreto de dígitos`);
                     return false;
                 }
-                
-                // Check if all digits are the same
+
                 if (/^(\d)\1{10}$/.test(cpf)) {
-                    showError(input, 'CPF inválido: todos os dígitos são iguais.', errorMsgId);
-                    console.log('[VALIDATION CPF] CPF inválido: dígitos repetidos');
+                    showError(input, 'CPF inválido: todos os dígitos são iguais.', baseErrorId + '-error-msg');
+                    console.log(`[VALIDATION CPF] ${baseErrorId} inválido: dígitos repetidos`);
                     return false;
                 }
-                
-                // Calculate first verification digit
+
                 let sum = 0;
                 for (let i = 0; i < 9; i++) {
                     sum += parseInt(cpf.charAt(i)) * (10 - i);
                 }
                 let remainder = sum % 11;
                 let digit1 = remainder < 2 ? 0 : 11 - remainder;
-                
-                // Calculate second verification digit
+
                 sum = 0;
                 for (let i = 0; i < 10; i++) {
                     sum += parseInt(cpf.charAt(i)) * (11 - i);
                 }
                 remainder = sum % 11;
                 let digit2 = remainder < 2 ? 0 : 11 - remainder;
-                
-                // Check if calculated digits match the provided ones
+
                 if (parseInt(cpf.charAt(9)) !== digit1 || parseInt(cpf.charAt(10)) !== digit2) {
-                    showError(input, 'CPF inválido.', errorMsgId);
-                    console.log('[VALIDATION CPF] CPF inválido: dígitos verificadores incorretos');
+                    showError(input, 'CPF inválido.', baseErrorId + '-error-msg');
+                    console.log(`[VALIDATION CPF] ${baseErrorId} inválido: dígitos verificadores incorretos`);
                     return false;
                 }
-                
+
                 // CPF is valid
-                console.log('[VALIDATION CPF] CPF válido');
-                input.style.borderColor = 'var(--secondary-color)';
-                input.style.backgroundColor = '';
+                console.log(`[VALIDATION CPF] ${baseErrorId} válido`);
+                input.style.borderColor = 'var(--secondary-color)'; // Indicate success
+                // clearValidationStyles should have reset background if needed
                 return true;
             }
-            
+
             // Helper function to show validation error
             function showError(input, message, errorMsgId) {
-                // Não aplicar estilos de erro se o elemento for um CEP válido
-                if (input.id === 'input_108' && input.classList.contains('cep-valido')) {
+                // Não aplicar estilos de erro se o elemento for um CEP/Telefone válido
+                if ((input.id === 'input_108' || input.id === 'input_215') && input.classList.contains('cep-valido')) {
                     return;
                 }
-                
+                if (input.id === 'input_118' && input.classList.contains('phone-valid')) {
+                    return;
+                }
+
+                // Add error styles
                 input.style.borderColor = 'var(--error-color)';
                 input.style.backgroundColor = 'var(--error-bg)';
-                
-                const errorMsg = document.createElement('div');
-                errorMsg.id = errorMsgId;
-                errorMsg.className = 'error-message';
-                errorMsg.textContent = message;
-                errorMsg.style.color = 'var(--error-color)';
-                errorMsg.style.fontSize = '0.8rem';
-                errorMsg.style.marginTop = '4px';
-                
-                // Insert error message after the input or its container
-                if (input.id === 'input_118') {
-                    // Para o campo de telefone, inserir a mensagem após o container do telefone
-                    const phoneContainer = input.closest('.phone-input-container');
-                    phoneContainer.parentNode.insertBefore(errorMsg, phoneContainer.nextSibling);
+                input.classList.add('error'); // Add a general error class if needed
+
+                // Create and insert error message if it doesn't exist
+                let errorMsg = document.getElementById(errorMsgId);
+                if (!errorMsg) {
+                     errorMsg = document.createElement('div');
+                     errorMsg.id = errorMsgId;
+                     errorMsg.className = 'error-message';
+                     errorMsg.textContent = message;
+                     errorMsg.style.color = 'var(--error-color)';
+                     errorMsg.style.fontSize = '0.8rem';
+                     errorMsg.style.marginTop = '4px';
+
+                     // Insert error message into the parent form-group
+                     const parentGroup = input.closest('.form-group');
+                     if (parentGroup) {
+                         parentGroup.appendChild(errorMsg);
+                     } else {
+                          // Fallback: Insert after the input (less ideal for dynamic fields)
+                         input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                     }
+                }
+            }
+
+            // Helper function to clear validation styles and specific messages
+            function clearValidationStyles(input, baseErrorId) {
+                // Remove specific error message if it exists
+                const specificErrorMsg = document.getElementById(baseErrorId + '-error-msg');
+                if (specificErrorMsg) {
+                    specificErrorMsg.remove();
+                }
+                // Remove potential success message
+                const specificSuccessMsg = document.getElementById(baseErrorId + '-success-msg');
+                 if (specificSuccessMsg) {
+                     specificSuccessMsg.remove();
+                 }
+
+                // Check if *any* other error messages remain for this field's group
+                let otherErrorsExist = false;
+                const parentGroup = input.closest('.form-group');
+
+                // --- Attempt to remove the 'required' error message specifically ---
+                const requiredErrorMsgId = input.id + '-required-error';
+                const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                if (requiredErrorMsg) {
+                    requiredErrorMsg.remove();
+                    console.log(`[clearValidationStyles] Removed required message for ${input.id}`);
+                }
+                // --- End removal of 'required' error ---
+
+                if (parentGroup) {
+                    // Check messages within the same group, excluding the one we just removed (if it existed)
+                    const allMessages = parentGroup.querySelectorAll('.error-message');
+                     // Re-check if other messages *still* exist *after* removing the required one
+                     otherErrorsExist = Array.from(allMessages).some(msg =>
+                         msg.id !== (baseErrorId + '-error-msg')
+                     );
                 } else {
-                    // Para outros campos, inserir a mensagem após o input
-                    input.parentNode.insertBefore(errorMsg, input.nextSibling);
+                    // Fallback check if no parent group found (less likely)
+                     const siblingErrors = input.parentNode.querySelectorAll('.error-message');
+                     otherErrorsExist = Array.from(siblingErrors).some(msg => msg.id !== (baseErrorId + '-error-msg'));
+                }
+
+                // Also check for the required error specifically, as it might be added by validateTabFields
+                const requiredErrorId = input.id + '-required-error';
+                if (document.getElementById(requiredErrorId)) {
+                    otherErrorsExist = true;
+                }
+                 // Check for special char error class
+                 if (input.classList.contains('special-char-error')) {
+                     otherErrorsExist = true;
+                 }
+
+
+                // Reset styles only if no other error messages or specific error classes are present
+                if (!otherErrorsExist && !input.classList.contains('cep-valido') && !input.classList.contains('phone-valid')) {
+                    input.style.borderColor = '';
+                    input.style.backgroundColor = '';
+                    input.classList.remove('error'); // General error class if used
+                    // Don't remove special-char-error here, let its own validation handle it
                 }
             }
             
@@ -2932,53 +2991,72 @@
             });
 
             // Função para sugerir naturalidade (cidade e estado) conforme o usuário digita
-            const naturalidadeInput = document.getElementById('input_97');
-            if (naturalidadeInput) {
-                // Cria o contêiner de sugestões
-                const suggestionsContainer = document.createElement('div');
-                suggestionsContainer.className = 'suggestions-container';
-                suggestionsContainer.style.display = 'none';
-                suggestionsContainer.style.position = 'absolute';
-                suggestionsContainer.style.zIndex = '1000';
-                suggestionsContainer.style.backgroundColor = '#fff';
-                suggestionsContainer.style.width = 'calc(100% - 2px)';
-                suggestionsContainer.style.maxHeight = '200px';
-                suggestionsContainer.style.overflowY = 'auto';
-                suggestionsContainer.style.border = '1px solid var(--input-border)';
-                suggestionsContainer.style.borderTop = 'none';
-                suggestionsContainer.style.borderRadius = '0 0 6px 6px';
-                suggestionsContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-                
-                // Coloca o contêiner após o input
-                naturalidadeInput.parentNode.style.position = 'relative';
-                naturalidadeInput.parentNode.appendChild(suggestionsContainer);
-                
-                // Cache para evitar consultas repetidas
+            function setupNaturalidadeSuggestions(inputId) {
+                const naturalidadeInput = document.getElementById(inputId);
+                if (!naturalidadeInput) {
+                    console.warn(`[Naturalidade Setup] Input with ID ${inputId} not found.`);
+                    return; // Exit if the input doesn't exist (e.g., spouse section hidden)
+                }
+
+                // Verifica se o contêiner de sugestões já existe para este input
+                let suggestionsContainer = naturalidadeInput.parentNode.querySelector(`.suggestions-container[data-for="${inputId}"]`);
+
+                if (!suggestionsContainer) {
+                     // Cria o contêiner de sugestões apenas se não existir
+                     suggestionsContainer = document.createElement('div');
+                     suggestionsContainer.className = 'suggestions-container';
+                     suggestionsContainer.setAttribute('data-for', inputId); // Associate with the input
+                     suggestionsContainer.style.display = 'none';
+                     suggestionsContainer.style.position = 'absolute';
+                     suggestionsContainer.style.zIndex = '1000';
+                     suggestionsContainer.style.backgroundColor = '#fff';
+                     suggestionsContainer.style.width = 'calc(100% - 2px)'; // Adjust based on parent structure if needed
+                     suggestionsContainer.style.maxHeight = '200px';
+                     suggestionsContainer.style.overflowY = 'auto';
+                     suggestionsContainer.style.border = '1px solid var(--input-border)';
+                     suggestionsContainer.style.borderTop = 'none';
+                     suggestionsContainer.style.borderRadius = '0 0 6px 6px';
+                     suggestionsContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                     
+                     // Coloca o contêiner após o input
+                     naturalidadeInput.parentNode.style.position = 'relative'; // Ensure parent is relative
+                     naturalidadeInput.parentNode.appendChild(suggestionsContainer);
+                 }
+
+                // Cache para evitar consultas repetidas (pode ser global ou por input)
                 const citiesCache = {};
                 let debounceTimer;
-                
+
+                // --- Remover listeners antigos antes de adicionar novos ---
+                 // Clone o nó para remover listeners - mais robusto que tentar remover individualmente
+                 const oldInput = naturalidadeInput;
+                 const newInput = oldInput.cloneNode(true);
+                 oldInput.parentNode.replaceChild(newInput, oldInput);
+                 const currentNaturalidadeInput = document.getElementById(inputId); // Re-selecionar o novo nó
+                 const currentSuggestionsContainer = document.querySelector(`.suggestions-container[data-for="${inputId}"]`); // Re-selecionar container
+
                 // Adiciona evento de input ao campo de naturalidade
-                naturalidadeInput.addEventListener('input', function() {
+                currentNaturalidadeInput.addEventListener('input', function() {
                     const query = this.value.trim();
-                    
+
                     // Limpa o timer anterior
                     clearTimeout(debounceTimer);
-                    
+
                     // Oculta sugestões se o input estiver vazio
                     if (query.length < 3) {
-                        suggestionsContainer.style.display = 'none';
+                        currentSuggestionsContainer.style.display = 'none';
                         return;
                     }
-                    
+
                     // Define um novo timer para evitar consultas excessivas
-                    debounceTimer = setTimeout(function() {
+                    debounceTimer = setTimeout(() => {
                         if (citiesCache[query]) {
                             // Usa o cache se a consulta já foi feita antes
-                            displaySuggestions(citiesCache[query]);
+                            displaySuggestions(citiesCache[query], currentNaturalidadeInput, currentSuggestionsContainer);
                         } else {
                             // Adiciona classe de carregamento
-                            naturalidadeInput.classList.add('loading');
-                            
+                            currentNaturalidadeInput.classList.add('loading');
+
                             // Consome a API do IBGE para buscar municípios
                             fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome`)
                                 .then(response => response.json())
@@ -2990,34 +3068,34 @@
                                         const searchStr = `${cityName} - ${stateAbbr}`.toLowerCase();
                                         return searchStr.includes(query.toLowerCase());
                                     }).slice(0, 10); // Limita a 10 resultados
-                                    
+
                                     // Armazena no cache
                                     citiesCache[query] = filteredCities;
-                                    
+
                                     // Exibe as sugestões
-                                    displaySuggestions(filteredCities);
-                                    
+                                    displaySuggestions(filteredCities, currentNaturalidadeInput, currentSuggestionsContainer);
+
                                     // Remove classe de carregamento
-                                    naturalidadeInput.classList.remove('loading');
+                                    currentNaturalidadeInput.classList.remove('loading');
                                 })
                                 .catch(error => {
                                     console.error('Erro ao buscar cidades:', error);
-                                    naturalidadeInput.classList.remove('loading');
+                                    currentNaturalidadeInput.classList.remove('loading');
                                 });
                         }
                     }, 300); // Tempo de espera para evitar consultas em cada tecla
                 });
-                
-                // Função para exibir as sugestões
-                function displaySuggestions(cities) {
+
+                // Função para exibir as sugestões (agora aceita o input e o container)
+                function displaySuggestions(cities, targetInput, targetContainer) {
                     // Limpa o contêiner de sugestões
-                    suggestionsContainer.innerHTML = '';
-                    
+                    targetContainer.innerHTML = '';
+
                     if (cities.length === 0) {
-                        suggestionsContainer.style.display = 'none';
+                        targetContainer.style.display = 'none';
                         return;
                     }
-                    
+
                     // Cria um item para cada cidade
                     cities.forEach(city => {
                         const item = document.createElement('div');
@@ -3026,43 +3104,49 @@
                         item.style.padding = '10px 12px';
                         item.style.cursor = 'pointer';
                         item.style.borderBottom = '1px solid var(--divider-color)';
-                        
+
                         // Adiciona efeito hover
                         item.addEventListener('mouseover', function() {
                             this.style.backgroundColor = 'var(--background-color)';
                         });
-                        
+
                         item.addEventListener('mouseout', function() {
                             this.style.backgroundColor = 'transparent';
                         });
-                        
+
                         // Adiciona evento de clique para selecionar a cidade
                         item.addEventListener('click', function() {
-                            naturalidadeInput.value = this.textContent;
-                            suggestionsContainer.style.display = 'none';
+                            targetInput.value = this.textContent;
+                            targetContainer.style.display = 'none';
+                            // Opcional: Disparar um evento 'change' ou 'input' no input original
+                            targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+                            targetInput.dispatchEvent(new Event('change', { bubbles: true }));
                         });
-                        
-                        suggestionsContainer.appendChild(item);
+
+                        targetContainer.appendChild(item);
                     });
-                    
+
                     // Exibe o contêiner de sugestões
-                    suggestionsContainer.style.display = 'block';
+                    targetContainer.style.display = 'block';
                 }
-                
+
                 // Fecha as sugestões ao clicar fora do campo
-                document.addEventListener('click', function(e) {
-                    if (e.target !== naturalidadeInput && e.target !== suggestionsContainer) {
-                        suggestionsContainer.style.display = 'none';
+                 // Usar um listener global mais seguro
+                 document.addEventListener('click', function(e) {
+                    if (currentNaturalidadeInput && currentSuggestionsContainer) {
+                         if (!currentNaturalidadeInput.contains(e.target) && !currentSuggestionsContainer.contains(e.target)) {
+                             currentSuggestionsContainer.style.display = 'none';
+                         }
                     }
-                });
-                
+                 });
+
                 // Navegação por teclado nas sugestões
-                naturalidadeInput.addEventListener('keydown', function(e) {
-                    const items = suggestionsContainer.querySelectorAll('.suggestion-item');
-                    if (!items.length) return;
-                    
-                    const activeItem = suggestionsContainer.querySelector('.suggestion-item.active');
-                    
+                currentNaturalidadeInput.addEventListener('keydown', function(e) {
+                    const items = currentSuggestionsContainer.querySelectorAll('.suggestion-item');
+                    if (!items.length || currentSuggestionsContainer.style.display === 'none') return;
+
+                    const activeItem = currentSuggestionsContainer.querySelector('.suggestion-item.active');
+
                     // Tecla para baixo
                     if (e.key === 'ArrowDown') {
                         e.preventDefault();
@@ -3071,52 +3155,55 @@
                             items[0].style.backgroundColor = 'var(--background-color)';
                         } else {
                             const index = Array.from(items).indexOf(activeItem);
-                            if (index < items.length - 1) {
-                                activeItem.classList.remove('active');
-                                activeItem.style.backgroundColor = 'transparent';
-                                items[index + 1].classList.add('active');
-                                items[index + 1].style.backgroundColor = 'var(--background-color)';
-                                
-                                // Scroll se necessário
-                                if (items[index + 1].offsetTop >= suggestionsContainer.scrollTop + suggestionsContainer.offsetHeight) {
-                                    suggestionsContainer.scrollTop = items[index + 1].offsetTop - suggestionsContainer.offsetHeight + items[index + 1].offsetHeight;
-                                }
-                            }
+                            activeItem.classList.remove('active');
+                            activeItem.style.backgroundColor = 'transparent';
+                            const nextIndex = (index + 1) % items.length; // Wrap around
+                            items[nextIndex].classList.add('active');
+                            items[nextIndex].style.backgroundColor = 'var(--background-color)';
+                            items[nextIndex].scrollIntoView({ block: 'nearest' });
                         }
                     }
-                    
+
                     // Tecla para cima
                     else if (e.key === 'ArrowUp') {
                         e.preventDefault();
-                        if (activeItem) {
+                        if (!activeItem) {
+                            items[items.length - 1].classList.add('active');
+                            items[items.length - 1].style.backgroundColor = 'var(--background-color)';
+                            items[items.length - 1].scrollIntoView({ block: 'nearest' });
+                        } else {
                             const index = Array.from(items).indexOf(activeItem);
-                            if (index > 0) {
-                                activeItem.classList.remove('active');
-                                activeItem.style.backgroundColor = 'transparent';
-                                items[index - 1].classList.add('active');
-                                items[index - 1].style.backgroundColor = 'var(--background-color)';
-                                
-                                // Scroll se necessário
-                                if (items[index - 1].offsetTop < suggestionsContainer.scrollTop) {
-                                    suggestionsContainer.scrollTop = items[index - 1].offsetTop;
-                                }
-                            }
+                            activeItem.classList.remove('active');
+                            activeItem.style.backgroundColor = 'transparent';
+                            const prevIndex = (index - 1 + items.length) % items.length; // Wrap around
+                            items[prevIndex].classList.add('active');
+                            items[prevIndex].style.backgroundColor = 'var(--background-color)';
+                            items[prevIndex].scrollIntoView({ block: 'nearest' });
                         }
                     }
-                    
+
                     // Tecla Enter
                     else if (e.key === 'Enter' && activeItem) {
                         e.preventDefault();
-                        naturalidadeInput.value = activeItem.textContent;
-                        suggestionsContainer.style.display = 'none';
+                        currentNaturalidadeInput.value = activeItem.textContent;
+                        currentSuggestionsContainer.style.display = 'none';
+                         // Disparar evento de input/change
+                        currentNaturalidadeInput.dispatchEvent(new Event('input', { bubbles: true }));
+                        currentNaturalidadeInput.dispatchEvent(new Event('change', { bubbles: true }));
                     }
-                    
+
                     // Tecla Escape
                     else if (e.key === 'Escape') {
-                        suggestionsContainer.style.display = 'none';
+                        currentSuggestionsContainer.style.display = 'none';
                     }
                 });
             }
+
+            // Configura sugestões para Naturalidade do usuário
+            setupNaturalidadeSuggestions('input_97');
+            
+            // Configura sugestões para Naturalidade do Cônjuge (será ativado quando a seção for visível)
+            // A chamada será feita dentro de atualizarCamposConjuge para garantir que o campo exista
             
             // Melhoria condicional para o campo orgaoEmissor baseado no tipoDocumento
             const tipoDocumentoSelect = document.getElementById('input_105');
@@ -3489,6 +3576,9 @@
                         if (mostrarCamposConjuge && typeof atualizarCampoOrgaoEmissorConjuge === 'function') {
                             setTimeout(atualizarCampoOrgaoEmissorConjuge, 20);
                         }
+
+                        // Configurar sugestões de Naturalidade para o cônjuge APENAS QUANDO VISÍVEL
+                         setupNaturalidadeSuggestions('input_230');
                     }
                 }
                 
@@ -3506,288 +3596,173 @@
             function aplicarValidacoesConjuge() {
                 const estadoCivil = document.getElementById('input_103').value;
                 const mostrarCamposConjuge = (estadoCivil === 'Casado(a)' || estadoCivil === 'União Estável');
-                
+
+                // IDs dos campos obrigatórios do cônjuge (exceto Nome do Pai)
+                const conjugeRequiredFieldIds = [
+                    'input_225', 'input_226', 'input_227', 'input_228', 'input_229',
+                    'input_230', 'input_231', 'input_232', 'input_233', 'input_234',
+                    'input_235', 'input_236'
+                ];
+
                 if (mostrarCamposConjuge) {
-                    // Validação do CPF do cônjuge
-                    const cpfConjugeInput = document.getElementById('input_228');
-                    if (cpfConjugeInput) {
-                        // Formatar CPF enquanto digita
-                        cpfConjugeInput.addEventListener('input', function() {
-                            let value = this.value.replace(/\D/g, '');
-                            if (value.length > 11) {
-                                value = value.substring(0, 11);
+                    console.log("[VALIDATION SETUP] Aplicando validações aos campos do cônjuge.");
+
+                    // Helper function to safely add listeners
+                    function addValidationListener(elementId, eventType, handler) {
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            const listenerAttr = `data-${eventType}-listener-set-${elementId}`;
+                            if (!element.getAttribute(listenerAttr)) {
+                                element.addEventListener(eventType, handler);
+                                element.setAttribute(listenerAttr, 'true');
+                                console.log(`[VALIDATION SETUP] Listener ${eventType} adicionado para ${elementId}`);
                             }
-                            
-                            if (value.length > 9) {
-                                this.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
-                            } else if (value.length > 6) {
-                                this.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
-                            } else if (value.length > 3) {
-                                this.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
-                            } else {
-                                this.value = value;
-                            }
-                            
-                            // Validação em tempo real
-                            validateCPF(this);
-                        });
-                        
-                        // Validar ao perder o foco
-                        cpfConjugeInput.addEventListener('blur', function() {
-                            validateCPF(this);
-                        });
-                        
-                        // Validação inicial se já tiver valor
-                        if (cpfConjugeInput.value) {
-                            validateCPF(cpfConjugeInput);
-                        }
-                    }
-                    
-                    // Validação da data de nascimento do cônjuge
-                    const dataNascimentoConjugeInput = document.getElementById('input_231');
-                    if (dataNascimentoConjugeInput) {
-                        // O listener de blur já foi adicionado no loop dateFields.forEach acima.
-                        // Mantemos a lógica para garantir que a validação ocorra se o campo for tornado visível/obrigatório.
-                        if (!dataNascimentoConjugeInput.hasAttribute('data-blur-listener-set')) {
-                            dataNascimentoConjugeInput.setAttribute('data-blur-listener-set', 'true');
-                            // A validação no blur já está sendo feita pelo loop dateFields
+                        } else {
+                             console.warn(`[VALIDATION SETUP] Elemento ${elementId} não encontrado para adicionar listener.`);
                         }
                     }
 
-                    // Adicionar validação para data de expedição do cônjuge no blur
-                     const dataExpedicaoConjugeInput = document.getElementById('input_234');
-                     if (dataExpedicaoConjugeInput) {
-                         // O listener de blur já foi adicionado no loop dateFields.forEach acima.
-                          if (!dataExpedicaoConjugeInput.hasAttribute('data-blur-listener-set')) {
-                             dataExpedicaoConjugeInput.setAttribute('data-blur-listener-set', 'true');
-                             // A validação no blur já está sendo feita pelo loop dateFields
-                          }
-                     }
+                    // Itera por todos os campos obrigatórios do cônjuge
+                    conjugeRequiredFieldIds.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (!field) return; // Skip if field not found
 
-                    // Aplicar validação de caracteres especiais aos campos de texto do cônjuge
-                    const camposConjugeIds = [
-                        'input_225', 'input_226', 'input_227', 'input_229', 'input_230', 
-                        'input_232', 'input_233', 'input_235', 'input_236', 'input_237'
-                    ];
-                    
-                    camposConjugeIds.forEach(id => {
-                        const campo = document.getElementById(id);
-                        if (campo && (campo.type === 'text' || campo.tagName === 'TEXTAREA') && campo.id !== 'input_228') {
-                            // Não aplicar a validação de caracteres especiais ao CPF que tem sua própria validação
-                            campo.addEventListener('input', function() {
+                        const isTextField = (field.tagName === 'INPUT' && field.type === 'text') || field.tagName === 'TEXTAREA';
+                        const isSelectField = field.tagName === 'SELECT';
+
+                        // --- Listener de Interação Inicial (Input/Change) para limpar "Obrigatório" ---
+                        const initialEventType = isSelectField ? 'change' : 'input';
+                        addValidationListener(fieldId, initialEventType, function() {
+                            // 1. Remover erro "Obrigatório" imediatamente se houver valor
+                            const requiredErrorMsgId = this.id + '-required-error';
+                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                            if (this.value && this.value.trim()) { // Verifica se há algum valor (para input) ou se não é a opção vazia (para select)
+                                if (requiredErrorMsg) {
+                                    requiredErrorMsg.remove();
+                                    console.log(`[Listener ${initialEventType}] Removed required message for ${this.id}`);
+                                    // Tenta limpar estilos básicos se o campo não tiver *outros* erros visíveis
+                                    if (!hasOtherErrors(this)) {
+                                         this.style.borderColor = '';
+                                         this.style.backgroundColor = '';
+                                         this.classList.remove('error');
+                                    }
+                                } else {
+                                     // Se não havia msg de erro obrigatório, apenas reseta estilo se não houver outros erros
+                                     if (!hasOtherErrors(this)) {
+                                         this.style.borderColor = '';
+                                         this.style.backgroundColor = '';
+                                         this.classList.remove('error');
+                                     }
+                                 }
+                            } // Fim da limpeza do erro obrigatório
+
+                            // 2. Formatação/Validação ativa durante a digitação/mudança
+
+                            // 3. Chamar validação específica se necessário (exceto selects que validam no change)
+                            if (fieldId === 'input_228') { // CPF
+                                // Formatação ativa do CPF
+                                let value = this.value.replace(/\D/g, '');
+                                if (value.length > 11) value = value.substring(0, 11);
+                                if (value.length > 9) this.value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                                else if (value.length > 6) this.value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                                else if (value.length > 3) this.value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                                else this.value = value;
+                                validateCPF(this);
+                            } else if (isTextField && fieldId !== 'input_231' && fieldId !== 'input_234' && fieldId !== 'input_233') {
+                                // Filtragem ativa para Nomes
+                                if (['input_225', 'input_236'].includes(fieldId)) {
+                                      let sanitizedValue = this.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ\s'-]/g, '');
+                                      if (this.value !== sanitizedValue) this.value = sanitizedValue;
+                                 }
                                 validateSpecialChars(this);
-                            });
-                            
-                            campo.addEventListener('blur', function() {
-                                validateSpecialChars(this);
-                            });
-                            
-                            // Validação inicial
-                            if (campo.value) {
-                                validateSpecialChars(campo);
-                            }
-                        }
+                            } else if (fieldId === 'input_233') {
+                                // Formatação ativa para Nº Documento (baseado no tipo)
+                                // A lógica está em applyDocumentNumberRules, mas chamamos a validação de char aqui
+                                 validateSpecialChars(this); // Validar chars permitidos
+                             }
+                             // Datas (input_231, input_234) validam no blur
+                             // Selects (input_226, input_227, input_232, input_235) validam no change/blur
+                        });
+
+                        // --- Listener de Blur para Validação Final do Formato/Regra ---
+                        if (fieldId !== 'input_226' && fieldId !== 'input_227' && fieldId !== 'input_232') { // Selects não precisam de blur extra geralmente
+                             addValidationListener(fieldId, 'blur', function() {
+                                 // Remover erro "Obrigatório" se ainda existir e tiver valor
+                                 const requiredErrorMsgId = this.id + '-required-error';
+                                 const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                                 if (requiredErrorMsg && this.value.trim()) { requiredErrorMsg.remove(); }
+
+                                 // Chamar validação específica
+                                 if (fieldId === 'input_228') validateCPF(this);
+                                 else if (fieldId === 'input_231') validateAge(this);
+                                 else if (fieldId === 'input_234') validateDate(this);
+                                 else if (isTextField) validateSpecialChars(this);
+                                  // Para Órgão Emissor (input_235), a validação de char já cobre se for texto
+                             });
+                         }
+
+                        // --- Lógica Específica para Selects (change) ---
+                         if (isSelectField) {
+                             addValidationListener(fieldId, 'change', function() {
+                                 // Remover erro "Obrigatório" se valor selecionado
+                                 const requiredErrorMsgId = this.id + '-required-error';
+                                 const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                                 if (this.value && requiredErrorMsg) {
+                                     requiredErrorMsg.remove();
+                                     // Tenta limpar estilos básicos
+                                     if (!hasOtherErrors(this)) {
+                                         this.style.borderColor = '';
+                                         this.style.backgroundColor = '';
+                                     }
+                                 }
+
+                                 // Lógica adicional para Tipo de Documento (input_232)
+                                 if (fieldId === 'input_232') {
+                                     if (typeof atualizarCampoOrgaoEmissorConjuge === 'function') {
+                                         atualizarCampoOrgaoEmissorConjuge();
+                                     }
+                                     applyDocumentNumberRules('input_232', 'input_233');
+                                      // Revalidar Órgão Emissor (input_235) após a troca
+                                      const orgaoEmissorConj = document.getElementById('input_235');
+                                      if(orgaoEmissorConj && orgaoEmissorConj.required && !orgaoEmissorConj.value) {
+                                          // Se o novo campo for obrigatório e estiver vazio, pode mostrar erro
+                                          // Mas idealmente a lógica de atualização já lida com isso.
+                                          // Poderia chamar validateTabFields aqui, mas pode ser complexo.
+                                          // Por ora, a limpeza do erro obrigatório no change é suficiente.
+                                      }
+                                 }
+                                  // Para Órgão Emissor (input_235) se for select, validação é implícita pela seleção.
+                             });
+                         }
+
+                        // --- Validação Inicial (se campo já tem valor quando seção aparece) ---
+                        if (field.value.trim()) {
+                             console.log(`[VALIDATION SETUP] Validando valor inicial de ${fieldId}`);
+                             if (fieldId === 'input_228') validateCPF(field);
+                             else if (fieldId === 'input_231') validateAge(field);
+                             else if (fieldId === 'input_234') validateDate(field);
+                             else if (isTextField) validateSpecialChars(field);
+                             // Selects com valor inicial não precisam de validação extra aqui,
+                             // a não ser que o valor pré-selecionado seja inválido por alguma regra.
+                         }
                     });
-                    
-                    // Validação e sugestão para Naturalidade do cônjuge
-                    const naturalidadeConjugeInput = document.getElementById('input_230');
-                    if (naturalidadeConjugeInput) {
-                        // Criar container para sugestões do cônjuge se ainda não existir
-                        if (!document.querySelector('.conjuge-suggestions')) {
-                            const conjugeSuggestionsContainer = document.createElement('div');
-                            conjugeSuggestionsContainer.className = 'suggestions-container conjuge-suggestions';
-                            conjugeSuggestionsContainer.style.display = 'none';
-                            conjugeSuggestionsContainer.style.position = 'absolute';
-                            conjugeSuggestionsContainer.style.zIndex = '1000';
-                            conjugeSuggestionsContainer.style.backgroundColor = '#fff';
-                            conjugeSuggestionsContainer.style.width = 'calc(100% - 2px)';
-                            conjugeSuggestionsContainer.style.maxHeight = '200px';
-                            conjugeSuggestionsContainer.style.overflowY = 'auto';
-                            conjugeSuggestionsContainer.style.border = '1px solid var(--input-border)';
-                            conjugeSuggestionsContainer.style.borderTop = 'none';
-                            conjugeSuggestionsContainer.style.borderRadius = '0 0 6px 6px';
-                            conjugeSuggestionsContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-                            
-                            // Adicionar container após o input
-                            naturalidadeConjugeInput.parentNode.style.position = 'relative';
-                            naturalidadeConjugeInput.parentNode.appendChild(conjugeSuggestionsContainer);
-                            
-                            // Usar o mesmo cache de cidades para evitar consultas repetidas
-                            let conjugeDebounceTimer;
-                            
-                            // Adicionar evento de input
-                            naturalidadeConjugeInput.addEventListener('input', function() {
-                                const query = this.value.trim();
-                                
-                                // Limpar o timer anterior
-                                clearTimeout(conjugeDebounceTimer);
-                                
-                                // Ocultar sugestões se o input estiver vazio
-                                if (query.length < 3) {
-                                    conjugeSuggestionsContainer.style.display = 'none';
-                                    return;
-                                }
-                                
-                                // Definir novo timer para evitar consultas excessivas
-                                conjugeDebounceTimer = setTimeout(function() {
-                                    if (window.citiesCache && window.citiesCache[query]) {
-                                        // Usar o cache se a consulta já foi feita antes
-                                        displayConjugeSuggestions(window.citiesCache[query]);
-                                    } else {
-                                        // Adicionar classe de carregamento
-                                        naturalidadeConjugeInput.classList.add('loading');
-                                        
-                                        // Consumir a API do IBGE
-                                        fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome`)
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                // Filtrar municípios que contenham o texto digitado
-                                                const filteredCities = data.filter(city => {
-                                                    const cityName = city.nome.toLowerCase();
-                                                    const stateAbbr = city.microrregiao.mesorregiao.UF.sigla;
-                                                    const searchStr = `${cityName} - ${stateAbbr}`.toLowerCase();
-                                                    return searchStr.includes(query.toLowerCase());
-                                                }).slice(0, 10); // Limitar a 10 resultados
-                                                
-                                                // Armazenar no cache global
-                                                if (!window.citiesCache) window.citiesCache = {};
-                                                window.citiesCache[query] = filteredCities;
-                                                
-                                                // Exibir sugestões
-                                                displayConjugeSuggestions(filteredCities);
-                                                
-                                                // Remover classe de carregamento
-                                                naturalidadeConjugeInput.classList.remove('loading');
-                                            })
-                                            .catch(error => {
-                                                console.error('Erro ao buscar cidades para cônjuge:', error);
-                                                naturalidadeConjugeInput.classList.remove('loading');
-                                            });
-                                    }
-                                }, 300);
-                            });
-                            
-                            // Função para exibir sugestões
-                            function displayConjugeSuggestions(cities) {
-                                // Limpar o container de sugestões
-                                conjugeSuggestionsContainer.innerHTML = '';
-                                
-                                if (cities.length === 0) {
-                                    conjugeSuggestionsContainer.style.display = 'none';
-                                    return;
-                                }
-                                
-                                // Criar um item para cada cidade
-                                cities.forEach(city => {
-                                    const item = document.createElement('div');
-                                    item.className = 'suggestion-item';
-                                    item.textContent = `${city.nome} - ${city.microrregiao.mesorregiao.UF.sigla}`;
-                                    item.style.padding = '10px 12px';
-                                    item.style.cursor = 'pointer';
-                                    item.style.borderBottom = '1px solid var(--divider-color)';
-                                    
-                                    // Adicionar efeito hover
-                                    item.addEventListener('mouseover', function() {
-                                        this.style.backgroundColor = 'var(--background-color)';
-                                    });
-                                    
-                                    item.addEventListener('mouseout', function() {
-                                        this.style.backgroundColor = 'transparent';
-                                    });
-                                    
-                                    // Adicionar evento de clique para selecionar cidade
-                                    item.addEventListener('click', function() {
-                                        naturalidadeConjugeInput.value = this.textContent;
-                                        conjugeSuggestionsContainer.style.display = 'none';
-                                    });
-                                    
-                                    conjugeSuggestionsContainer.appendChild(item);
-                                });
-                                
-                                // Exibir container de sugestões
-                                conjugeSuggestionsContainer.style.display = 'block';
-                            }
-                            
-                            // Fechar sugestões ao clicar fora do campo
-                            document.addEventListener('click', function(e) {
-                                if (e.target !== naturalidadeConjugeInput && e.target !== conjugeSuggestionsContainer) {
-                                    conjugeSuggestionsContainer.style.display = 'none';
-                                }
-                            });
-                            
-                            // Navegação por teclado nas sugestões
-                            naturalidadeConjugeInput.addEventListener('keydown', function(e) {
-                                const items = conjugeSuggestionsContainer.querySelectorAll('.suggestion-item');
-                                if (!items.length) return;
-                                
-                                const activeItem = conjugeSuggestionsContainer.querySelector('.suggestion-item.active');
-                                
-                                // Tecla para baixo
-                                if (e.key === 'ArrowDown') {
-                                    e.preventDefault();
-                                    if (!activeItem) {
-                                        items[0].classList.add('active');
-                                        items[0].style.backgroundColor = 'var(--background-color)';
-                                    } else {
-                                        const index = Array.from(items).indexOf(activeItem);
-                                        if (index < items.length - 1) {
-                                            activeItem.classList.remove('active');
-                                            activeItem.style.backgroundColor = 'transparent';
-                                            items[index + 1].classList.add('active');
-                                            items[index + 1].style.backgroundColor = 'var(--background-color)';
-                                            
-                                            // Scroll se necessário
-                                            if (items[index + 1].offsetTop >= conjugeSuggestionsContainer.scrollTop + conjugeSuggestionsContainer.offsetHeight) {
-                                                conjugeSuggestionsContainer.scrollTop = items[index + 1].offsetTop - conjugeSuggestionsContainer.offsetHeight + items[index + 1].offsetHeight;
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                // Tecla para cima
-                                else if (e.key === 'ArrowUp') {
-                                    e.preventDefault();
-                                    if (activeItem) {
-                                        const index = Array.from(items).indexOf(activeItem);
-                                        if (index > 0) {
-                                            activeItem.classList.remove('active');
-                                            activeItem.style.backgroundColor = 'transparent';
-                                            items[index - 1].classList.add('active');
-                                            items[index - 1].style.backgroundColor = 'var(--background-color)';
-                                            
-                                            // Scroll se necessário
-                                            if (items[index - 1].offsetTop < conjugeSuggestionsContainer.scrollTop) {
-                                                conjugeSuggestionsContainer.scrollTop = items[index - 1].offsetTop;
-                                            }
-                                        }
-                                    }
-                                }
-                                
-                                // Tecla Enter
-                                else if (e.key === 'Enter' && activeItem) {
-                                    e.preventDefault();
-                                    naturalidadeConjugeInput.value = activeItem.textContent;
-                                    conjugeSuggestionsContainer.style.display = 'none';
-                                }
-                                
-                                // Tecla Escape
-                                else if (e.key === 'Escape') {
-                                    conjugeSuggestionsContainer.style.display = 'none';
-                                }
-                            });
-                        }
-                    }
+
+                    // Aplicar regras ao número do documento (input_233) inicialmente
+                     applyDocumentNumberRules('input_232', 'input_233');
+                      // Atualizar órgão emissor (input_235) inicialmente
+                      if (typeof atualizarCampoOrgaoEmissorConjuge === 'function') {
+                           atualizarCampoOrgaoEmissorConjuge();
+                      }
+
+                } else {
+                    console.log("[VALIDATION SETUP] Campos do cônjuge ocultos, validações não aplicadas.");
+                    // Opcional: Limpar atributos data-* ou remover listeners se a seção for ocultada novamente.
+                    // Por simplicidade, a abordagem atual com data-* evita duplicação na re-exibição.
                 }
             }
-            
+
             // Executar a validação quando o formulário carrega
             setTimeout(aplicarValidacoesConjuge, 200);
-            
-            // Executar a validação quando o estado civil muda
-            document.getElementById('input_103').addEventListener('change', function() {
-                // Pequeno delay para garantir que a seção do cônjuge já foi atualizada
-                setTimeout(aplicarValidacoesConjuge, 50);
-            });
 
             // Função para aplicar regras ao campo de número de documento baseado no tipo
             function applyDocumentNumberRules(typeSelectId, numberInputId) {
@@ -3821,6 +3796,18 @@
                         currentNumberInput.addEventListener('input', function() {
                             // Remove caracteres não permitidos para RG (incluindo . e -)
                             this.value = this.value.replace(/[^0-9Xx]/g, '');
+                            // --- ADDED: Remove required error on input ---
+                            const requiredErrorMsgId = this.id + '-required-error';
+                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                            if (this.value.trim() && requiredErrorMsg) {
+                                requiredErrorMsg.remove();
+                                // Optionally reset basic styles if no other errors
+                                if (!hasOtherErrors(this)) {
+                                    this.style.borderColor = '';
+                                    this.style.backgroundColor = '';
+                                }
+                            }
+                            // --- END ADDED ---
                         });
                         break;
                     case 'CNH':
@@ -3829,7 +3816,20 @@
                         currentNumberInput.maxLength = 11;
                         currentNumberInput.addEventListener('input', function() {
                             // Permite apenas dígitos e limita a 11
+                            // Use the literal regex /\\D/g to remove non-digits
                             this.value = this.value.replace(/\\D/g, '').slice(0, 11);
+                            // --- ADDED: Remove required error on input ---
+                            const requiredErrorMsgId = this.id + '-required-error';
+                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                            if (this.value.trim() && requiredErrorMsg) {
+                                requiredErrorMsg.remove();
+                                // Optionally reset basic styles if no other errors
+                                if (!hasOtherErrors(this)) {
+                                    this.style.borderColor = '';
+                                    this.style.backgroundColor = '';
+                                }
+                            }
+                            // --- END ADDED ---
                         });
                         // Adiciona validação no blur
                         currentNumberInput.addEventListener('blur', function() {
@@ -3866,10 +3866,37 @@
                             let value = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase(); 
                             if (value.length > 8) value = value.slice(0, 8);
                             this.value = value;
+                            // --- ADDED: Remove required error on input ---
+                            const requiredErrorMsgId = this.id + '-required-error';
+                            const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                            if (this.value.trim() && requiredErrorMsg) {
+                                requiredErrorMsg.remove();
+                                // Optionally reset basic styles if no other errors
+                                if (!hasOtherErrors(this)) {
+                                    this.style.borderColor = '';
+                                    this.style.backgroundColor = '';
+                                }
+                            }
+                            // --- END ADDED ---
                         });
                         break;
                     default:
                         // Sem regras específicas para outros tipos ou quando nada está selecionado
+                        // Add listener to remove required error for default case too
+                        currentNumberInput.addEventListener('input', function() {
+                             // --- ADDED: Remove required error on input for default ---
+                             const requiredErrorMsgId = this.id + '-required-error';
+                             const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                             if (this.value.trim() && requiredErrorMsg) {
+                                 requiredErrorMsg.remove();
+                                 // Optionally reset basic styles if no other errors
+                                 if (!hasOtherErrors(this)) {
+                                     this.style.borderColor = '';
+                                     this.style.backgroundColor = '';
+                                 }
+                             }
+                             // --- END ADDED ---
+                         });
                         break;
                 }
             }
@@ -3910,6 +3937,18 @@
                 // Tentar obter o campo de órgão emissor do cônjuge
                 const orgaoEmissorConjugeField = document.getElementById('input_235');
 
+                // Limpar mensagens de erro existentes ANTES de remover o campo
+                if (orgaoEmissorConjugeField) {
+                    const parentGroup = orgaoEmissorConjugeField.closest('.form-group');
+                    if (parentGroup) {
+                        const errorMessages = parentGroup.querySelectorAll('.error-message');
+                        errorMessages.forEach(msg => msg.remove());
+                    }
+                    // Remover estilos de erro do campo antigo
+                    orgaoEmissorConjugeField.style.borderColor = '';
+                    orgaoEmissorConjugeField.style.backgroundColor = '';
+                }
+
                 // Se o select ou o campo não existirem (por exemplo, seção oculta), não fazer nada
                 if (!tipoDocumentoConjugeSelect || !orgaoEmissorConjugeField) {
                      console.warn('Campos do cônjuge não encontrados para atualizar órgão emissor.');
@@ -3923,7 +3962,7 @@
                 // Guardar o elemento pai para readicionar o campo
                 const parent = orgaoEmissorConjugeField.parentNode;
 
-                // Remove o campo atual
+                // Remove o campo atual APÓS limpar erros
                 orgaoEmissorConjugeField.remove();
 
                 let newField;
