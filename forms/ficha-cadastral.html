@@ -1557,46 +1557,136 @@
             // Função para validar campos de uma aba específica
             function validateTabFields(tabId) {
                 const currentTab = document.getElementById(tabId);
-                const requiredFields = currentTab.querySelectorAll('input[required], select[required], textarea[required]');
+                // Select required inputs, selects, textareas directly
+                const requiredFields = currentTab.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), select[required], textarea[required]');
+                // Handle required radio groups
+                const requiredRadioGroups = {};
+                currentTab.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+                    const groupName = radio.name;
+                    if (!requiredRadioGroups[groupName]) {
+                        // Find the label or container for the group to place the error message
+                        let container = radio.closest('.form-group') || radio.closest('.radio-group') || radio.parentNode;
+                        let labelElement = container?.querySelector('.form-label');
+                        requiredRadioGroups[groupName] = { elements: [], required: true, errorContainer: container, labelElement: labelElement };
+                    }
+                    requiredRadioGroups[groupName].elements.push(radio);
+                });
+                 // Handle required checkbox groups (at least one needs to be checked)
+                 const requiredCheckboxGroups = {};
+                 currentTab.querySelectorAll('input[type="checkbox"][required]').forEach(checkbox => {
+                     const groupName = checkbox.name;
+                     if (!requiredCheckboxGroups[groupName]) {
+                         let container = checkbox.closest('.form-group') || checkbox.closest('.checkbox-group') || checkbox.parentNode;
+                         let labelElement = container?.querySelector('.form-label');
+                         requiredCheckboxGroups[groupName] = { elements: [], required: true, errorContainer: container, labelElement: labelElement };
+                     }
+                     requiredCheckboxGroups[groupName].elements.push(checkbox);
+                 });
                 
                 let isValid = true;
                 let firstInvalidField = null;
                 
+                // Validate individual fields (input, select, textarea)
                 requiredFields.forEach(field => {
+                    const errorMsgId = field.id + '-required-error'; // Unique ID for required message
+                    let errorMsg = document.getElementById(errorMsgId);
+
                     if (!field.value.trim()) {
                         isValid = false;
                         field.style.borderColor = 'var(--error-color)';
                         field.style.backgroundColor = 'var(--error-bg)';
                         
-                        // Armazena o primeiro campo inválido
-                        if (!firstInvalidField) {
-                            firstInvalidField = field;
-                        }
+                        if (!firstInvalidField) firstInvalidField = field;
                         
-                        // Adiciona mensagem de erro se não existir
-                        let errorMsg = field.nextElementSibling;
-                        if (!errorMsg || !errorMsg.classList.contains('error-message')) {
+                        if (!errorMsg) {
                             errorMsg = document.createElement('div');
+                            errorMsg.id = errorMsgId; // Assign the ID
                             errorMsg.className = 'error-message';
                             errorMsg.textContent = 'Este campo é obrigatório';
+                            // Insert after field or its container if needed (e.g., phone)
+                            if (field.id === 'input_118') {
+                                field.closest('.phone-input-container').parentNode.insertBefore(errorMsg, field.closest('.phone-input-container').nextSibling);
+                            } else {
                             field.parentNode.insertBefore(errorMsg, field.nextSibling);
+                            }
                         }
                     } else {
-                        // Remove estilo de erro
-                        field.style.borderColor = '';
-                        field.style.backgroundColor = '';
-                        
-                        // Remove mensagem de erro se existir
-                        const errorMsg = field.nextElementSibling;
-                        if (errorMsg && errorMsg.classList.contains('error-message')) {
-                            errorMsg.remove();
-                        }
+                        // Remove specific required error message if it exists
+                         if (errorMsg) errorMsg.remove();
+                         // We don't reset style here; input/change listeners handle that
+                         // to avoid conflicts with other validation styles
                     }
                 });
-                
-                // Se não for válido, mostra uma mensagem para o usuário
+
+                // Validate required radio groups
+                Object.keys(requiredRadioGroups).forEach(groupName => {
+                    const group = requiredRadioGroups[groupName];
+                    const isChecked = group.elements.some(radio => radio.checked);
+                     const errorMsgId = groupName + '-required-error'; // ID for group error
+                     const errorContainer = group.errorContainer;
+                     let errorMsg = document.getElementById(errorMsgId);
+
+                    if (!isChecked) {
+                        isValid = false;
+                        // Highlight the group container
+                         if (errorContainer) errorContainer.style.outline = '1px solid var(--error-color)';
+
+                        if (!firstInvalidField) firstInvalidField = group.elements[0]; // Focus first element
+
+                        if (!errorMsg && errorContainer) {
+                            errorMsg = document.createElement('div');
+                            errorMsg.id = errorMsgId;
+                            errorMsg.className = 'error-message';
+                            errorMsg.textContent = 'Selecione uma opção';
+                            // Append error message after the group or label
+                            if (group.labelElement) {
+                                group.labelElement.parentNode.insertBefore(errorMsg, group.labelElement.nextSibling.nextSibling); // Adjust insertion point as needed
+                            } else {
+                                errorContainer.appendChild(errorMsg);
+                            }
+                        }
+                    } else {
+                        // Remove error
+                         if (errorMsg) errorMsg.remove();
+                         if (errorContainer) errorContainer.style.outline = ''; // Remove highlight
+                    }
+                });
+
+                 // Validate required checkbox groups (at least one checked)
+                 Object.keys(requiredCheckboxGroups).forEach(groupName => {
+                     const group = requiredCheckboxGroups[groupName];
+                     const isChecked = group.elements.some(checkbox => checkbox.checked);
+                     const errorMsgId = groupName + '-required-error'; // ID for group error
+                     const errorContainer = group.errorContainer;
+                     let errorMsg = document.getElementById(errorMsgId);
+
+                     if (!isChecked) {
+                         isValid = false;
+                         if (errorContainer) errorContainer.style.outline = '1px solid var(--error-color)';
+
+                         if (!firstInvalidField) firstInvalidField = group.elements[0];
+
+                         if (!errorMsg && errorContainer) {
+                             errorMsg = document.createElement('div');
+                             errorMsg.id = errorMsgId;
+                             errorMsg.className = 'error-message';
+                             errorMsg.textContent = 'Selecione ao menos uma opção';
+                             // Append error message after the group or label
+                              if (group.labelElement) {
+                                  group.labelElement.parentNode.insertBefore(errorMsg, group.labelElement.nextSibling.nextSibling); // Adjust insertion point as needed
+                              } else {
+                                  errorContainer.appendChild(errorMsg);
+                              }
+                         }
+                     } else {
+                         // Remove error
+                         if (errorMsg) errorMsg.remove();
+                         if (errorContainer) errorContainer.style.outline = ''; // Remove highlight
+                     }
+                 });
+
+                // If not valid, show alert and focus
                 if (!isValid) {
-                    // Em dispositivos móveis, rola suavemente até o primeiro campo inválido
                     if (window.innerWidth < 768 && firstInvalidField) {
                         setTimeout(() => {
                             firstInvalidField.scrollIntoView({ 
@@ -3125,6 +3215,15 @@
                             }
                         }
                         
+                        // Replicar a Nacionalidade do usuário para o cônjuge
+                        if (mostrarCamposConjuge) {
+                            const nacionalidadeUsuario = document.getElementById('input_96');
+                            const nacionalidadeConjuge = document.getElementById('input_229');
+                            if (nacionalidadeUsuario && nacionalidadeConjuge) {
+                                nacionalidadeConjuge.value = nacionalidadeUsuario.value;
+                            }
+                        }
+                        
                         // Tornar os campos obrigatórios ou não
                         camposConjugeIds.forEach(id => {
                             const campo = document.getElementById(id);
@@ -3752,6 +3851,102 @@
                     newField.value = currentValue;
                 }
              }
+
+            // --- Add listeners to remove the 'required' errors ---
+
+            // Helper to check for other error messages for a field/container
+            function hasOtherErrors(field, isGroup = false, groupName = '') {
+                const container = isGroup ? field.closest('.form-group') : field.parentNode;
+                if (!container) return false;
+
+                const potentialErrorMessages = container.querySelectorAll('.error-message');
+                const requiredErrorMsgId = isGroup ? groupName + '-required-error' : field.id + '-required-error';
+
+                for (let msg of potentialErrorMessages) {
+                    // Check if the message is NOT the 'required' error message we are about to remove
+                    if (msg.id !== requiredErrorMsgId) {
+                        return true; // Found another error message
+                    }
+                }
+                 // Check for specific error classes on the field itself (if not a group check)
+                 if (!isGroup && (field.classList.contains('special-char-error') || field.classList.contains('error') /* Add other relevant error classes */)) {
+                     return true;
+                 }
+                 // For groups, we might check the container's outline, but the message check is usually sufficient
+                return false; // No other errors found
+            }
+
+            // Generic listener for input fields (text, email, tel, etc.)
+            document.querySelectorAll('input[required]:not([type="radio"]):not([type="checkbox"]), textarea[required]').forEach(field => {
+                field.addEventListener('input', function() {
+                    const requiredErrorMsgId = this.id + '-required-error';
+                    const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                    if (this.value.trim() && requiredErrorMsg) {
+                        requiredErrorMsg.remove(); // Remove the 'required' message
+                        // Only reset style if no other errors remain
+                        if (!hasOtherErrors(this)) {
+                            this.style.borderColor = '';
+                            this.style.backgroundColor = '';
+                        }
+                    }
+                });
+            });
+
+            // Generic listener for select fields
+            document.querySelectorAll('select[required]').forEach(field => {
+                field.addEventListener('change', function() {
+                    const requiredErrorMsgId = this.id + '-required-error';
+                    const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                    if (this.value && requiredErrorMsg) {
+                         requiredErrorMsg.remove(); // Remove the 'required' message
+                        // Only reset style if no other errors remain
+                         if (!hasOtherErrors(this)) {
+                             this.style.borderColor = '';
+                             this.style.backgroundColor = '';
+                         }
+                    }
+                });
+            });
+
+            // Listener for radio buttons
+            document.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+                 radio.addEventListener('change', function() {
+                     const groupName = this.name;
+                     const groupRadios = document.querySelectorAll(`input[type="radio"][name="${groupName}"]`);
+                     const isChecked = Array.from(groupRadios).some(r => r.checked);
+                     const requiredErrorMsgId = groupName + '-required-error';
+                     const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                     const errorContainer = this.closest('.form-group'); // Find container
+
+                     if (isChecked && requiredErrorMsg && errorContainer) {
+                         requiredErrorMsg.remove();
+                         // Only remove highlight if no other group errors exist
+                          if (!hasOtherErrors(this, true, groupName)) {
+                             errorContainer.style.outline = '';
+                          }
+                     }
+                 });
+             });
+
+             // Listener for checkboxes
+             document.querySelectorAll('input[type="checkbox"][required]').forEach(checkbox => {
+                 checkbox.addEventListener('change', function() {
+                     const groupName = this.name;
+                     const groupCheckboxes = document.querySelectorAll(`input[type="checkbox"][name="${groupName}"]`);
+                     const isChecked = Array.from(groupCheckboxes).some(c => c.checked);
+                     const requiredErrorMsgId = groupName + '-required-error';
+                     const requiredErrorMsg = document.getElementById(requiredErrorMsgId);
+                     const errorContainer = this.closest('.form-group'); // Find container
+
+                     if (isChecked && requiredErrorMsg && errorContainer) {
+                         requiredErrorMsg.remove();
+                         // Only remove highlight if no other group errors exist
+                         if (!hasOtherErrors(this, true, groupName)) {
+                             errorContainer.style.outline = '';
+                         }
+                     }
+                 });
+             });
 
         });
     </script>
