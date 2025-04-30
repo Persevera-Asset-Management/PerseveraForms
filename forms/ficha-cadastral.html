@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Email Validator via CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/dist/email-validator.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/email-validator@2.0.4/dist/email-validator.min.js" defer></script>
         
     <!-- Carregando fontes Avenir via @font-face -->
     <style>
@@ -2877,10 +2877,12 @@
                 
                 // Remove classes anteriores
                 cepInput.classList.remove('cep-valido');
+                cepInput.classList.remove('error'); // Explicitly remove error class
                 
                 // Também remover qualquer estilo de erro que possa ter sido aplicado anteriormente
                 cepInput.style.borderColor = '';
                 cepInput.style.backgroundColor = '';
+                cepInput.style.color = ''; // Explicitly reset text color
                 
                 // Remove mensagem de erro anterior se existir
                 const errorEl = document.getElementById(`${cepFieldId}-error-msg`);
