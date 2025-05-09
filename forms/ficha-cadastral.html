@@ -763,6 +763,41 @@
             cursor: not-allowed;
             pointer-events: none;
         }
+
+        /* Autocomplete suggestions container */
+        .autocomplete-suggestions {
+            position: absolute;
+            border: 1px solid var(--input-border);
+            border-top: none;
+            z-index: 999;
+            top: 100%; /* Position below the input */
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            max-height: 200px; 
+            overflow-y: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 0 0 6px 6px;
+            display: none; /* Initially hidden */
+        }
+
+        .autocomplete-suggestions div {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--divider-color);
+            font-family: var(--font-light);
+            font-size: 14px;
+            text-align: left; /* Ensure text is aligned left */
+        }
+        .autocomplete-suggestions div:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-suggestions div:hover,
+        .autocomplete-suggestions div.active { /* 'active' class for keyboard navigation */
+            background-color: var(--background-color);
+            color: var(--primary-color);
+        }
     </style>
 </head>
 <body>
@@ -797,6 +832,11 @@
                             <label class="form-label required" for="input_94">Nome Completo</label>
                             <input type="text" id="input_94" name="q94_nomeCompleto" class="form-control" required>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label required" for="input_95">CPF</label>
+                            <input type="text" id="input_95" name="q95_cpf" class="form-control" placeholder="000.000.000-00" required>
+                        </div>
                     </div>
                     
                     <div class="form-row">
@@ -824,10 +864,10 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label required" for="input_95">CPF</label>
-                            <input type="text" id="input_95" name="q95_cpf" class="form-control" placeholder="000.000.000-00" required>
+                            <label class="form-label required" for="input_238">Ocupação Profissional</label>
+                            <input type="text" id="input_238" name="q238_ocupacaoProfissional" class="form-control" placeholder="exemplo: Engenheiro, Advogado, etc." required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label required" for="input_96">Nacionalidade</label>
                             <input type="text" id="input_96" name="q96_nacionalidade" class="form-control" value="Brasileiro(a)" required>
@@ -880,9 +920,7 @@
                             <label class="form-label required" for="input_100">Nome da Mãe</label>
                             <input type="text" id="input_100" name="q100_nomeMae" class="form-control" required>
                         </div>
-                    </div>
 
-                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="input_101">Nome do Pai</label>
                             <input type="text" id="input_101" name="q101_nomePai" class="form-control">
@@ -897,6 +935,11 @@
                         <div class="form-group">
                             <label class="form-label" for="input_225">Nome Completo</label>
                             <input type="text" id="input_225" name="q225_nomeCompletoConjuge" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="input_228">CPF</label>
+                            <input type="text" id="input_228" name="q228_cpfConjuge" class="form-control" placeholder="000.000.000-00">
                         </div>
                     </div>
                     
@@ -925,8 +968,8 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" for="input_228">CPF</label>
-                            <input type="text" id="input_228" name="q228_cpfConjuge" class="form-control" placeholder="000.000.000-00">
+                            <label class="form-label required" for="input_239">Ocupação Profissional</label>
+                            <input type="text" id="input_239" name="q239_ocupacaoProfissionalConjuge" class="form-control" placeholder="exemplo: Engenheiro, Advogado, etc." required>
                         </div>
                         
                         <div class="form-group">
@@ -981,9 +1024,7 @@
                             <label class="form-label" for="input_236">Nome da Mãe</label>
                             <input type="text" id="input_236" name="q236_nomeMaeConjuge" class="form-control">
                         </div>
-                    </div>
 
-                    <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="input_237">Nome do Pai</label>
                             <input type="text" id="input_237" name="q237_nomePaiConjuge" class="form-control">
@@ -4267,6 +4308,396 @@
                  });
              });
 
+            // --- START: Autocomplete for Occupation Fields ---
+            const professionsRawData = [
+                {"code": "ACOUGUEIRO", "name": "Açougueiro"}, {"code": "ACUMPURISTA", "name": "Acumpurista"},
+                {"code": "ADESTRADOR", "name": "Adestrador/Tratador de Animais/Treinador de Animais"},
+                {"code": "ADMINISTRADOR", "name": "Administrador"}, {"code": "ADVOGADO", "name": "Advogado"},
+                {"code": "AEROVIARIO", "name": "Aeroviario/Empregado de Aeroporto"}, {"code": "AFIADOR", "name": "Afiador"},
+                {"code": "AGENCIADOR_DE_PROPAGANDA", "name": "Agenciador de Propaganda"},
+                {"code": "AGENCIADOR_CARGAS_TRANSPORTES", "name": "Agenciador de Serv. (Cargas/Transportes)"},
+                {"code": "AGENTE_ADMINISTRATIVO", "name": "Agente Administrativo"},
+                {"code": "AGENTE_DE_COMPRA_VENDA", "name": "Agente de Compra e Venda"},
+                {"code": "AGENTE_DE_SERVICOS_FUNERARIOS", "name": "Agente de Serviços Funerarios"},
+                {"code": "AGENTE_DE_VIAGEM", "name": "Agente de viagem/Agente de turismo/Operador de turismo"},
+                {"code": "AGRONOMO", "name": "Agronomo"}, {"code": "AJUDANTE_GERAL", "name": "Ajudante Geral"},
+                {"code": "AJUSTADOR_RETIFICADOR", "name": "Ajustador/Retificador"}, {"code": "ALFAIATE", "name": "Alfaiate"},
+                {"code": "AMBULANTES", "name": "Ambulantes(Camelo,Pipoqueiro,etc)"},
+                {"code": "ANALISTA_RECURSOS_HUMANOS", "name": "Analista de Cargos/Recursos Humanos etc"},
+                {"code": "ANALISTA_CREDITO_E_COBRANCA", "name": "Analista de Cred/Cad/Cobr/Garant/Inf etc"},
+                {"code": "ANALISTA_CUSTOS_PROJ_SERV_ECONOMIA", "name": "Analista de Custos/Proj/Serv/Economia etc"},
+                {"code": "ANALISTA_PRODUCAO_CRONOALISTA", "name": "Analista de Producao/Cronoalista"},
+                {"code": "ANALISTA_SISTEMAS", "name": "Analista de Sistemas"},
+                {"code": "APOSENTADO", "name": "Aposentado(exceto funcionario publico)"},
+                {"code": "ARBITRO_DE_ESPORTES", "name": "Arbitro de Esportes"},
+                {"code": "ARMADOR_DE_FERRAGENS", "name": "Armador de Ferragens"}, {"code": "ARMEIRO", "name": "Armeiro"},
+                {"code": "ARQUEOLOGO", "name": "Arqueologo"}, {"code": "ARQUITETO", "name": "Arquiteto"},
+                {"code": "ARQUIVISTA", "name": "Arquivista"}, {"code": "ARTESAO", "name": "Artesao"},
+                {"code": "ARTISTA_PLASTICO", "name": "Artista Plastico"}, {"code": "ASCENSORISTA", "name": "Ascensorista"},
+                {"code": "ASSISTENTE_SOCIAL", "name": "Assistente Social"}, {"code": "ASTRONOMO", "name": "Astronomo"},
+                {"code": "ATLETA", "name": "Atleta Profissional"}, {"code": "ATOR", "name": "Ator"},
+                {"code": "ATUARIO", "name": "Atuario"}, {"code": "AUDITOR_PUBLICO", "name": "Auditor Publico"},
+                {"code": "AUXILIAR_COZINHA_LIMPEZA_COSTURA_COPA", "name": "Auxiliar Cozinha/Limpeza/Costura/Copa etc"},
+                {"code": "AUXILIAR_DE_ENFERMAGEM_TECNICO", "name": "Auxiliar de Enfermagem/Tecnico de Enfermagem"},
+                {"code": "AUXILIAR_DE_ESCRITORIO", "name": "Auxiliar de Escritorio e Ass."},
+                {"code": "AUXILIAR_DE_LABORATORIO", "name": "Auxiliar de Laboratorio"},
+                {"code": "AUXILIAR_DE_SERVICOS_GERAIS", "name": "Auxiliar de Serviços Gerais"},
+                {"code": "AVALIADOR", "name": "Avaliador"}, {"code": "CUIDADOR", "name": "Cuidador"},
+                {"code": "DANCARINO", "name": "Dançarino"}, {"code": "BANCARIO", "name": "Bancario"},
+                {"code": "BARBEIRO", "name": "Barbeiro"}, {"code": "BARISTA", "name": "Barista/Barman/Barwoman"},
+                {"code": "BIBLIOTECARIO", "name": "Bibliotecario"},
+                {"code": "BILHETEIRO_COBRADOR", "name": "Bilheteiro(Transp/Diversao)/Trocador/Cobrador Transp Passageiro/Caixa"},
+                {"code": "BIOLOGO", "name": "Biologo"}, {"code": "BIOMEDICO", "name": "Biomedico"},
+                {"code": "BOLSISTA", "name": "Bolsista"}, {"code": "BOMBEIRO_ENCANADOR", "name": "Bombeiro/Encanador"},
+                {"code": "BORRACHEIRO", "name": "Borracheiro"}, {"code": "CABELEIREIRO", "name": "Cabeleireiro"},
+                {"code": "CAIXEIRO_VIAJANTE", "name": "Caixeiro-Viajante"},
+                {"code": "CAMAREIRA_ARRUMADEIRA", "name": "Camareira/Arrumadeira"}, {"code": "CANTOR", "name": "Cantor"},
+                {"code": "CARGOS_DE_CONFIANCA_COMISSOES", "name": "Cargos de Confiança/Comissoes"},
+                {"code": "CARREGADOR", "name": "Carregador"}, {"code": "CARTEIRO", "name": "Carteiro"},
+                {"code": "CARTORARIO", "name": "Cartorario"}, {"code": "CASEIRO", "name": "Caseiro"},
+                {"code": "CAVALARICO", "name": "Cavalarico/Ferrador/Tratador de Animais"},
+                {"code": "CENOGRAFO", "name": "Cenografo"}, {"code": "CHAVEIRO", "name": "Chaveiro"},
+                {"code": "CHEFE_DA_PRODUCAO", "name": "Chefe da Producao"},
+                {"code": "CHEFE_INTERMEDIARIO", "name": "Chefe Intermediario"},
+                {"code": "COBRADOR_EM_GERAL", "name": "Cobrador em Geral"},
+                {"code": "COMANDANTE_DE_EMBARCACOES", "name": "Comandante de Embarcacoes"},
+                {"code": "COMENTARISTA", "name": "Comentarista"}, {"code": "COMISSARIO_DE_BORDO", "name": "Comissario de Bordo"},
+                {"code": "COMPOSITOR", "name": "Compositor"}, {"code": "COMUNICOLOGO", "name": "Comunicologo"},
+                {"code": "CONSELHEIRO_TUTELAR", "name": "Conselheiro Tutelar"},
+                {"code": "CONSULTOR_DE_EMPRESAS", "name": "Consultor de Empresas"}, {"code": "CONTADOR", "name": "Contador"},
+                {"code": "CONTRAMESTRE", "name": "Contramestre"}, {"code": "CONTROLADOR_DE_VOO", "name": "Controlador de Voo"},
+                {"code": "COREOGRAFO", "name": "Coreografo"}, {"code": "CORRETOR_EM_GERAL", "name": "Corretor em Geral"},
+                {"code": "CORTADOR", "name": "Cortador"},
+                {"code": "COSTUREIRA", "name": "Costureira/Bordadeira/Cerzideira"},
+                {"code": "COZINHEIRO_CONFEITEIRO_PADEIRO", "name": "Cozinheiro/Confeiteiro/Padeiro"},
+                {"code": "DECORADOR", "name": "Decorador"}, {"code": "DEGUSTADOR_VINHO_CAFE", "name": "Degustador(Vinho/Café etc)"},
+                {"code": "DELEGADO_DE_POLICIA", "name": "Delegado de Policia"}, {"code": "DEMONSTRADOR", "name": "Demonstrador"},
+                {"code": "DENTISTA_ODONTOLOGO", "name": "Dentista/Odontologo"}, {"code": "DEPILADOR", "name": "Depilador"},
+                {"code": "DEPUTADO_ESTADUAL_FEDERAL", "name": "Deputado Estadual/Federal"},
+                {"code": "DESEMBARGADOR", "name": "Desembargador"}, {"code": "DESENHISTA", "name": "Desenhista"},
+                {"code": "DESPACHANTE_INCLUSIVE_ADUANEIRO", "name": "Despachante (inclusive aduaneiro)"},
+                {"code": "DETETIVE_INVESTIGADOR", "name": "Detetive/Investigador"},
+                {"code": "DETETIZADOR", "name": "Detetizador"}, {"code": "DIGITADOR", "name": "Digitador"},
+                {"code": "DIPLOMATA", "name": "Diplomata"}, {"code": "DIRETOR_DE_EMPRESA", "name": "Diretor de Empresa"},
+                {"code": "DIRETOR_DE_ESPETACULOS", "name": "Diretor de Espetaculos"},
+                {"code": "DIRETOR_DE_ESTABELECIMENTO_DE_ENSINO", "name": "Diretor de Estabelecimento de Ensino"},
+                {"code": "ECONOMISTA", "name": "Economista"}, {"code": "ELETRICISTA", "name": "Eletricista"},
+                {"code": "EMBALADOR", "name": "Embalador"}, {"code": "EMBALSAMADOR", "name": "Embalsamador"},
+                {"code": "EMPREGADA_DOMESTICA", "name": "Empregada domestica"},
+                {"code": "EMPRESARIO_DE_ATLETA", "name": "Empresario de Atleta"}, {"code": "ENFERMEIRO", "name": "Enfermeiro"},
+                {"code": "ENGENHEIRO", "name": "Engenheiro"},
+                {"code": "ENTREVISTADOR_CENSO_PESQUISA_PRECOS", "name": "Entrevistador(Censo/Pesquisa/Preços)"},
+                {"code": "ESCRITOR", "name": "Escritor"}, {"code": "ESCULTOR", "name": "Escultor"},
+                {"code": "ESOTERICOS_ASTROLOGOS_TAROLOGO_NUMEROLOGO", "name": "Esotericos(Astrologos/Tarologo/Numerologo etc)"},
+                {"code": "ESTATISTICO", "name": "Estatistico"}, {"code": "ESTETICISTA", "name": "Esteticista"},
+                {"code": "ESTILISTA_MODELISTA", "name": "Estilista/Modelista"}, {"code": "ESTIVADOR", "name": "Estivador"},
+                {"code": "FARMACEUTICO", "name": "Farmaceutico"}, {"code": "FAXINEIRO_DIARISTA", "name": "Faxineiro/Diarista"},
+                {"code": "FEIRANTE", "name": "Feirante"}, {"code": "FERRAMENTEIRO", "name": "Ferramenteiro"},
+                {"code": "FISCAL", "name": "Fiscal"}, {"code": "FISCAL_DE_PRODUCAO", "name": "Fiscal de Producao"},
+                {"code": "FISCAL_SERVICOS_DE_TRANSPORTE", "name": "Fiscal Serviços de Transporte"},
+                {"code": "FISICO", "name": "Fisico"}, {"code": "FISIOTERAPEUTA", "name": "Fisioterapeuta"},
+                {"code": "FOGUISTA_DE_EMBARCACOES_OU_LOCOMOTIVAS", "name": "Foguista de Embarcacoes ou Locomotivas"},
+                {"code": "FONOAUDIOLOGO", "name": "Fonoaudiologo"},
+                {"code": "FORCAS_ARMADAS_SOLDADO_MARINHEIRO", "name": "Forças Armadas (Soldado,Marinheiro,etc)"},
+                {"code": "FOTOGRAFO", "name": "Fotografo"},
+                {"code": "FRENTISTA_TRABALHADOR_DE_POSTO_DE_GASOLINA", "name": "Frentista/Trabalhador de posto de gasolina"},
+                {"code": "FUNCIONARIO_PUBLICO_CIVIL_APOSENTADO", "name": "Funcionario Publico Civil Aposentado"},
+                {"code": "FUNDIDOR", "name": "Fundidor"}, {"code": "GARAGISTA", "name": "Garagista"},
+                {"code": "GARCOM_MAITRE", "name": "Garçom/Maitre"}, {"code": "GARIMPEIRO", "name": "Garimpeiro"},
+                {"code": "GEOGRAFO", "name": "Geografo"}, {"code": "GEOLOGO", "name": "Geologo"},
+                {"code": "GERENTE", "name": "Gerente"}, {"code": "GESSISTA", "name": "Gessista"},
+                {"code": "GOVERNADOR_DE_ESTADO", "name": "Governador de Estado"}, {"code": "GOVERNANTA", "name": "Governanta"},
+                {"code": "GUIA_TURISTICO", "name": "Guia Turistico"},
+                {"code": "HOSPITAL_TRABALHADORES_EM_GERAL", "name": "Hospital - Trabalhadores em Geral"},
+                {"code": "IMPERMEABILIZADOR", "name": "Impermeabilizador"}, {"code": "INSPETOR", "name": "Inspetor"},
+                {"code": "INSPETOR_DE_CONTROLE_DE_QUALIDADE", "name": "Inspetor de Controle de Qualidade"},
+                {"code": "INSTALADOR_DE_GAS_AGUA_ESGOTO", "name": "Instalador de Gas,Agua e Esgoto"},
+                {"code": "INSTRUMENTADOR_CIRURGICO", "name": "Instrumentador Cirurgico"},
+                {"code": "INSTRUMENTISTA", "name": "Instrumentista"},
+                {"code": "INSTRUTOR_DE_AUTOESCOLA", "name": "Instrutor de Autoescola"},
+                {"code": "INSTRUTOR_PROFESSOR_CURSOS_LIVRES", "name": "Instrutor/Professor de Cursos Livres(Ginastica,Ingles,Informatica)"},
+                {"code": "INTERPRETE_TRADUTOR", "name": "Interprete/Tradutor"}, {"code": "JARDINEIRO", "name": "Jardineiro"},
+                {"code": "JOALHEIRO", "name": "Joalheiro"}, {"code": "JORNALEIRO", "name": "Jornaleiro"},
+                {"code": "JORNALISTA_REPORTER", "name": "Jornalista/Reporter"}, {"code": "JUIZ_DE_DIREITO", "name": "Juiz de Direito"},
+                {"code": "LANTERNEIRO", "name": "Lanterneiro"},
+                {"code": "LAVADOR_DE_CARROS_ROUPAS", "name": "Lavador de Carros/Roupas"},
+                {"code": "LEILOEIRO", "name": "Leiloeiro"}, {"code": "LEITURISTA", "name": "Leiturista"},
+                {"code": "GARI", "name": "Lixeiro/Gari/Varredor/Coletor de Lixo"}, {"code": "LOCUTOR", "name": "Locutor"},
+                {"code": "MANICURE_PEDICURE_PODOLOGO", "name": "Manicure/Pedicure/Podologo"},
+                {"code": "MANOBRISTA_NAO_EMPREGADO_GUARDADOR_DE_CARRO", "name": "Manobrista (não empregado)/Guardador de Carro"},
+                {"code": "MAQUILADOR", "name": "Maquilador"},
+                {"code": "MAQUINISTA_DE_EMBARCACOES_OU_LOCOMOTIVAS", "name": "Maquinista de Embarcacoes ou Locomotivas"},
+                {"code": "MARCENEIRO_CARPINTEIRO", "name": "Marceneiro/Carpinteiro"},
+                {"code": "MARINHEIRO_ASS", "name": "Marinheiro e Ass."}, {"code": "MASSAGISTA", "name": "Massagista"},
+                {"code": "MATEMATICO", "name": "Matematico"}, {"code": "MECANICO", "name": "Mecanico"},
+                {"code": "MEDICO", "name": "Medico"}, {"code": "MEMBRO_DA_DEFENSORIA_PUBLICA", "name": "Membro da Defensoria Publica"},
+                {"code": "MEMBRO_DE_EQUIPE_TECNICA_DE_ESPORTES", "name": "Membro de Equipe tecnica de esportes"},
+                {"code": "MEMBRO_DO_MINISTERIO_PUBLICO", "name": "Membro do Ministerio Publico"},
+                {"code": "MEMBRO_EQUIPE_TECNICA_ESPORTES", "name": "Membro Equipe Técnica Esportes"},
+                {"code": "MESTRE_DE_PRODUCAO", "name": "Mestre de Producao"}, {"code": "METEOROLOGISTA", "name": "Meteorologista"},
+                {"code": "MILITAR_EM_GERAL", "name": "Militar em Geral"}, {"code": "MILITAR_REFORMADO", "name": "Militar reformado"},
+                {"code": "MINISTRO_DE_ESTADO", "name": "Ministro de Estado"},
+                {"code": "MINISTRO_DE_TRIBUNAL_SUPERIOR", "name": "Ministro de Tribunal Superior"},
+                {"code": "MODELO_DE_MODAS", "name": "Modelo de Modas"}, {"code": "MONTADOR", "name": "Montador"},
+                {"code": "MOTORISTA_TRANSPORTE_CARGAS", "name": "Motorista (veiculo transporte cargas)"},
+                {"code": "MOTORISTA_TRANSPORTE_DE_PASSAGEIROS", "name": "Motorista (veiculo transporte de passageiros)"},
+                {"code": "MOTORISTA_AUTONOMO_TAXISTA_PRINCIPAL", "name": "Motorista autonomo (taxista principal)"},
+                {"code": "MUSEOLOGO", "name": "Museologo"}, {"code": "MUSICO", "name": "Musico"},
+                {"code": "NUTRICIONISTA", "name": "Nutricionista"},
+                {"code": "OFFICE_BOY_CONTINUO_ENTREGADOR_MOTOBOY", "name": "Office boy/Continuo/Entregador/Motoboy"},
+                {"code": "OFICIAL_DE_FORCAS_AUX_FORCAS_ARMADAS", "name": "Oficial de Forças Aux e Forças Armadas"},
+                {"code": "OFICIAL_DE_JUSTICA", "name": "Oficial de Justiça"},
+                {"code": "OPERADOR_DE_CALDEIRA", "name": "Operador de Caldeira"},
+                {"code": "OPERADOR_DE_CAMERAS_DE_CINEMA_TV", "name": "Operador de Cameras de Cinema e TV"},
+                {"code": "OPERADOR_DE_COMPUTADOR", "name": "Operador de Computador"},
+                {"code": "OPERADOR_DE_GUINDASTE", "name": "Operador de Guindaste"},
+                {"code": "OPERADOR_DE_ILUMINACAO", "name": "Operador de Iluminacao"},
+                {"code": "OPERADOR_DE_MAQUINAS_APARELHOS", "name": "Operador de Maquinas e Aparelhos"},
+                {"code": "OPERADOR_DE_TELEMARKETING", "name": "Operador de Telemarketing"},
+                {"code": "OPERARIO_SEMI_ESPECIALIZADO_PRODUCAO", "name": "Operario Semi-especializado Producao"},
+                {"code": "ORIENTADOR_PEDAGOGICO", "name": "Orientador Pedagogico"}, {"code": "OURIVES", "name": "Ourives"},
+                {"code": "PAISAGISTA", "name": "Paisagista"}, {"code": "PEDREIRO", "name": "Pedreiro"},
+                {"code": "PENSAO_ALIMENTICIA_PARA_FILHOS", "name": "Pensao alimenticia para filhos"},
+                {"code": "PENSIONISTA", "name": "Pensionista"}, {"code": "PERSONAL_TRAINER", "name": "Personal Trainer"},
+                {"code": "PESCADOR", "name": "Pescador"}, {"code": "PESQUISADOR_CIENTIFICO", "name": "Pesquisador Cientifico"},
+                {"code": "PILOTO_DE_AERONAVES", "name": "Piloto de Aeronaves"}, {"code": "PINTOR", "name": "Pintor"},
+                {"code": "PISCICULTOR", "name": "Piscicultor"}, {"code": "PORTEIRO_ZELADOR", "name": "Porteiro/Zelador"},
+                {"code": "PORTUARIO", "name": "Portuario"}, {"code": "PREFEITO", "name": "Prefeito"},
+                {"code": "PRENSISTA_ESTAMPADOR", "name": "Prensista/Estampador"},
+                {"code": "PROCURADOR_MEMBROS_DA_PROCURADORIA", "name": "Procurador/Membros da Procuradoria"},
+                {"code": "PRODUTOR_DE_EVENTOS", "name": "Produtor de Eventos(Promoter)/Produtor de Artes em geral"},
+                {"code": "PROFESSOR_AUTONOMO_PARTICULAR", "name": "Professor Autonomo/Particular"},
+                {"code": "PROFESSOR_ENSINO_FUNDAMENTAL_E_MEDIO", "name": "Professor de Ensino Fundamental e Medio"},
+                {"code": "PROFESSOR_ENSINO_SUPERIOR", "name": "Professor de Ensino Superior"},
+                {"code": "PROFESSOR_IDIOMAS", "name": "Professor de Idiomas"},
+                {"code": "PROFISSIONAL_CIRCO_ACROBATA", "name": "Profissional de Circo/Acrobata"},
+                {"code": "PROFISSIONAL_LETRAS_ARTES", "name": "Profissional de Letras e Artes"},
+                {"code": "PROGRAMADOR", "name": "Programador"}, {"code": "PROMOTOR_DE_VENDAS", "name": "Promotor de Vendas"},
+                {"code": "PROMOTOR_PUBLICO", "name": "Promotor Publico"},
+                {"code": "PROPRIETARIO_COMERCIAL", "name": "Proprietario de Estabel. Comercial"},
+                {"code": "PROPRIETARIO_INDUSTRIAL", "name": "Proprietario de Estabel. Industrial"},
+                {"code": "PROPRIETARIO_MICROEMPRESA", "name": "Proprietario de Microempresa"},
+                {"code": "PROPRIETARIO_PRESTACAO_SERVICOS", "name": "Proprietario de Estabel. de Prestaçao Serviços"},
+                {"code": "PROPRIETARIO_RURAL_AGRICOLA_FLORESTAL_PECUARI", "name": "Proprietario de Estabel. Rural,Agricola,Florestal,Pecuario"},
+                {"code": "PROTETICO", "name": "Protetico"},
+                {"code": "PSICANALISTA", "name": "Psicologo/Terapeuta/Psicanalista"},
+                {"code": "PSICOTERAPEUTA", "name": "Psicologo/Terapeuta/Psicoterapeuta"},
+                {"code": "PUBLICITARIO", "name": "Publicitario"}, {"code": "QUIMICO", "name": "Quimico"},
+                {"code": "RADIALISTA", "name": "Radialista"}, {"code": "RECEPCIONISTA", "name": "Recepcionista"},
+                {"code": "RECICLAGEM", "name": "Reciclagem - Trabalhadores em geral"},
+                {"code": "RECREADOR", "name": "Recreador"}, {"code": "RELACOES_PUBLICAS", "name": "Relacoes Publicas"},
+                {"code": "RELOJOEIRO", "name": "Relojoeiro"},
+                {"code": "REPRESENTANTE_COMERCIAL", "name": "Representante Comercial"}, {"code": "SAPATEIRO", "name": "Sapateiro"},
+                {"code": "SECRETARIA", "name": "Secretaria"}, {"code": "SECRETARIO_DE_ESTADO", "name": "Secretario de Estado"},
+                {"code": "SECRETARIO_MUNICIPAL", "name": "Secretario Municipal"}, {"code": "SECURITARIO", "name": "Securitario"},
+                {"code": "SEGURANCA_PATRIMONIAL", "name": "Segurança Patrimonial - trabalhadores em geral"},
+                {"code": "SENADOR", "name": "Senador"}, {"code": "SERRALHEIRO", "name": "Serralheiro"},
+                {"code": "SERVENTUARIO_DA_JUSTICA", "name": "Serventuario da Justiça"},
+                {"code": "SERVICOS_DE_MANUTENCAO", "name": "Serviços de Manutencao"}, {"code": "SOCIOLOGO", "name": "Sociologo"},
+                {"code": "SOLDADO_CORPO_DE_BOMBEIROS", "name": "Soldado Corpo de Bombeiros"},
+                {"code": "SUPERINTENDENTE", "name": "Superintendente"}, {"code": "SUPERVISOR", "name": "Supervisor"},
+                {"code": "SUPERVISOR_TECNICO_OPERACIONAL", "name": "Supervisor/Tecnico Operacional"},
+                {"code": "TABELIAO", "name": "Tabeliao"}, {"code": "TAPECEIRO", "name": "Tapeceiro"},
+                {"code": "TECNICO_DA_RECEITA_FEDERAL", "name": "Tecnico da Receita Federal"},
+                {"code": "TECNICO_DE_BIOLOGIA", "name": "Tecnico de Biologia"},
+                {"code": "TECNICO_DE_CONTABILIDADE", "name": "Tecnico de Contabilidade"},
+                {"code": "TECNICO_DE_ELETRICIDADE", "name": "Tecnico de Eletricidade"},
+                {"code": "TECNICO_DE_ELETRONICA", "name": "Tecnico de Eletronica"},
+                {"code": "TECNICO_DE_ESTATISTICA", "name": "Tecnico de Estatistica"},
+                {"code": "TECNICO_DE_LABORATORIO", "name": "Tecnico de Laboratorio"},
+                {"code": "TECNICO_DE_MECANICA", "name": "Tecnico de Mecanica"},
+                {"code": "TECNICO_DE_QUIMICA", "name": "Tecnico de Quimica"},
+                {"code": "TECNICO_DE_RADIOLOGIA", "name": "Tecnico de Radiologia"},
+                {"code": "TECNICO_DE_TELECOMUNICACOES", "name": "Tecnico de Telecomunicacoes"},
+                {"code": "TECNICO_EM_AGRONOMIA", "name": "Tecnico em Agronomia"},
+                {"code": "TECNICO_EM_DESPORTOS", "name": "Tecnico em Desportos"},
+                {"code": "TECNICO_EM_EDIFICACOES", "name": "Tecnico em Edificacoes"},
+                {"code": "TECNICO_EM_ELETRONICA", "name": "Tecnico em Eletronica"},
+                {"code": "TECNICO_EM_ESTATISTICA", "name": "Tecnico em Estatistica"},
+                {"code": "TECNICO_EM_FARMACIA", "name": "Tecnico em Farmacia"},
+                {"code": "TECNICO_EM_FINANCAS", "name": "Tecnico em Finanças"},
+                {"code": "TECNICO_EM_INFORMATICA", "name": "Tecnico em Informatica"},
+                {"code": "TECNICO_EM_INSEMINACAO", "name": "Tecnico em Inseminacao"},
+                {"code": "TECNICO_EM_MECANICA", "name": "Tecnico em Mecanica"},
+                {"code": "TECNICO_EM_QUIMICA", "name": "Tecnico em Quimica"},
+                {"code": "TECNICO_EM_RADIOLOGIA", "name": "Tecnico em Radiologia"},
+                {"code": "TECNICO_EM_REFRIGERACAO", "name": "Tecnico em Refrigeracao"},
+                {"code": "TECNICO_EM_TELECOMUNICACOES", "name": "Tecnico em Telecomunicacoes"},
+                {"code": "TECNICO_PROJETISTA", "name": "Tecnico Projetista"}, {"code": "TELEFONISTA", "name": "Telefonista"},
+                {"code": "TERAPEUTA_OCUPACIONAL", "name": "Terapeuta Ocupacional"}, {"code": "TORNEIRO", "name": "Torneiro"},
+                {"code": "TRABALHADOR_DA_ADMINISTRACAO", "name": "Trabalhador da Administracao"},
+                {"code": "TRABALHADOR_DA_PESCA", "name": "Trabalhador da Pesca"},
+                {"code": "TRABALHADOR_DE_ARTES_GRAFICAS", "name": "Trabalhador de Artes Graficas"},
+                {"code": "TRABALHADOR_DE_CONSTRUCAO_CIVIL", "name": "Trabalhador de Construcao Civil"},
+                {"code": "TRABALHADOR_FABRICACAO_FUMO_CIGARRO_CHARUTOS", "name": "Trabalhador Fabricacao fumo/cigarro/charutos"},
+                {"code": "TRABALHADOR_FABRICACAO_FUMO_CIGARROS_CHARUTOS", "name": "Trabalhador Fabricacao fumo/cigarros/charutos"},
+                {"code": "TRABALHADOR_INDUSTRIAL", "name": "Trabalhador Industrial"},
+                {"code": "TRABALHADOR_RURAL", "name": "Trabalhador Rural"},
+                {"code": "TRABALHADOR_SERV_CONTABCAIXA_ASS", "name": "Trabalhador serv. contab.caixa e ass."},
+                {"code": "TRAINEES", "name": "Trainees"}, {"code": "VENDEDOR", "name": "Vendedor"},
+                {"code": "VENDEDOR_PRACISTA", "name": "Vendedor Pracista"}, {"code": "VEREADOR", "name": "Vereador"},
+                {"code": "VETERINARIO", "name": "Veterinario"}, {"code": "VIDRACEIRO", "name": "Vidraceiro"},
+                {"code": "WEBDESIGNER", "name": "Webdesigner"}, {"code": "ZOOTECNISTA", "name": "Zootecnista"}
+                // Add more professions here if needed, this is a substantial list from FitBank
+            ];
+
+            const professionsList = professionsRawData
+                .map(p => p.name)
+                .filter(name => name) // Ensure no null/empty names
+                .sort((a, b) => a.localeCompare(b));
+
+            function initOccupationAutocomplete(inputId, sourceList) {
+                const inputEl = document.getElementById(inputId);
+                if (!inputEl) {
+                    console.warn(`[Occupation Autocomplete] Input ${inputId} not found.`);
+                    return;
+                }
+
+                let suggestionsContainer = inputEl.parentNode.querySelector(`.autocomplete-suggestions[data-for="${inputId}"]`);
+                if (!suggestionsContainer) {
+                    suggestionsContainer = document.createElement('div');
+                    suggestionsContainer.className = 'autocomplete-suggestions';
+                    suggestionsContainer.setAttribute('data-for', inputId);
+                    // Ensure parent is suitable for absolute positioning
+                    if (getComputedStyle(inputEl.parentNode).position === 'static') {
+                        inputEl.parentNode.style.position = 'relative';
+                    }
+                    inputEl.parentNode.appendChild(suggestionsContainer);
+                }
+                
+                let activeSuggestionIndex = -1;
+
+                function showSuggestions(filteredList) {
+                    suggestionsContainer.innerHTML = '';
+                    activeSuggestionIndex = -1;
+                    if (filteredList.length === 0) {
+                        suggestionsContainer.style.display = 'none';
+                        return;
+                    }
+
+                    filteredList.slice(0, 10).forEach((itemText, index) => { // Limit to 10 suggestions
+                        const div = document.createElement('div');
+                        div.textContent = itemText;
+                        div.addEventListener('mousedown', function(e) { // Use mousedown to fire before blur
+                            inputEl.value = this.textContent;
+                            suggestionsContainer.style.display = 'none';
+                            // Trigger change event for any other listeners
+                            inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+                        });
+                        suggestionsContainer.appendChild(div);
+                    });
+                    suggestionsContainer.style.display = 'block';
+                }
+                
+                function updateActiveSuggestion(newIndex) {
+                    const items = suggestionsContainer.querySelectorAll('div');
+                    if (items.length === 0) return;
+
+                    if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+                        items[activeSuggestionIndex].classList.remove('active');
+                    }
+                    activeSuggestionIndex = newIndex;
+                    if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+                        items[activeSuggestionIndex].classList.add('active');
+                        items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+                    }
+                }
+
+                inputEl.addEventListener('input', function() {
+                    const value = this.value.trim().toLowerCase();
+                    if (value.length < 2) { // Min 2 chars to search
+                        suggestionsContainer.style.display = 'none';
+                        activeSuggestionIndex = -1;
+                        return;
+                    }
+                    const filtered = sourceList.filter(item => item.toLowerCase().includes(value));
+                    showSuggestions(filtered);
+                });
+                
+                inputEl.addEventListener('keydown', function(e) {
+                    const items = suggestionsContainer.querySelectorAll('div');
+                    if (suggestionsContainer.style.display === 'none' || items.length === 0) return;
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        updateActiveSuggestion((activeSuggestionIndex + 1) % items.length);
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        updateActiveSuggestion((activeSuggestionIndex - 1 + items.length) % items.length);
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+                            inputEl.value = items[activeSuggestionIndex].textContent;
+                            suggestionsContainer.style.display = 'none';
+                            activeSuggestionIndex = -1;
+                             // Trigger change event for any other listeners
+                            inputEl.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    } else if (e.key === 'Escape') {
+                        suggestionsContainer.style.display = 'none';
+                        activeSuggestionIndex = -1;
+                    }
+                });
+
+                inputEl.addEventListener('blur', function() {
+                    // Delay hiding to allow click/mousedown on suggestion
+                    setTimeout(() => {
+                        if (!suggestionsContainer.matches(':hover')) { // Don't hide if mouse is over suggestions
+                           suggestionsContainer.style.display = 'none';
+                           activeSuggestionIndex = -1;
+                        }
+                    }, 200);
+                });
+                
+                // Hide suggestions if clicked outside
+                document.addEventListener('click', function(event) {
+                    if (!inputEl.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+                        suggestionsContainer.style.display = 'none';
+                        activeSuggestionIndex = -1;
+                    }
+                });
+            }
+
+            initOccupationAutocomplete('input_238', professionsList); // Ocupação Profissional
+            
+            // For the spouse occupation, we need to ensure it's initialized if/when the field becomes visible
+            // The existing `atualizarCamposConjuge` function can be a good place to call this,
+            // or we can try to initialize it here and it will work if the field exists.
+            // Let's try to initialize it directly. If input_239 is not yet in DOM, it will gracefully fail.
+            // If it's added later, this particular init won't attach.
+            // A better approach might be to call initOccupationAutocomplete from within atualizarCamposConjuge
+            // when the spouse section is made visible.
+
+            // However, for simplicity now, let's call it. If it's not present, it won't break.
+            initOccupationAutocomplete('input_239', professionsList); // Ocupação Profissional Cônjuge
+            
+            // Modify 'atualizarCamposConjuge' to initialize autocomplete for spouse when shown
+            const originalAtualizarCamposConjuge = typeof atualizarCamposConjuge === 'function' ? atualizarCamposConjuge : null;
+            if (originalAtualizarCamposConjuge) {
+                window.atualizarCamposConjuge = function() {
+                    originalAtualizarCamposConjuge.apply(this, arguments); // Call original function
+                    const estadoCivilSelect = document.getElementById('input_103');
+                    if (estadoCivilSelect) {
+                        const estadoCivil = estadoCivilSelect.value;
+                        const mostrarCamposConjuge = (estadoCivil === 'Casado(a)' || estadoCivil === 'União Estável');
+                        if (mostrarCamposConjuge) {
+                            // Ensure it's only initialized once or can handle re-initialization safely
+                            const spouseOccupationInput = document.getElementById('input_239');
+                            if (spouseOccupationInput && !spouseOccupationInput.hasAttribute('data-autocomplete-initialized')) {
+                                initOccupationAutocomplete('input_239', professionsList);
+                                spouseOccupationInput.setAttribute('data-autocomplete-initialized', 'true');
+                                console.log('[Occupation Autocomplete] Initialized for spouse.');
+                            }
+                        }
+                    }
+                };
+                // If atualizarCamposConjuge is called immediately on load, this override will catch it.
+            }
+
+
+            // --- END: Autocomplete for Occupation Fields ---
+
+            console.log('[INIT] Inicialização completa do formulário');
         });
 
         // Adicionar no final da função principal, após eventListeners de prevButtons, uma validação de envio para o botão final
