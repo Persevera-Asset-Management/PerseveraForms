@@ -20,7 +20,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             text-align: center;
         }
-        h1 {
+        h2 {
             margin-top: 0;
         }
         #pluggy-connect-container {
@@ -104,11 +104,11 @@
                 includeSandbox: true,
                 onSuccess: (itemData) => {
                     console.log('Sucesso! Conexão com Pluggy realizada!', itemData);
-                    document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h1>Conexão realizada com sucesso!</h1><p>Você já pode fechar esta janela.</p></div></div>';
+                    document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h2>Conexão realizada com sucesso!</h2><p>Você já pode fechar esta janela.</p></div></div>';
                 },
                 onError: (error) => {
                     console.error('Opa! Erro no Pluggy Connect... ', error);
-                     document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h1>Ocorreu um erro</h1><p>Houve um erro durante a conexão. Você pode tentar fechar e abrir a página novamente. Se o erro persistir, contate o suporte.</p></div></div>';
+                     document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h2>Ocorreu um erro</h2><p>Houve um erro durante a conexão. Você pode tentar fechar e abrir a página novamente. Se o erro persistir, contate o suporte.</p></div></div>';
                 },
             });
             pluggyConnect.init();
