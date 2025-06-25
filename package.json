@@ -1,8 +1,10 @@
 {
   "name": "perseveraforms",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,9 +14,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
   "bugs": {
     "url": "https://github.com/Persevera-Asset-Management/PerseveraForms/issues"
   },
-  "homepage": "https://github.com/Persevera-Asset-Management/PerseveraForms#readme",
-  "description": ""
+  "homepage": "https://github.com/Persevera-Asset-Management/PerseveraForms#readme"
 }
