@@ -57,7 +57,8 @@
 
     <div id="status-container">
         <div class="card">
-            <h1>Iniciando conexão segura...</h1>
+            <img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;">
+            <h2>Iniciando conexão segura...</h2>
             <p>Por favor, aguarde.</p>
         </div>
     </div>
@@ -91,7 +92,7 @@
             // The clientID and clientSecret are no longer here!
             const connectToken = await getConnectToken();
             if (!connectToken) {
-                statusContainer.innerHTML = '<div class="card"><h1>Erro de Conexão</h1><p>Não foi possível iniciar a conexão. Por favor, contate o suporte.</p></div>';
+                statusContainer.innerHTML = '<div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h2>Erro de Conexão</h2><p>Não foi possível iniciar a conexão. Por favor, contate a Persevera.</p></div>';
                 return;
             }
             
@@ -103,11 +104,11 @@
                 includeSandbox: true,
                 onSuccess: (itemData) => {
                     console.log('Sucesso! Conexão com Pluggy realizada!', itemData);
-                    document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><h1>Conexão realizada com sucesso!</h1><p>Você já pode fechar esta janela.</p></div></div>';
+                    document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h1>Conexão realizada com sucesso!</h1><p>Você já pode fechar esta janela.</p></div></div>';
                 },
                 onError: (error) => {
                     console.error('Opa! Erro no Pluggy Connect... ', error);
-                     document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><h1>Ocorreu um erro</h1><p>Houve um erro durante a conexão. Você pode tentar fechar e abrir a página novamente. Se o erro persistir, contate o suporte.</p></div></div>';
+                     document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h1>Ocorreu um erro</h1><p>Houve um erro durante a conexão. Você pode tentar fechar e abrir a página novamente. Se o erro persistir, contate o suporte.</p></div></div>';
                 },
             });
             pluggyConnect.init();
