@@ -3,6 +3,9 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware to parse JSON bodies. Pluggy webhooks are sent as JSON.
+app.use(express.json());
+
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname)));
 
@@ -51,6 +54,19 @@ app.get('/api/get-connect-token', async (req, res) => {
         console.error("An unexpected error occurred:", error);
         res.status(500).json({ error: "An internal server error occurred." });
     }
+});
+
+// Webhook endpoint to receive events from Pluggy
+app.post('/webhook', (req, res) => {
+  console.log('🔌 Webhook event received!', JSON.stringify(req.body, null, 2));
+
+  // Here you can add logic to process the webhook event data.
+  // For example, you can look at `req.body.event` to see what happened.
+  // Some common events are 'item/created', 'item/updated', 'item/error'.
+  
+  // It's important to respond with a 200 OK to let Pluggy know
+  // that you've received the webhook successfully.
+  res.status(200).send('Webhook received');
 });
 
 // Serve connect.html for the root path
