@@ -56,16 +56,34 @@ app.get('/api/get-connect-token', async (req, res) => {
     }
 });
 
-// Webhook endpoint to receive events from Pluggy
-app.post('/webhook', (req, res) => {
+// Webhook endpoint to receive events from Pluggy and forward them to Make.com
+app.post('/webhook', async (req, res) => {
   console.log('🔌 Webhook event received!', JSON.stringify(req.body, null, 2));
 
-  // Here you can add logic to process the webhook event data.
-  // For example, you can look at `req.body.event` to see what happened.
-  // Some common events are 'item/created', 'item/updated', 'item/error'.
-  
-  // It's important to respond with a 200 OK to let Pluggy know
-  // that you've received the webhook successfully.
+  // This is your Make.com webhook URL.
+  // For production, it's highly recommended to move this to an environment variable.
+  const makeWebhookUrl = 'https://hook.us1.make.com/f7c1cohwpmais6ytfqg2cx7wj9offvfp';
+
+  if (makeWebhookUrl) {
+    try {
+      console.log('Forwarding to Make.com...');
+      const response = await fetch(makeWebhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body),
+      });
+
+      if (!response.ok) {
+        console.error('Make.com webhook forward failed:', response.statusText);
+      } else {
+        console.log('Successfully forwarded to Make.com');
+      }
+    } catch (error) {
+      console.error('Error forwarding webhook to Make.com:', error);
+    }
+  }
+
+  // Respond to Pluggy immediately to acknowledge receipt
   res.status(200).send('Webhook received');
 });
 
