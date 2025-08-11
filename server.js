@@ -9,10 +9,11 @@ app.use(express.json());
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname)));
 
-app.get('/api/get-connect-token', async (req, res) => {
+app.post('/api/get-connect-token', async (req, res) => {
     // Securely get credentials from environment variables on the server
     const clientId = process.env.PLUGGY_CLIENT_ID;
     const clientSecret = process.env.PLUGGY_CLIENT_SECRET;
+    const { itemId } = req.body; // Extract itemId from the request body
 
     if (!clientId || !clientSecret) {
         console.error("Server-side environment variables PLUGGY_CLIENT_ID and PLUGGY_CLIENT_SECRET are not set.");
@@ -35,9 +36,19 @@ app.get('/api/get-connect-token', async (req, res) => {
         const { apiKey } = await authResponse.json();
 
         // 2. Create a connect_token using the API Key
+        // If an itemId is provided, add it to the request to create a token for updating the item.
+        const connectTokenConfig = {};
+        if (itemId) {
+            connectTokenConfig.itemId = itemId;
+        }
+        
         const tokenResponse = await fetch("https://api.pluggy.ai/connect_token", {
             method: 'POST',
-            headers: { "X-API-KEY": apiKey }
+            headers: {
+                "X-API-KEY": apiKey,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(connectTokenConfig)
         });
 
         if (!tokenResponse.ok) {

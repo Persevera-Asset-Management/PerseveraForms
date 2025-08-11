@@ -67,10 +67,14 @@
 
     <script src="https://cdn.pluggy.ai/pluggy-connect/v2.8.2/pluggy-connect.js"></script>
     <script>
-        async function getConnectToken() {
+        async function getConnectToken(itemId) {
             try {
                 // Fetch the connect token from our secure backend endpoint
-                const response = await fetch('/api/get-connect-token');
+                const response = await fetch('/api/get-connect-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ itemId: itemId }) // Send itemId to the backend
+                });
                 
                 if (response.ok) {
                     const data = await response.json();
@@ -89,8 +93,11 @@
             const statusContainer = document.getElementById('status-container');
             const pluggyContainer = document.getElementById('pluggy-connect-container');
 
-            // The clientID and clientSecret are no longer here!
-            const connectToken = await getConnectToken();
+            // Extract itemId from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemIdToUpdate = urlParams.get('itemId');
+
+            const connectToken = await getConnectToken(itemIdToUpdate);
             if (!connectToken) {
                 statusContainer.innerHTML = '<div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h2>Erro de Conexão</h2><p>Não foi possível iniciar a conexão. Por favor, contate a Persevera.</p></div>';
                 return;
@@ -99,7 +106,7 @@
             statusContainer.style.display = 'none';
             pluggyContainer.style.display = 'block';
 
-            const pluggyConnect = new PluggyConnect({
+            const connectOptions = {
                 connectToken: connectToken,
                 includeSandbox: true,
                 onSuccess: (itemData) => {
@@ -110,7 +117,14 @@
                     console.error('Opa! Erro no Pluggy Connect... ', error);
                      document.body.innerHTML = '<div id="status-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;"><div class="card"><img src="assets/logo_trimmed.png" alt="Persevera Logo" style="width: 200px; margin-bottom: 20px;"><h2>Ocorreu um erro</h2><p>Houve um erro durante a conexão. Você pode tentar fechar e abrir a página novamente. Se o erro persistir, contate a Persevera.</p></div></div>';
                 },
-            });
+            };
+
+            // If we have an itemId, set the widget to update mode
+            if (itemIdToUpdate) {
+                connectOptions.updateItem = itemIdToUpdate;
+            }
+
+            const pluggyConnect = new PluggyConnect(connectOptions);
             pluggyConnect.init();
         });
     </script>
